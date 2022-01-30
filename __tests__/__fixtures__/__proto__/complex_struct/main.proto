@@ -1,0 +1,76 @@
+/**
+ * This structure represents an example of hierarchical message with nested, circular and external references 
+ * of several levels. Used to test DescriptorIndexReducer.
+ */
+
+syntax = "proto3";
+
+import "external.proto";
+import "external.external.proto";
+import "google/protobuf/timestamp.proto";
+
+// Status represents object status
+enum Status {
+    Draft = 0;
+    Active = 1;
+    Deleted = 2; 
+};
+
+// Labels represents object labels
+message Labels {
+    // Labels represents array of labels
+    repeated string Labels = 1;
+}
+
+// Message is the base message structure
+message Message {
+    // Message.Message is the nested Message structure
+    message Message {
+        // Message.Message.Message is the Message structure nested into nested structure
+        message Message {
+            // Example strings
+            repeated string Strings = 1;
+            // Protobuf timestamp
+            google.protobuf.Timestamp Timestamp = 2;
+        }
+
+        string String = 1;
+        map<string, .Message.Message> Messages = 2;
+    }
+
+    message Circular {
+        string String = 1;
+        Circular Circular = 2;
+    }
+
+    message CircularA {
+        string String = 1;
+        CircularB CircularB = 2;
+    }
+
+    message CircularB {
+        string String = 1;
+        CircularA CircularA = 2;
+    }
+
+    // Enum is nested enum
+    enum Service {
+        None = 0;     // None
+        Facebook = 1; // Facebook profile
+        Google = 2;   // Google profile
+    }
+
+    string String = 1;
+    Labels Labels = 2;
+    Status Status1 = 3;
+    Status Status2 = 4;    
+    Service Network = 5;
+    repeated string Strings = 6;
+    map<string, string> MapString = 7;
+    map<string, .Message.Message> MapMessages = 8;
+    Circular CircularInstance = 9;
+    CircularA CircularAInstance = 10;
+    .external.Properties Properties1 = 11;
+    .external.external.Properties Properties2 = 12;
+    repeated Service Services = 13;
+}

@@ -1,0 +1,17 @@
+/**
+ * Represents the structure with nested messages
+ */
+syntax = "proto3";
+
+message Person {
+    string Name = 1;
+    string Surname = 2;
+    int32 Age = 3;
+    float Weight = 4;
+    Id Id = 5;
+}
+
+message Id {
+    string Number = 1;
+    string Serial = 2;
+}

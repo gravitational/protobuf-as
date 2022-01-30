@@ -1,0 +1,36 @@
+/**
+ * Represents the structure with all possible elementary types.
+ */
+
+syntax = "proto3";
+package elementaries;
+
+enum Enum {
+    Zero = 0;
+    One = 1;
+    Two = 2;
+}
+
+message Elementaries {
+    double Double = 1;
+    float Float = 2;
+    int32 Int32 = 3;
+    uint32 UInt32 = 4;    
+    sint32 SInt32 = 5;
+    fixed32 Fixed32 = 6;
+    sfixed32 SFixed32 = 7;
+    int64 Int64 = 8;
+    uint64 UInt64 = 9;
+    sint64 SInt64 = 10;
+    fixed64 Fixed64 = 11;
+    fixed64 SFixed64 = 12;
+    bool Bool = 13;
+    Enum Enum = 14;
+    bytes Bytes = 15;
+    string String = 16;
+    bytes EmptyBytes = 17;
+    string EmptyString = 18;
+    int64 EmptyInt64 = 19;
+    int64 EmptyInt32 = 20;
+    bool EmptyBool = 21;
+}
