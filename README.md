@@ -119,11 +119,27 @@ The generated code depends on a few common classes. There are the following opti
 * `disablePrettier=true` disables prettier on the generated code.
 * `nullable=true` would generate nested object field defs as `Object | null` instead of `Object`.
 
-# Interop
+# Generating type aliases
+
+Sometimes, it is useful to provide shortcuts to a deeply nested types. For example, it would be easier to reference `google.protobuf.Timestamp` as `Timestamp` in the code.
+
+It can be done using `typeAliases` option:
+
+```sh
+protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt typeAliases=Timestamp+google.protobuf.Timestamp example/example.proto
+```
+
+It will generate the following line in the target file:
+
+```typescript
+type Timestamp = google.protobuf.Timestamp;
+```
+
+# Interop with non-node hosts
 
 Option `enableInterop=true` embeds standard interop methods [assembly/protobuf_interop.ts](assembly/protobuf_interop.ts) into the target file.
 
-Interop methods facilitate passing messages to and from WASM side if you plan to use `protobuf-as` outside of nodejs host environment, when AssemblyScript loader is not available.
+Interop methods facilitate passing messages to and from WASM side if you plan to use `protobuf-as` outside of nodejs host environment, where AssemblyScript loader is not available.
 
 This looks as following for `wasmer-go`:
 

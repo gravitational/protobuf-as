@@ -44,5 +44,12 @@ export class Blocks {
                 ${value}
             `)
         });
+
+        if (this.options.typeAliases) {
+            this.p('// Type aliases')
+            this.options.typeAliases.forEach((value, key) => {
+                this.p(`type ${key} = ${value}`)
+            })
+        }
     }
 }

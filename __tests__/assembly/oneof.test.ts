@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { instantiateSync } from '@assemblyscript/loader/umd';
-import { OneOf, Branch2 } from "../__fixtures__/__ts_proto__/oneof/main"
+import { OneOf } from "../__fixtures__/__ts_proto__/oneof/main"
 import type * as t from "../__fixtures__/__assembly__/oneof-module"
 
 const imports = { /* imports go here */ };
