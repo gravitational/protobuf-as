@@ -48,7 +48,7 @@ export class Blocks {
         if (this.options.typeAliases) {
             this.p('// Type aliases')
             this.options.typeAliases.forEach((value, key) => {
-                this.p(`type ${key} = ${value}`)
+                this.p(`export type ${key} = ${value}`)
             })
         }
     }

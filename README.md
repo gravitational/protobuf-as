@@ -132,7 +132,7 @@ protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly -
 It will generate the following line in the target file:
 
 ```typescript
-type Timestamp = google.protobuf.Timestamp;
+export type Timestamp = google.protobuf.Timestamp;
 ```
 
 # Interop with non-node hosts
