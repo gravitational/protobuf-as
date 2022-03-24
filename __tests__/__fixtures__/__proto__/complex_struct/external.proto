@@ -1,0 +1,10 @@
+syntax = "proto3";
+package external;
+
+message Properties {
+    string Properties = 1;
+}
+
+message Labels {
+    string Labels = 1;
+}

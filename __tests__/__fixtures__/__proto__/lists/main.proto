@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+enum Enum {
+    Zero = 0;
+    One = 1;
+    Two = 2;
+}
+
+message Message {
+    string String = 1;
+}
+
+message Lists {
+    repeated Enum Enums = 1;
+    repeated string Strings = 2;
+    repeated bytes Bytes = 3;
+    repeated Message Messages = 4;
+    repeated int32 Ints = 5 [packed=true];
+}

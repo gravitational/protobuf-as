@@ -1,0 +1,6 @@
+syntax = "proto3";
+package external.external;
+
+message Properties {
+    string Properties = 1;
+}

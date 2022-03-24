@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package example;
+
+import "google/protobuf/timestamp.proto";
+
+// Status represents object status
+enum Status {
+    Draft = 0;     // Draft
+    Published = 1; // Published
+    Deleted = 2;   // Deleted
+};
+
+// Tags represents object labels
+message Tags {
+    // Tags represents array of labels
+    repeated string Tags = 1;
+}
+
+// Post is represents blog post
+message Post {
+    // Post paragraph
+    message Paragraph {
+        // Paragraph content
+        string Content = 1;
+    }
+
+    // Status
+    Status Status = 1;
+
+    // Author name
+    string Author = 2;
+
+    // Created at
+    google.protobuf.Timestamp CreatedAt = 3;
+
+    // Tags
+    Tags Tags = 4;
+}
