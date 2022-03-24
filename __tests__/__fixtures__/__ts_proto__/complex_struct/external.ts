@@ -12,7 +12,9 @@ export interface Labels {
     Labels: string;
 }
 
-const baseProperties: object = { Properties: '' };
+function createBaseProperties(): Properties {
+    return { Properties: '' };
+}
 
 export const Properties = {
     encode(
@@ -29,7 +31,7 @@ export const Properties = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseProperties } as Properties;
+        const message = createBaseProperties();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -45,12 +47,11 @@ export const Properties = {
     },
 
     fromJSON(object: any): Properties {
-        const message = { ...baseProperties } as Properties;
-        message.Properties =
-            object.Properties !== undefined && object.Properties !== null
+        return {
+            Properties: isSet(object.Properties)
                 ? String(object.Properties)
-                : '';
-        return message;
+                : '',
+        };
     },
 
     toJSON(message: Properties): unknown {
@@ -63,13 +64,15 @@ export const Properties = {
     fromPartial<I extends Exact<DeepPartial<Properties>, I>>(
         object: I,
     ): Properties {
-        const message = { ...baseProperties } as Properties;
+        const message = createBaseProperties();
         message.Properties = object.Properties ?? '';
         return message;
     },
 };
 
-const baseLabels: object = { Labels: '' };
+function createBaseLabels(): Labels {
+    return { Labels: '' };
+}
 
 export const Labels = {
     encode(
@@ -86,7 +89,7 @@ export const Labels = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseLabels } as Labels;
+        const message = createBaseLabels();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -102,12 +105,9 @@ export const Labels = {
     },
 
     fromJSON(object: any): Labels {
-        const message = { ...baseLabels } as Labels;
-        message.Labels =
-            object.Labels !== undefined && object.Labels !== null
-                ? String(object.Labels)
-                : '';
-        return message;
+        return {
+            Labels: isSet(object.Labels) ? String(object.Labels) : '',
+        };
     },
 
     toJSON(message: Labels): unknown {
@@ -117,7 +117,7 @@ export const Labels = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Labels>, I>>(object: I): Labels {
-        const message = { ...baseLabels } as Labels;
+        const message = createBaseLabels();
         message.Labels = object.Labels ?? '';
         return message;
     },
@@ -157,4 +157,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (_m0.util.Long !== Long) {
     _m0.util.Long = Long as any;
     _m0.configure();
+}
+
+function isSet(value: any): boolean {
+    return value !== null && value !== undefined;
 }

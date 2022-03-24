@@ -17,7 +17,7 @@ export type Writer = (value: string) => void;
 
 // Global code blocks registry
 export interface GlobalsRegistry {
-    registerGlobal(key: string, content: string);
+    registerGlobal(key: string, content: string): void;
 }
 
 // staticFiles represents list of static files to embed/copy
@@ -52,7 +52,7 @@ export class WalkerAS implements FlatWalker, GlobalsRegistry {
     constructor(private options: Readonly<Options>) {
         const p = this.p.bind(this);
 
-        this.blocks = new Blocks(p, this.options, this.staticFiles);
+        this.blocks = new Blocks(p, this.options, this.staticFiles());
         this.namespace = new Namespace(p);
         this.enum = new Enum(p);
         this.message = new Message(p);
@@ -158,7 +158,7 @@ export class WalkerAS implements FlatWalker, GlobalsRegistry {
         this.size.finish();
     }
 
-    get content() {
+    public content() {
         const content = this.chunks.join('\n');
 
         return this.options.disablePrettier
@@ -166,7 +166,7 @@ export class WalkerAS implements FlatWalker, GlobalsRegistry {
             : prettier.format(content, prettierOptions);
     }
 
-    get staticFiles() {
+    public staticFiles() {
         if (this.options.deps != "package") {
             return staticFiles;
         }

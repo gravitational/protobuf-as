@@ -33,6 +33,7 @@ export type EnumValue = Id & Comment & {
 export type Message = Id & Comment & {
     kind: 'message';
     desc: proto.DescriptorProto;
+    oneOf: string[]
 };
 
 // Field
@@ -40,6 +41,7 @@ export type Field = Id & Comment & {
     kind: 'field';
     desc: proto.FieldDescriptorProto;
     hasOne?: string; // Descriptor ID this field references, if any
+    oneOf?: string;   // oneOf group this field belongs to
 };
 
 // Descriptor is a wrapper over standard protobuf descriptor with global id. It transforms to DecoratedDescriptor.

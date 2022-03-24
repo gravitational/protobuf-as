@@ -13,9 +13,13 @@ message OneOf {
         Branch1 Branch1 = 1;
         Branch2 Branch2 = 2;
     }
+    
+    string NonOneOf1 = 3;
 
     oneof SecondMessage {
-        Branch1 Branch3 = 3;
-        Branch2 Branch4 = 4;
+        string Branch3 = 4;
+        int32 Branch4 = 5;
     }
+
+    string NonOneOf2 = 6;    
 }

@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import { instantiateSync } from '@assemblyscript/loader/umd';
 import { Lists, Enum, Message } from '../__fixtures__/__ts_proto__/lists/main';
 import type * as t from '../__fixtures__/__assembly__/lists-module';
+import { TextEncoder, TextDecoder } from 'util';
 
 const imports = {
     /* imports go here */

@@ -224,11 +224,11 @@ export class Size {
     private map(field: decorated.FieldMap | decorated.FieldMapMessage) {
         const type = getTypeInfo(field);
         const f = `this.${field.name}`;
-        const keyTypeInfo = type.keyTypeInfo;
-        const valueTypeInfo = type.valueTypeInfo;
+        const keyTypeInfo = type.keyTypeInfo as TypeInfo;
+        const valueTypeInfo = type.valueTypeInfo as TypeInfo;
         const name = `__sizeMapEntry_${relativeName(
-            keyTypeInfo.typeName,
-        )}_${relativeName(valueTypeInfo.typeName)}`;
+            keyTypeInfo.typeName as string,
+        )}_${relativeName(valueTypeInfo.typeName as string)}`;
 
         // Returns size of a map item when it's elementary => elementary
         if (field.value.kind == 'field_elementary') {

@@ -72,21 +72,23 @@ async function main() {
     const walker = new WalkerAS(options);
     strategy.walk(walker);
 
-    const content = walker.content
+    const content = walker.content()
     const files = [{
         name: options.targetFileName, content: content
     }];
 
     if (options.deps == 'export') {
-        walker.staticFiles.forEach((f) => {
+        walker.staticFiles().forEach((f) => {
             files.push({ name: basename(f), content: readFileSync(f).toString() });
         });
     }
 
     const response = CodeGeneratorResponse.fromPartial({
-        file: files,
-        supportedFeatures:
-            CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL,
+        // There is an issue with type declaration in ts-proto-descriptors, ignoring it for now
+        /* eslint-disable @typescript-eslint/ban-ts-comment */
+        // @ts-ignore
+        file: files, 
+        supportedFeatures: CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL,
     });
 
     const buffer = CodeGeneratorResponse.encode(response).finish();

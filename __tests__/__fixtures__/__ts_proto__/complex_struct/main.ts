@@ -155,7 +155,9 @@ export interface Message_MapMessagesEntry {
     value: Message_Message | undefined;
 }
 
-const baseLabels: object = { Labels: '' };
+function createBaseLabels(): Labels {
+    return { Labels: [] };
+}
 
 export const Labels = {
     encode(
@@ -172,8 +174,7 @@ export const Labels = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseLabels } as Labels;
-        message.Labels = [];
+        const message = createBaseLabels();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -189,9 +190,11 @@ export const Labels = {
     },
 
     fromJSON(object: any): Labels {
-        const message = { ...baseLabels } as Labels;
-        message.Labels = (object.Labels ?? []).map((e: any) => String(e));
-        return message;
+        return {
+            Labels: Array.isArray(object?.Labels)
+                ? object.Labels.map((e: any) => String(e))
+                : [],
+        };
     },
 
     toJSON(message: Labels): unknown {
@@ -205,20 +208,29 @@ export const Labels = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Labels>, I>>(object: I): Labels {
-        const message = { ...baseLabels } as Labels;
+        const message = createBaseLabels();
         message.Labels = object.Labels?.map((e) => e) || [];
         return message;
     },
 };
 
-const baseMessage: object = {
-    String: '',
-    Status1: 0,
-    Status2: 0,
-    Network: 0,
-    Strings: '',
-    Services: 0,
-};
+function createBaseMessage(): Message {
+    return {
+        String: '',
+        Labels: undefined,
+        Status1: 0,
+        Status2: 0,
+        Network: 0,
+        Strings: [],
+        MapString: {},
+        MapMessages: {},
+        CircularInstance: undefined,
+        CircularAInstance: undefined,
+        Properties1: undefined,
+        Properties2: undefined,
+        Services: [],
+    };
+}
 
 export const Message = {
     encode(
@@ -291,11 +303,7 @@ export const Message = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMessage } as Message;
-        message.Strings = [];
-        message.MapString = {};
-        message.MapMessages = {};
-        message.Services = [];
+        const message = createBaseMessage();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -378,62 +386,51 @@ export const Message = {
     },
 
     fromJSON(object: any): Message {
-        const message = { ...baseMessage } as Message;
-        message.String =
-            object.String !== undefined && object.String !== null
-                ? String(object.String)
-                : '';
-        message.Labels =
-            object.Labels !== undefined && object.Labels !== null
+        return {
+            String: isSet(object.String) ? String(object.String) : '',
+            Labels: isSet(object.Labels)
                 ? Labels.fromJSON(object.Labels)
-                : undefined;
-        message.Status1 =
-            object.Status1 !== undefined && object.Status1 !== null
-                ? statusFromJSON(object.Status1)
-                : 0;
-        message.Status2 =
-            object.Status2 !== undefined && object.Status2 !== null
-                ? statusFromJSON(object.Status2)
-                : 0;
-        message.Network =
-            object.Network !== undefined && object.Network !== null
+                : undefined,
+            Status1: isSet(object.Status1) ? statusFromJSON(object.Status1) : 0,
+            Status2: isSet(object.Status2) ? statusFromJSON(object.Status2) : 0,
+            Network: isSet(object.Network)
                 ? message_ServiceFromJSON(object.Network)
-                : 0;
-        message.Strings = (object.Strings ?? []).map((e: any) => String(e));
-        message.MapString = Object.entries(object.MapString ?? {}).reduce<{
-            [key: string]: string;
-        }>((acc, [key, value]) => {
-            acc[key] = String(value);
-            return acc;
-        }, {});
-        message.MapMessages = Object.entries(object.MapMessages ?? {}).reduce<{
-            [key: string]: Message_Message;
-        }>((acc, [key, value]) => {
-            acc[key] = Message_Message.fromJSON(value);
-            return acc;
-        }, {});
-        message.CircularInstance =
-            object.CircularInstance !== undefined &&
-            object.CircularInstance !== null
+                : 0,
+            Strings: Array.isArray(object?.Strings)
+                ? object.Strings.map((e: any) => String(e))
+                : [],
+            MapString: isObject(object.MapString)
+                ? Object.entries(object.MapString).reduce<{
+                      [key: string]: string;
+                  }>((acc, [key, value]) => {
+                      acc[key] = String(value);
+                      return acc;
+                  }, {})
+                : {},
+            MapMessages: isObject(object.MapMessages)
+                ? Object.entries(object.MapMessages).reduce<{
+                      [key: string]: Message_Message;
+                  }>((acc, [key, value]) => {
+                      acc[key] = Message_Message.fromJSON(value);
+                      return acc;
+                  }, {})
+                : {},
+            CircularInstance: isSet(object.CircularInstance)
                 ? Message_Circular.fromJSON(object.CircularInstance)
-                : undefined;
-        message.CircularAInstance =
-            object.CircularAInstance !== undefined &&
-            object.CircularAInstance !== null
+                : undefined,
+            CircularAInstance: isSet(object.CircularAInstance)
                 ? Message_CircularA.fromJSON(object.CircularAInstance)
-                : undefined;
-        message.Properties1 =
-            object.Properties1 !== undefined && object.Properties1 !== null
+                : undefined,
+            Properties1: isSet(object.Properties1)
                 ? Properties.fromJSON(object.Properties1)
-                : undefined;
-        message.Properties2 =
-            object.Properties2 !== undefined && object.Properties2 !== null
+                : undefined,
+            Properties2: isSet(object.Properties2)
                 ? Properties1.fromJSON(object.Properties2)
-                : undefined;
-        message.Services = (object.Services ?? []).map((e: any) =>
-            message_ServiceFromJSON(e),
-        );
-        return message;
+                : undefined,
+            Services: Array.isArray(object?.Services)
+                ? object.Services.map((e: any) => message_ServiceFromJSON(e))
+                : [],
+        };
     },
 
     toJSON(message: Message): unknown {
@@ -493,7 +490,7 @@ export const Message = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Message>, I>>(object: I): Message {
-        const message = { ...baseMessage } as Message;
+        const message = createBaseMessage();
         message.String = object.String ?? '';
         message.Labels =
             object.Labels !== undefined && object.Labels !== null
@@ -542,7 +539,9 @@ export const Message = {
     },
 };
 
-const baseMessage_Message: object = { String: '' };
+function createBaseMessage_Message(): Message_Message {
+    return { String: '', Messages: {} };
+}
 
 export const Message_Message = {
     encode(
@@ -565,8 +564,7 @@ export const Message_Message = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMessage_Message } as Message_Message;
-        message.Messages = {};
+        const message = createBaseMessage_Message();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -591,18 +589,17 @@ export const Message_Message = {
     },
 
     fromJSON(object: any): Message_Message {
-        const message = { ...baseMessage_Message } as Message_Message;
-        message.String =
-            object.String !== undefined && object.String !== null
-                ? String(object.String)
-                : '';
-        message.Messages = Object.entries(object.Messages ?? {}).reduce<{
-            [key: string]: Message_Message;
-        }>((acc, [key, value]) => {
-            acc[key] = Message_Message.fromJSON(value);
-            return acc;
-        }, {});
-        return message;
+        return {
+            String: isSet(object.String) ? String(object.String) : '',
+            Messages: isObject(object.Messages)
+                ? Object.entries(object.Messages).reduce<{
+                      [key: string]: Message_Message;
+                  }>((acc, [key, value]) => {
+                      acc[key] = Message_Message.fromJSON(value);
+                      return acc;
+                  }, {})
+                : {},
+        };
     },
 
     toJSON(message: Message_Message): unknown {
@@ -620,7 +617,7 @@ export const Message_Message = {
     fromPartial<I extends Exact<DeepPartial<Message_Message>, I>>(
         object: I,
     ): Message_Message {
-        const message = { ...baseMessage_Message } as Message_Message;
+        const message = createBaseMessage_Message();
         message.String = object.String ?? '';
         message.Messages = Object.entries(object.Messages ?? {}).reduce<{
             [key: string]: Message_Message;
@@ -634,7 +631,9 @@ export const Message_Message = {
     },
 };
 
-const baseMessage_Message_Message: object = { Strings: '' };
+function createBaseMessage_Message_Message(): Message_Message_Message {
+    return { Strings: [], Timestamp: undefined };
+}
 
 export const Message_Message_Message = {
     encode(
@@ -660,10 +659,7 @@ export const Message_Message_Message = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = {
-            ...baseMessage_Message_Message,
-        } as Message_Message_Message;
-        message.Strings = [];
+        const message = createBaseMessage_Message_Message();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -684,15 +680,14 @@ export const Message_Message_Message = {
     },
 
     fromJSON(object: any): Message_Message_Message {
-        const message = {
-            ...baseMessage_Message_Message,
-        } as Message_Message_Message;
-        message.Strings = (object.Strings ?? []).map((e: any) => String(e));
-        message.Timestamp =
-            object.Timestamp !== undefined && object.Timestamp !== null
+        return {
+            Strings: Array.isArray(object?.Strings)
+                ? object.Strings.map((e: any) => String(e))
+                : [],
+            Timestamp: isSet(object.Timestamp)
                 ? fromJsonTimestamp(object.Timestamp)
-                : undefined;
-        return message;
+                : undefined,
+        };
     },
 
     toJSON(message: Message_Message_Message): unknown {
@@ -710,16 +705,16 @@ export const Message_Message_Message = {
     fromPartial<I extends Exact<DeepPartial<Message_Message_Message>, I>>(
         object: I,
     ): Message_Message_Message {
-        const message = {
-            ...baseMessage_Message_Message,
-        } as Message_Message_Message;
+        const message = createBaseMessage_Message_Message();
         message.Strings = object.Strings?.map((e) => e) || [];
         message.Timestamp = object.Timestamp ?? undefined;
         return message;
     },
 };
 
-const baseMessage_Message_MessagesEntry: object = { key: '' };
+function createBaseMessage_Message_MessagesEntry(): Message_Message_MessagesEntry {
+    return { key: '', value: undefined };
+}
 
 export const Message_Message_MessagesEntry = {
     encode(
@@ -745,9 +740,7 @@ export const Message_Message_MessagesEntry = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = {
-            ...baseMessage_Message_MessagesEntry,
-        } as Message_Message_MessagesEntry;
+        const message = createBaseMessage_Message_MessagesEntry();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -769,18 +762,12 @@ export const Message_Message_MessagesEntry = {
     },
 
     fromJSON(object: any): Message_Message_MessagesEntry {
-        const message = {
-            ...baseMessage_Message_MessagesEntry,
-        } as Message_Message_MessagesEntry;
-        message.key =
-            object.key !== undefined && object.key !== null
-                ? String(object.key)
-                : '';
-        message.value =
-            object.value !== undefined && object.value !== null
+        return {
+            key: isSet(object.key) ? String(object.key) : '',
+            value: isSet(object.value)
                 ? Message_Message.fromJSON(object.value)
-                : undefined;
-        return message;
+                : undefined,
+        };
     },
 
     toJSON(message: Message_Message_MessagesEntry): unknown {
@@ -796,9 +783,7 @@ export const Message_Message_MessagesEntry = {
     fromPartial<I extends Exact<DeepPartial<Message_Message_MessagesEntry>, I>>(
         object: I,
     ): Message_Message_MessagesEntry {
-        const message = {
-            ...baseMessage_Message_MessagesEntry,
-        } as Message_Message_MessagesEntry;
+        const message = createBaseMessage_Message_MessagesEntry();
         message.key = object.key ?? '';
         message.value =
             object.value !== undefined && object.value !== null
@@ -808,7 +793,9 @@ export const Message_Message_MessagesEntry = {
     },
 };
 
-const baseMessage_Circular: object = { String: '' };
+function createBaseMessage_Circular(): Message_Circular {
+    return { String: '', Circular: undefined };
+}
 
 export const Message_Circular = {
     encode(
@@ -831,7 +818,7 @@ export const Message_Circular = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMessage_Circular } as Message_Circular;
+        const message = createBaseMessage_Circular();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -853,16 +840,12 @@ export const Message_Circular = {
     },
 
     fromJSON(object: any): Message_Circular {
-        const message = { ...baseMessage_Circular } as Message_Circular;
-        message.String =
-            object.String !== undefined && object.String !== null
-                ? String(object.String)
-                : '';
-        message.Circular =
-            object.Circular !== undefined && object.Circular !== null
+        return {
+            String: isSet(object.String) ? String(object.String) : '',
+            Circular: isSet(object.Circular)
                 ? Message_Circular.fromJSON(object.Circular)
-                : undefined;
-        return message;
+                : undefined,
+        };
     },
 
     toJSON(message: Message_Circular): unknown {
@@ -878,7 +861,7 @@ export const Message_Circular = {
     fromPartial<I extends Exact<DeepPartial<Message_Circular>, I>>(
         object: I,
     ): Message_Circular {
-        const message = { ...baseMessage_Circular } as Message_Circular;
+        const message = createBaseMessage_Circular();
         message.String = object.String ?? '';
         message.Circular =
             object.Circular !== undefined && object.Circular !== null
@@ -888,7 +871,9 @@ export const Message_Circular = {
     },
 };
 
-const baseMessage_CircularA: object = { String: '' };
+function createBaseMessage_CircularA(): Message_CircularA {
+    return { String: '', CircularB: undefined };
+}
 
 export const Message_CircularA = {
     encode(
@@ -911,7 +896,7 @@ export const Message_CircularA = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMessage_CircularA } as Message_CircularA;
+        const message = createBaseMessage_CircularA();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -933,16 +918,12 @@ export const Message_CircularA = {
     },
 
     fromJSON(object: any): Message_CircularA {
-        const message = { ...baseMessage_CircularA } as Message_CircularA;
-        message.String =
-            object.String !== undefined && object.String !== null
-                ? String(object.String)
-                : '';
-        message.CircularB =
-            object.CircularB !== undefined && object.CircularB !== null
+        return {
+            String: isSet(object.String) ? String(object.String) : '',
+            CircularB: isSet(object.CircularB)
                 ? Message_CircularB.fromJSON(object.CircularB)
-                : undefined;
-        return message;
+                : undefined,
+        };
     },
 
     toJSON(message: Message_CircularA): unknown {
@@ -958,7 +939,7 @@ export const Message_CircularA = {
     fromPartial<I extends Exact<DeepPartial<Message_CircularA>, I>>(
         object: I,
     ): Message_CircularA {
-        const message = { ...baseMessage_CircularA } as Message_CircularA;
+        const message = createBaseMessage_CircularA();
         message.String = object.String ?? '';
         message.CircularB =
             object.CircularB !== undefined && object.CircularB !== null
@@ -968,7 +949,9 @@ export const Message_CircularA = {
     },
 };
 
-const baseMessage_CircularB: object = { String: '' };
+function createBaseMessage_CircularB(): Message_CircularB {
+    return { String: '', CircularA: undefined };
+}
 
 export const Message_CircularB = {
     encode(
@@ -991,7 +974,7 @@ export const Message_CircularB = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMessage_CircularB } as Message_CircularB;
+        const message = createBaseMessage_CircularB();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -1013,16 +996,12 @@ export const Message_CircularB = {
     },
 
     fromJSON(object: any): Message_CircularB {
-        const message = { ...baseMessage_CircularB } as Message_CircularB;
-        message.String =
-            object.String !== undefined && object.String !== null
-                ? String(object.String)
-                : '';
-        message.CircularA =
-            object.CircularA !== undefined && object.CircularA !== null
+        return {
+            String: isSet(object.String) ? String(object.String) : '',
+            CircularA: isSet(object.CircularA)
                 ? Message_CircularA.fromJSON(object.CircularA)
-                : undefined;
-        return message;
+                : undefined,
+        };
     },
 
     toJSON(message: Message_CircularB): unknown {
@@ -1038,7 +1017,7 @@ export const Message_CircularB = {
     fromPartial<I extends Exact<DeepPartial<Message_CircularB>, I>>(
         object: I,
     ): Message_CircularB {
-        const message = { ...baseMessage_CircularB } as Message_CircularB;
+        const message = createBaseMessage_CircularB();
         message.String = object.String ?? '';
         message.CircularA =
             object.CircularA !== undefined && object.CircularA !== null
@@ -1048,7 +1027,9 @@ export const Message_CircularB = {
     },
 };
 
-const baseMessage_MapStringEntry: object = { key: '', value: '' };
+function createBaseMessage_MapStringEntry(): Message_MapStringEntry {
+    return { key: '', value: '' };
+}
 
 export const Message_MapStringEntry = {
     encode(
@@ -1071,9 +1052,7 @@ export const Message_MapStringEntry = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = {
-            ...baseMessage_MapStringEntry,
-        } as Message_MapStringEntry;
+        const message = createBaseMessage_MapStringEntry();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -1092,18 +1071,10 @@ export const Message_MapStringEntry = {
     },
 
     fromJSON(object: any): Message_MapStringEntry {
-        const message = {
-            ...baseMessage_MapStringEntry,
-        } as Message_MapStringEntry;
-        message.key =
-            object.key !== undefined && object.key !== null
-                ? String(object.key)
-                : '';
-        message.value =
-            object.value !== undefined && object.value !== null
-                ? String(object.value)
-                : '';
-        return message;
+        return {
+            key: isSet(object.key) ? String(object.key) : '',
+            value: isSet(object.value) ? String(object.value) : '',
+        };
     },
 
     toJSON(message: Message_MapStringEntry): unknown {
@@ -1116,16 +1087,16 @@ export const Message_MapStringEntry = {
     fromPartial<I extends Exact<DeepPartial<Message_MapStringEntry>, I>>(
         object: I,
     ): Message_MapStringEntry {
-        const message = {
-            ...baseMessage_MapStringEntry,
-        } as Message_MapStringEntry;
+        const message = createBaseMessage_MapStringEntry();
         message.key = object.key ?? '';
         message.value = object.value ?? '';
         return message;
     },
 };
 
-const baseMessage_MapMessagesEntry: object = { key: '' };
+function createBaseMessage_MapMessagesEntry(): Message_MapMessagesEntry {
+    return { key: '', value: undefined };
+}
 
 export const Message_MapMessagesEntry = {
     encode(
@@ -1151,9 +1122,7 @@ export const Message_MapMessagesEntry = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = {
-            ...baseMessage_MapMessagesEntry,
-        } as Message_MapMessagesEntry;
+        const message = createBaseMessage_MapMessagesEntry();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -1175,18 +1144,12 @@ export const Message_MapMessagesEntry = {
     },
 
     fromJSON(object: any): Message_MapMessagesEntry {
-        const message = {
-            ...baseMessage_MapMessagesEntry,
-        } as Message_MapMessagesEntry;
-        message.key =
-            object.key !== undefined && object.key !== null
-                ? String(object.key)
-                : '';
-        message.value =
-            object.value !== undefined && object.value !== null
+        return {
+            key: isSet(object.key) ? String(object.key) : '',
+            value: isSet(object.value)
                 ? Message_Message.fromJSON(object.value)
-                : undefined;
-        return message;
+                : undefined,
+        };
     },
 
     toJSON(message: Message_MapMessagesEntry): unknown {
@@ -1202,9 +1165,7 @@ export const Message_MapMessagesEntry = {
     fromPartial<I extends Exact<DeepPartial<Message_MapMessagesEntry>, I>>(
         object: I,
     ): Message_MapMessagesEntry {
-        const message = {
-            ...baseMessage_MapMessagesEntry,
-        } as Message_MapMessagesEntry;
+        const message = createBaseMessage_MapMessagesEntry();
         message.key = object.key ?? '';
         message.value =
             object.value !== undefined && object.value !== null
@@ -1270,4 +1231,12 @@ function fromJsonTimestamp(o: any): Date {
 if (_m0.util.Long !== Long) {
     _m0.util.Long = Long as any;
     _m0.configure();
+}
+
+function isObject(value: any): boolean {
+    return typeof value === 'object' && value !== null;
+}
+
+function isSet(value: any): boolean {
+    return value !== null && value !== undefined;
 }

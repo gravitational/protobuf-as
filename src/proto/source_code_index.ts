@@ -55,6 +55,11 @@ export class CodeIndex extends Map<string, SourceCodeInfo_Location> {
             return "";
         }
         const value = this.get(path);
+
+        if (value == undefined) {
+            return ""
+        }
+
         const result = value.leadingDetachedComments.join("\n\n");
         return (result + value.leadingComments + "\n\n" + value.trailingComments).trim();
     }

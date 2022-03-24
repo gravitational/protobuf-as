@@ -19,7 +19,9 @@ export interface Id {
     Serial: string;
 }
 
-const basePerson: object = { Name: '', Surname: '', Age: 0, Weight: 0 };
+function createBasePerson(): Person {
+    return { Name: '', Surname: '', Age: 0, Weight: 0, Id: undefined };
+}
 
 export const Person = {
     encode(
@@ -48,7 +50,7 @@ export const Person = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...basePerson } as Person;
+        const message = createBasePerson();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -76,35 +78,20 @@ export const Person = {
     },
 
     fromJSON(object: any): Person {
-        const message = { ...basePerson } as Person;
-        message.Name =
-            object.Name !== undefined && object.Name !== null
-                ? String(object.Name)
-                : '';
-        message.Surname =
-            object.Surname !== undefined && object.Surname !== null
-                ? String(object.Surname)
-                : '';
-        message.Age =
-            object.Age !== undefined && object.Age !== null
-                ? Number(object.Age)
-                : 0;
-        message.Weight =
-            object.Weight !== undefined && object.Weight !== null
-                ? Number(object.Weight)
-                : 0;
-        message.Id =
-            object.Id !== undefined && object.Id !== null
-                ? Id.fromJSON(object.Id)
-                : undefined;
-        return message;
+        return {
+            Name: isSet(object.Name) ? String(object.Name) : '',
+            Surname: isSet(object.Surname) ? String(object.Surname) : '',
+            Age: isSet(object.Age) ? Number(object.Age) : 0,
+            Weight: isSet(object.Weight) ? Number(object.Weight) : 0,
+            Id: isSet(object.Id) ? Id.fromJSON(object.Id) : undefined,
+        };
     },
 
     toJSON(message: Person): unknown {
         const obj: any = {};
         message.Name !== undefined && (obj.Name = message.Name);
         message.Surname !== undefined && (obj.Surname = message.Surname);
-        message.Age !== undefined && (obj.Age = message.Age);
+        message.Age !== undefined && (obj.Age = Math.round(message.Age));
         message.Weight !== undefined && (obj.Weight = message.Weight);
         message.Id !== undefined &&
             (obj.Id = message.Id ? Id.toJSON(message.Id) : undefined);
@@ -112,7 +99,7 @@ export const Person = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Person>, I>>(object: I): Person {
-        const message = { ...basePerson } as Person;
+        const message = createBasePerson();
         message.Name = object.Name ?? '';
         message.Surname = object.Surname ?? '';
         message.Age = object.Age ?? 0;
@@ -125,7 +112,9 @@ export const Person = {
     },
 };
 
-const baseId: object = { Number: '', Serial: '' };
+function createBaseId(): Id {
+    return { Number: '', Serial: '' };
+}
 
 export const Id = {
     encode(message: Id, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
@@ -142,7 +131,7 @@ export const Id = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseId } as Id;
+        const message = createBaseId();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -161,16 +150,10 @@ export const Id = {
     },
 
     fromJSON(object: any): Id {
-        const message = { ...baseId } as Id;
-        message.Number =
-            object.Number !== undefined && object.Number !== null
-                ? String(object.Number)
-                : '';
-        message.Serial =
-            object.Serial !== undefined && object.Serial !== null
-                ? String(object.Serial)
-                : '';
-        return message;
+        return {
+            Number: isSet(object.Number) ? String(object.Number) : '',
+            Serial: isSet(object.Serial) ? String(object.Serial) : '',
+        };
     },
 
     toJSON(message: Id): unknown {
@@ -181,7 +164,7 @@ export const Id = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Id>, I>>(object: I): Id {
-        const message = { ...baseId } as Id;
+        const message = createBaseId();
         message.Number = object.Number ?? '';
         message.Serial = object.Serial ?? '';
         return message;
@@ -222,4 +205,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (_m0.util.Long !== Long) {
     _m0.util.Long = Long as any;
     _m0.configure();
+}
+
+function isSet(value: any): boolean {
+    return value !== null && value !== undefined;
 }

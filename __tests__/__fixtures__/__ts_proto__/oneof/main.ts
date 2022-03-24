@@ -16,12 +16,16 @@ export interface OneOf {
     Messages?:
         | { $case: 'Branch1'; Branch1: Branch1 }
         | { $case: 'Branch2'; Branch2: Branch2 };
+    NonOneOf1: string;
     SecondMessage?:
-        | { $case: 'Branch3'; Branch3: Branch1 }
-        | { $case: 'Branch4'; Branch4: Branch2 };
+        | { $case: 'Branch3'; Branch3: string }
+        | { $case: 'Branch4'; Branch4: number };
+    NonOneOf2: string;
 }
 
-const baseBranch1: object = { String: '' };
+function createBaseBranch1(): Branch1 {
+    return { String: '' };
+}
 
 export const Branch1 = {
     encode(
@@ -38,7 +42,7 @@ export const Branch1 = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseBranch1 } as Branch1;
+        const message = createBaseBranch1();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -54,12 +58,9 @@ export const Branch1 = {
     },
 
     fromJSON(object: any): Branch1 {
-        const message = { ...baseBranch1 } as Branch1;
-        message.String =
-            object.String !== undefined && object.String !== null
-                ? String(object.String)
-                : '';
-        return message;
+        return {
+            String: isSet(object.String) ? String(object.String) : '',
+        };
     },
 
     toJSON(message: Branch1): unknown {
@@ -69,13 +70,15 @@ export const Branch1 = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Branch1>, I>>(object: I): Branch1 {
-        const message = { ...baseBranch1 } as Branch1;
+        const message = createBaseBranch1();
         message.String = object.String ?? '';
         return message;
     },
 };
 
-const baseBranch2: object = { UInt32: 0 };
+function createBaseBranch2(): Branch2 {
+    return { UInt32: 0 };
+}
 
 export const Branch2 = {
     encode(
@@ -92,7 +95,7 @@ export const Branch2 = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseBranch2 } as Branch2;
+        const message = createBaseBranch2();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -108,28 +111,33 @@ export const Branch2 = {
     },
 
     fromJSON(object: any): Branch2 {
-        const message = { ...baseBranch2 } as Branch2;
-        message.UInt32 =
-            object.UInt32 !== undefined && object.UInt32 !== null
-                ? Number(object.UInt32)
-                : 0;
-        return message;
+        return {
+            UInt32: isSet(object.UInt32) ? Number(object.UInt32) : 0,
+        };
     },
 
     toJSON(message: Branch2): unknown {
         const obj: any = {};
-        message.UInt32 !== undefined && (obj.UInt32 = message.UInt32);
+        message.UInt32 !== undefined &&
+            (obj.UInt32 = Math.round(message.UInt32));
         return obj;
     },
 
     fromPartial<I extends Exact<DeepPartial<Branch2>, I>>(object: I): Branch2 {
-        const message = { ...baseBranch2 } as Branch2;
+        const message = createBaseBranch2();
         message.UInt32 = object.UInt32 ?? 0;
         return message;
     },
 };
 
-const baseOneOf: object = {};
+function createBaseOneOf(): OneOf {
+    return {
+        Messages: undefined,
+        NonOneOf1: '',
+        SecondMessage: undefined,
+        NonOneOf2: '',
+    };
+}
 
 export const OneOf = {
     encode(
@@ -148,17 +156,17 @@ export const OneOf = {
                 writer.uint32(18).fork(),
             ).ldelim();
         }
+        if (message.NonOneOf1 !== '') {
+            writer.uint32(26).string(message.NonOneOf1);
+        }
         if (message.SecondMessage?.$case === 'Branch3') {
-            Branch1.encode(
-                message.SecondMessage.Branch3,
-                writer.uint32(26).fork(),
-            ).ldelim();
+            writer.uint32(34).string(message.SecondMessage.Branch3);
         }
         if (message.SecondMessage?.$case === 'Branch4') {
-            Branch2.encode(
-                message.SecondMessage.Branch4,
-                writer.uint32(34).fork(),
-            ).ldelim();
+            writer.uint32(40).int32(message.SecondMessage.Branch4);
+        }
+        if (message.NonOneOf2 !== '') {
+            writer.uint32(50).string(message.NonOneOf2);
         }
         return writer;
     },
@@ -167,7 +175,7 @@ export const OneOf = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseOneOf } as OneOf;
+        const message = createBaseOneOf();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -184,16 +192,22 @@ export const OneOf = {
                     };
                     break;
                 case 3:
-                    message.SecondMessage = {
-                        $case: 'Branch3',
-                        Branch3: Branch1.decode(reader, reader.uint32()),
-                    };
+                    message.NonOneOf1 = reader.string();
                     break;
                 case 4:
                     message.SecondMessage = {
-                        $case: 'Branch4',
-                        Branch4: Branch2.decode(reader, reader.uint32()),
+                        $case: 'Branch3',
+                        Branch3: reader.string(),
                     };
+                    break;
+                case 5:
+                    message.SecondMessage = {
+                        $case: 'Branch4',
+                        Branch4: reader.int32(),
+                    };
+                    break;
+                case 6:
+                    message.NonOneOf2 = reader.string();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -204,32 +218,26 @@ export const OneOf = {
     },
 
     fromJSON(object: any): OneOf {
-        const message = { ...baseOneOf } as OneOf;
-        if (object.Branch1 !== undefined && object.Branch1 !== null) {
-            message.Messages = {
-                $case: 'Branch1',
-                Branch1: Branch1.fromJSON(object.Branch1),
-            };
-        }
-        if (object.Branch2 !== undefined && object.Branch2 !== null) {
-            message.Messages = {
-                $case: 'Branch2',
-                Branch2: Branch2.fromJSON(object.Branch2),
-            };
-        }
-        if (object.Branch3 !== undefined && object.Branch3 !== null) {
-            message.SecondMessage = {
-                $case: 'Branch3',
-                Branch3: Branch1.fromJSON(object.Branch3),
-            };
-        }
-        if (object.Branch4 !== undefined && object.Branch4 !== null) {
-            message.SecondMessage = {
-                $case: 'Branch4',
-                Branch4: Branch2.fromJSON(object.Branch4),
-            };
-        }
-        return message;
+        return {
+            Messages: isSet(object.Branch1)
+                ? {
+                      $case: 'Branch1',
+                      Branch1: Branch1.fromJSON(object.Branch1),
+                  }
+                : isSet(object.Branch2)
+                ? {
+                      $case: 'Branch2',
+                      Branch2: Branch2.fromJSON(object.Branch2),
+                  }
+                : undefined,
+            NonOneOf1: isSet(object.NonOneOf1) ? String(object.NonOneOf1) : '',
+            SecondMessage: isSet(object.Branch3)
+                ? { $case: 'Branch3', Branch3: String(object.Branch3) }
+                : isSet(object.Branch4)
+                ? { $case: 'Branch4', Branch4: Number(object.Branch4) }
+                : undefined,
+            NonOneOf2: isSet(object.NonOneOf2) ? String(object.NonOneOf2) : '',
+        };
     },
 
     toJSON(message: OneOf): unknown {
@@ -242,19 +250,17 @@ export const OneOf = {
             (obj.Branch2 = message.Messages?.Branch2
                 ? Branch2.toJSON(message.Messages?.Branch2)
                 : undefined);
+        message.NonOneOf1 !== undefined && (obj.NonOneOf1 = message.NonOneOf1);
         message.SecondMessage?.$case === 'Branch3' &&
-            (obj.Branch3 = message.SecondMessage?.Branch3
-                ? Branch1.toJSON(message.SecondMessage?.Branch3)
-                : undefined);
+            (obj.Branch3 = message.SecondMessage?.Branch3);
         message.SecondMessage?.$case === 'Branch4' &&
-            (obj.Branch4 = message.SecondMessage?.Branch4
-                ? Branch2.toJSON(message.SecondMessage?.Branch4)
-                : undefined);
+            (obj.Branch4 = Math.round(message.SecondMessage?.Branch4));
+        message.NonOneOf2 !== undefined && (obj.NonOneOf2 = message.NonOneOf2);
         return obj;
     },
 
     fromPartial<I extends Exact<DeepPartial<OneOf>, I>>(object: I): OneOf {
-        const message = { ...baseOneOf } as OneOf;
+        const message = createBaseOneOf();
         if (
             object.Messages?.$case === 'Branch1' &&
             object.Messages?.Branch1 !== undefined &&
@@ -275,6 +281,7 @@ export const OneOf = {
                 Branch2: Branch2.fromPartial(object.Messages.Branch2),
             };
         }
+        message.NonOneOf1 = object.NonOneOf1 ?? '';
         if (
             object.SecondMessage?.$case === 'Branch3' &&
             object.SecondMessage?.Branch3 !== undefined &&
@@ -282,7 +289,7 @@ export const OneOf = {
         ) {
             message.SecondMessage = {
                 $case: 'Branch3',
-                Branch3: Branch1.fromPartial(object.SecondMessage.Branch3),
+                Branch3: object.SecondMessage.Branch3,
             };
         }
         if (
@@ -292,9 +299,10 @@ export const OneOf = {
         ) {
             message.SecondMessage = {
                 $case: 'Branch4',
-                Branch4: Branch2.fromPartial(object.SecondMessage.Branch4),
+                Branch4: object.SecondMessage.Branch4,
             };
         }
+        message.NonOneOf2 = object.NonOneOf2 ?? '';
         return message;
     },
 };
@@ -333,4 +341,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (_m0.util.Long !== Long) {
     _m0.util.Long = Long as any;
     _m0.configure();
+}
+
+function isSet(value: any): boolean {
+    return value !== null && value !== undefined;
 }

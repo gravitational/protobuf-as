@@ -24,9 +24,15 @@ export type Numbered = {
     number: number;
 };
 
+// Has comment
 export type Commented = {
     comment: string;
 };
+
+// Has oneOf
+export type WithOneOf = {
+    oneOf?: string;
+}
 
 // Has name
 export type Named = {
@@ -59,6 +65,7 @@ export type Message = Depricable &
     Named & Commented & {
         kind: 'message';
         mapHelper: boolean; // This message represents an artificial type of map entry [key, value]
+        oneOf: string[];    // oneOf groups of a message
     };
 
 // Elementary field
@@ -66,6 +73,7 @@ export type FieldElementary = Depricable &
     Named &
     Numbered &
     Commented & 
+    WithOneOf &
     WireTypeable & {
         kind: 'field_elementary';
         type: FieldDescriptorProto_Type;
@@ -76,7 +84,7 @@ export type FieldElementary = Depricable &
 export type FieldElementaryRepeated = Depricable &
     Named &
     Numbered &
-    Commented & 
+    Commented &
     WireTypeable & {
         kind: 'field_elementary_repeated';
         type: FieldDescriptorProto_Type;
@@ -88,11 +96,11 @@ export type FieldElementaryRepeated = Depricable &
 export type FieldMessage = Depricable &
     Named &
     Numbered &
-    Commented & 
+    Commented &
+    WithOneOf &     
     WireTypeable & {
         kind: 'field_message';
         typeName: Named;
-        withinOneOf: boolean;
     };
 
 // Repeated message field
@@ -110,6 +118,7 @@ export type FieldMap = Depricable &
     Named &
     Numbered &
     Commented & 
+    WithOneOf & 
     WireTypeable & {
         kind: 'field_map';
         key: FieldElementary;
@@ -122,6 +131,7 @@ export type FieldMapMessage = Depricable &
     Named &
     Numbered &
     Commented & 
+    WithOneOf &    
     WireTypeable & {
         kind: 'field_map_message';
         key: FieldElementary;

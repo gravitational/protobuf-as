@@ -137,9 +137,12 @@ export class NamedDescriptorIndexReducer implements named.DescriptorCollection {
      * @param key Descriptor key
      * @returns Descriptor
      */
-    get(key: string): named.Descriptor {
+    get(key: string): named.Descriptor | undefined {
         if (this.weights.getWeight(key) > 0 || !this.weights.has(key)) {
-            return this.tree.get(key)[1];
+            const item = this.tree.get(key);
+            if (item) {
+                return item[1]
+            }
         }
         return undefined;
     }

@@ -35,7 +35,9 @@ export interface Maps_StringValueMapEntry {
     value: Value | undefined;
 }
 
-const baseValue: object = { Int32s: 0 };
+function createBaseValue(): Value {
+    return { Int32s: [] };
+}
 
 export const Value = {
     encode(
@@ -54,8 +56,7 @@ export const Value = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseValue } as Value;
-        message.Int32s = [];
+        const message = createBaseValue();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -78,15 +79,17 @@ export const Value = {
     },
 
     fromJSON(object: any): Value {
-        const message = { ...baseValue } as Value;
-        message.Int32s = (object.Int32s ?? []).map((e: any) => Number(e));
-        return message;
+        return {
+            Int32s: Array.isArray(object?.Int32s)
+                ? object.Int32s.map((e: any) => Number(e))
+                : [],
+        };
     },
 
     toJSON(message: Value): unknown {
         const obj: any = {};
         if (message.Int32s) {
-            obj.Int32s = message.Int32s.map((e) => e);
+            obj.Int32s = message.Int32s.map((e) => Math.round(e));
         } else {
             obj.Int32s = [];
         }
@@ -94,13 +97,20 @@ export const Value = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
-        const message = { ...baseValue } as Value;
+        const message = createBaseValue();
         message.Int32s = object.Int32s?.map((e) => e) || [];
         return message;
     },
 };
 
-const baseMaps: object = {};
+function createBaseMaps(): Maps {
+    return {
+        StringStringMap: {},
+        StringInt32Map: {},
+        Int32StringMap: {},
+        StringValueMap: {},
+    };
+}
 
 export const Maps = {
     encode(
@@ -138,11 +148,7 @@ export const Maps = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMaps } as Maps;
-        message.StringStringMap = {};
-        message.StringInt32Map = {};
-        message.Int32StringMap = {};
-        message.StringValueMap = {};
+        const message = createBaseMaps();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -191,32 +197,40 @@ export const Maps = {
     },
 
     fromJSON(object: any): Maps {
-        const message = { ...baseMaps } as Maps;
-        message.StringStringMap = Object.entries(
-            object.StringStringMap ?? {},
-        ).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-            acc[key] = String(value);
-            return acc;
-        }, {});
-        message.StringInt32Map = Object.entries(
-            object.StringInt32Map ?? {},
-        ).reduce<{ [key: string]: number }>((acc, [key, value]) => {
-            acc[key] = Number(value);
-            return acc;
-        }, {});
-        message.Int32StringMap = Object.entries(
-            object.Int32StringMap ?? {},
-        ).reduce<{ [key: number]: string }>((acc, [key, value]) => {
-            acc[Number(key)] = String(value);
-            return acc;
-        }, {});
-        message.StringValueMap = Object.entries(
-            object.StringValueMap ?? {},
-        ).reduce<{ [key: string]: Value }>((acc, [key, value]) => {
-            acc[key] = Value.fromJSON(value);
-            return acc;
-        }, {});
-        return message;
+        return {
+            StringStringMap: isObject(object.StringStringMap)
+                ? Object.entries(object.StringStringMap).reduce<{
+                      [key: string]: string;
+                  }>((acc, [key, value]) => {
+                      acc[key] = String(value);
+                      return acc;
+                  }, {})
+                : {},
+            StringInt32Map: isObject(object.StringInt32Map)
+                ? Object.entries(object.StringInt32Map).reduce<{
+                      [key: string]: number;
+                  }>((acc, [key, value]) => {
+                      acc[key] = Number(value);
+                      return acc;
+                  }, {})
+                : {},
+            Int32StringMap: isObject(object.Int32StringMap)
+                ? Object.entries(object.Int32StringMap).reduce<{
+                      [key: number]: string;
+                  }>((acc, [key, value]) => {
+                      acc[Number(key)] = String(value);
+                      return acc;
+                  }, {})
+                : {},
+            StringValueMap: isObject(object.StringValueMap)
+                ? Object.entries(object.StringValueMap).reduce<{
+                      [key: string]: Value;
+                  }>((acc, [key, value]) => {
+                      acc[key] = Value.fromJSON(value);
+                      return acc;
+                  }, {})
+                : {},
+        };
     },
 
     toJSON(message: Maps): unknown {
@@ -230,7 +244,7 @@ export const Maps = {
         obj.StringInt32Map = {};
         if (message.StringInt32Map) {
             Object.entries(message.StringInt32Map).forEach(([k, v]) => {
-                obj.StringInt32Map[k] = v;
+                obj.StringInt32Map[k] = Math.round(v);
             });
         }
         obj.Int32StringMap = {};
@@ -249,7 +263,7 @@ export const Maps = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Maps>, I>>(object: I): Maps {
-        const message = { ...baseMaps } as Maps;
+        const message = createBaseMaps();
         message.StringStringMap = Object.entries(
             object.StringStringMap ?? {},
         ).reduce<{ [key: string]: string }>((acc, [key, value]) => {
@@ -286,7 +300,9 @@ export const Maps = {
     },
 };
 
-const baseMaps_StringStringMapEntry: object = { key: '', value: '' };
+function createBaseMaps_StringStringMapEntry(): Maps_StringStringMapEntry {
+    return { key: '', value: '' };
+}
 
 export const Maps_StringStringMapEntry = {
     encode(
@@ -309,9 +325,7 @@ export const Maps_StringStringMapEntry = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = {
-            ...baseMaps_StringStringMapEntry,
-        } as Maps_StringStringMapEntry;
+        const message = createBaseMaps_StringStringMapEntry();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -330,18 +344,10 @@ export const Maps_StringStringMapEntry = {
     },
 
     fromJSON(object: any): Maps_StringStringMapEntry {
-        const message = {
-            ...baseMaps_StringStringMapEntry,
-        } as Maps_StringStringMapEntry;
-        message.key =
-            object.key !== undefined && object.key !== null
-                ? String(object.key)
-                : '';
-        message.value =
-            object.value !== undefined && object.value !== null
-                ? String(object.value)
-                : '';
-        return message;
+        return {
+            key: isSet(object.key) ? String(object.key) : '',
+            value: isSet(object.value) ? String(object.value) : '',
+        };
     },
 
     toJSON(message: Maps_StringStringMapEntry): unknown {
@@ -354,16 +360,16 @@ export const Maps_StringStringMapEntry = {
     fromPartial<I extends Exact<DeepPartial<Maps_StringStringMapEntry>, I>>(
         object: I,
     ): Maps_StringStringMapEntry {
-        const message = {
-            ...baseMaps_StringStringMapEntry,
-        } as Maps_StringStringMapEntry;
+        const message = createBaseMaps_StringStringMapEntry();
         message.key = object.key ?? '';
         message.value = object.value ?? '';
         return message;
     },
 };
 
-const baseMaps_StringInt32MapEntry: object = { key: '', value: 0 };
+function createBaseMaps_StringInt32MapEntry(): Maps_StringInt32MapEntry {
+    return { key: '', value: 0 };
+}
 
 export const Maps_StringInt32MapEntry = {
     encode(
@@ -386,9 +392,7 @@ export const Maps_StringInt32MapEntry = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = {
-            ...baseMaps_StringInt32MapEntry,
-        } as Maps_StringInt32MapEntry;
+        const message = createBaseMaps_StringInt32MapEntry();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -407,40 +411,32 @@ export const Maps_StringInt32MapEntry = {
     },
 
     fromJSON(object: any): Maps_StringInt32MapEntry {
-        const message = {
-            ...baseMaps_StringInt32MapEntry,
-        } as Maps_StringInt32MapEntry;
-        message.key =
-            object.key !== undefined && object.key !== null
-                ? String(object.key)
-                : '';
-        message.value =
-            object.value !== undefined && object.value !== null
-                ? Number(object.value)
-                : 0;
-        return message;
+        return {
+            key: isSet(object.key) ? String(object.key) : '',
+            value: isSet(object.value) ? Number(object.value) : 0,
+        };
     },
 
     toJSON(message: Maps_StringInt32MapEntry): unknown {
         const obj: any = {};
         message.key !== undefined && (obj.key = message.key);
-        message.value !== undefined && (obj.value = message.value);
+        message.value !== undefined && (obj.value = Math.round(message.value));
         return obj;
     },
 
     fromPartial<I extends Exact<DeepPartial<Maps_StringInt32MapEntry>, I>>(
         object: I,
     ): Maps_StringInt32MapEntry {
-        const message = {
-            ...baseMaps_StringInt32MapEntry,
-        } as Maps_StringInt32MapEntry;
+        const message = createBaseMaps_StringInt32MapEntry();
         message.key = object.key ?? '';
         message.value = object.value ?? 0;
         return message;
     },
 };
 
-const baseMaps_Int32StringMapEntry: object = { key: 0, value: '' };
+function createBaseMaps_Int32StringMapEntry(): Maps_Int32StringMapEntry {
+    return { key: 0, value: '' };
+}
 
 export const Maps_Int32StringMapEntry = {
     encode(
@@ -463,9 +459,7 @@ export const Maps_Int32StringMapEntry = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = {
-            ...baseMaps_Int32StringMapEntry,
-        } as Maps_Int32StringMapEntry;
+        const message = createBaseMaps_Int32StringMapEntry();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -484,23 +478,15 @@ export const Maps_Int32StringMapEntry = {
     },
 
     fromJSON(object: any): Maps_Int32StringMapEntry {
-        const message = {
-            ...baseMaps_Int32StringMapEntry,
-        } as Maps_Int32StringMapEntry;
-        message.key =
-            object.key !== undefined && object.key !== null
-                ? Number(object.key)
-                : 0;
-        message.value =
-            object.value !== undefined && object.value !== null
-                ? String(object.value)
-                : '';
-        return message;
+        return {
+            key: isSet(object.key) ? Number(object.key) : 0,
+            value: isSet(object.value) ? String(object.value) : '',
+        };
     },
 
     toJSON(message: Maps_Int32StringMapEntry): unknown {
         const obj: any = {};
-        message.key !== undefined && (obj.key = message.key);
+        message.key !== undefined && (obj.key = Math.round(message.key));
         message.value !== undefined && (obj.value = message.value);
         return obj;
     },
@@ -508,16 +494,16 @@ export const Maps_Int32StringMapEntry = {
     fromPartial<I extends Exact<DeepPartial<Maps_Int32StringMapEntry>, I>>(
         object: I,
     ): Maps_Int32StringMapEntry {
-        const message = {
-            ...baseMaps_Int32StringMapEntry,
-        } as Maps_Int32StringMapEntry;
+        const message = createBaseMaps_Int32StringMapEntry();
         message.key = object.key ?? 0;
         message.value = object.value ?? '';
         return message;
     },
 };
 
-const baseMaps_StringValueMapEntry: object = { key: '' };
+function createBaseMaps_StringValueMapEntry(): Maps_StringValueMapEntry {
+    return { key: '', value: undefined };
+}
 
 export const Maps_StringValueMapEntry = {
     encode(
@@ -540,9 +526,7 @@ export const Maps_StringValueMapEntry = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = {
-            ...baseMaps_StringValueMapEntry,
-        } as Maps_StringValueMapEntry;
+        const message = createBaseMaps_StringValueMapEntry();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -561,18 +545,12 @@ export const Maps_StringValueMapEntry = {
     },
 
     fromJSON(object: any): Maps_StringValueMapEntry {
-        const message = {
-            ...baseMaps_StringValueMapEntry,
-        } as Maps_StringValueMapEntry;
-        message.key =
-            object.key !== undefined && object.key !== null
-                ? String(object.key)
-                : '';
-        message.value =
-            object.value !== undefined && object.value !== null
+        return {
+            key: isSet(object.key) ? String(object.key) : '',
+            value: isSet(object.value)
                 ? Value.fromJSON(object.value)
-                : undefined;
-        return message;
+                : undefined,
+        };
     },
 
     toJSON(message: Maps_StringValueMapEntry): unknown {
@@ -588,9 +566,7 @@ export const Maps_StringValueMapEntry = {
     fromPartial<I extends Exact<DeepPartial<Maps_StringValueMapEntry>, I>>(
         object: I,
     ): Maps_StringValueMapEntry {
-        const message = {
-            ...baseMaps_StringValueMapEntry,
-        } as Maps_StringValueMapEntry;
+        const message = createBaseMaps_StringValueMapEntry();
         message.key = object.key ?? '';
         message.value =
             object.value !== undefined && object.value !== null
@@ -634,4 +610,12 @@ export type Exact<P, I extends P> = P extends Builtin
 if (_m0.util.Long !== Long) {
     _m0.util.Long = Long as any;
     _m0.configure();
+}
+
+function isObject(value: any): boolean {
+    return typeof value === 'object' && value !== null;
+}
+
+function isSet(value: any): boolean {
+    return value !== null && value !== undefined;
 }

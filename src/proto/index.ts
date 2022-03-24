@@ -7,5 +7,5 @@ export * from './decorated_descriptor_index';
 // Represents abstract descriptor collection interface
 export interface AbstractDescriptorCollection<T> {
     values(): ReadonlyArray<T>;
-    get(key: string): T;
+    get(key: string): T | undefined;
 }

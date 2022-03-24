@@ -41,10 +41,14 @@ export class OneOf {
   valueOf(): usize;
   static decodeArrayBuffer(buf: usize): usize;
   static decode(view: usize): usize;
+  __oneOf_Messages: usize;
+  __oneOf_SecondMessage: usize;
   Branch1: usize;
   Branch2: usize;
+  NonOneOf1: usize;
   Branch3: usize;
-  Branch4: usize;
+  Branch4: i32;
+  NonOneOf2: usize;
   size(): u32;
   encode(): usize;
   encodeU8Array(encoder?: usize): usize;

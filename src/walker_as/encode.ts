@@ -209,12 +209,12 @@ export class Encode {
     // Map
     private map(field: decorated.FieldMap | decorated.FieldMapMessage) {
         const f = `this.${field.name}`;
-        const type = getTypeInfo(field);
-        const sizeMethodName = `__sizeMapEntry_${relativeName(type.keyTypeInfo.typeName)}_${relativeName(type.valueTypeInfo.typeName)}`;
+        const type = getTypeInfo(field) as TypeInfo;
+        const sizeMethodName = `__sizeMapEntry_${relativeName(type.keyTypeInfo?.typeName as string)}_${relativeName(type.valueTypeInfo?.typeName as string)}`;
 
         const encodeValue =
             field.value.kind == 'field_elementary'
-                ? this.encodeElementary(field.value, type.valueTypeInfo, 'value')
+                ? this.encodeElementary(field.value, type.valueTypeInfo as TypeInfo, 'value')
                 : this.encodeMessage(field.value, 'value');
 
         this.p(`
@@ -229,7 +229,7 @@ export class Encode {
                         ${this.length('size')}
                         ${this.encodeElementary(
                             field.key,
-                            type.keyTypeInfo,
+                            type.keyTypeInfo as TypeInfo,
                             'key',
                         )}
                         ${encodeValue}

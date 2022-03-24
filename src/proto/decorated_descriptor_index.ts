@@ -66,7 +66,7 @@ export class DecoratedDescriptorIndex
         return Array.from(this.index.values());
     }
 
-    get(key: string): decorated.Descriptor {
+    get(key: string): decorated.Descriptor | undefined {
         return this.index.get(key);
     }
 
@@ -96,7 +96,7 @@ export class DecoratedDescriptorIndex
         return {
             ...this.relativeName(d),
             kind: d.kind,
-            deprecated: d.desc.options?.deprecated,
+            deprecated: d.desc.options?.deprecated || false,
             comment: d.comment,
         };
     }
@@ -106,7 +106,7 @@ export class DecoratedDescriptorIndex
             ...this.relativeName(d),
             kind: d.kind,
             number: d.desc.number,
-            deprecated: d.desc.options?.deprecated,
+            deprecated: d.desc.options?.deprecated || false,
             comment: d.comment,
         };
     }
@@ -115,9 +115,10 @@ export class DecoratedDescriptorIndex
         return {
             ...this.relativeName(d),
             kind: d.kind,
-            deprecated: d.desc.options?.deprecated,
-            mapHelper: d.desc.options?.mapEntry,
+            deprecated: d.desc.options?.deprecated || false,
+            mapHelper: d.desc.options?.mapEntry || false,
             comment: d.comment,
+            oneOf: d.oneOf,
         };
     }
 
@@ -131,7 +132,7 @@ export class DecoratedDescriptorIndex
             : null;
         const isMap = message?.desc?.options?.mapEntry;
         const isRepeated = this.isRepeated(d);
-        const deprecated = d.desc.options?.deprecated;
+        const deprecated = d.desc.options?.deprecated || false;
         const number = d.desc.number;
 
         const fieldBase = {
@@ -143,6 +144,10 @@ export class DecoratedDescriptorIndex
         };
 
         if (isMap) {
+            if (message == null) {
+                throw new Error("Map message not found")
+            }
+
             const key = this.createField(
                 <named.Field>index.get(message.id + '.key'),
                 index,
@@ -163,6 +168,7 @@ export class DecoratedDescriptorIndex
                         ...mapBase,
                         value,
                         wireType: decorated.WireType.LENGTH_DELIMITED,
+                        oneOf: d.oneOf,
                     };
                 } else if (decorated.isElementary(value)) {
                     return {
@@ -171,13 +177,17 @@ export class DecoratedDescriptorIndex
                         ...mapBase,
                         value,
                         wireType: decorated.WireType.LENGTH_DELIMITED,
+                        oneOf: d.oneOf,
                     };
                 }
             }
         } else if (isMessage) {
-            const typeName = this.relativeName(
-                index.get(named.normalize(d.desc.typeName)),
-            )
+            const t = index.get(named.normalize(d.desc.typeName))
+            if (t == undefined) {
+                throw new Error("Descriptor not found for " + d.desc.typeName)
+            }
+
+            const typeName = this.relativeName(t)
 
             if (isRepeated) {
                 return {
@@ -192,7 +202,7 @@ export class DecoratedDescriptorIndex
                     ...fieldBase, 
                     typeName, 
                     wireType: decorated.WireType.LENGTH_DELIMITED,
-                    withinOneOf: this.isWithinOneOf(d.desc),
+                    oneOf: d.oneOf,
                 };
             }
         }
@@ -212,8 +222,11 @@ export class DecoratedDescriptorIndex
         }
 
         const wireType = wireTypes.get(d.desc.type);
-
-        return { kind: 'field_elementary', ...fieldBase, wireType, isCollection };
+        if (wireType == undefined) {
+            throw new Error("Wire type not found for " + d.desc.name)
+        }
+        
+        return { kind: 'field_elementary', ...fieldBase, wireType, isCollection, oneOf: d.oneOf };
     }
 
     private isRepeated(d: named.Field): boolean {

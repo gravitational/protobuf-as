@@ -7,8 +7,8 @@ import { AbstractDescriptorCollection } from '../proto';
  * Walker interface
  */
 export interface Walker {
-    get content(): string;
-    get staticFiles(): string[];
+    content(): string;
+    staticFiles(): string[];
 }
 
 // Walker strategy is a strategy which calls a walker methods in an order required
@@ -19,55 +19,55 @@ export interface Walker {
 // It aims to generate encode(), decode() and size() methods.
 export abstract class WalkerStrategy<T, D> {
     constructor(protected index: AbstractDescriptorCollection<D>) {}
-    public abstract walk(walker: T);
+    public abstract walk(walker: T): void;
 }
 
 export interface FlatBlocksWalker {
-    beforeAll();
-    afterAll();
+    beforeAll(): void;
+    afterAll(): void;
 }
 
 export interface FlatNamespaceWalker {
-    startNamespace(namespace: decorated.Namespace);
-    finishNamespace(namespace: decorated.Namespace);
+    startNamespace(namespace: decorated.Namespace): void;
+    finishNamespace(namespace: decorated.Namespace): void;
 }
 
 export interface FlatEnumWalker {
-    startEnum(en: decorated.Enum);
-    enumValue(item: decorated.EnumValue);
-    finishEnum(en: decorated.Enum);
+    startEnum(en: decorated.Enum): void;
+    enumValue(item: decorated.EnumValue): void;
+    finishEnum(en: decorated.Enum): void;
 }
 
 export interface FlatMessageWalker {
-    startMessage(message: decorated.Message);
-    finishMessage(message: decorated.Message);
+    startMessage(message: decorated.Message): void;
+    finishMessage(message: decorated.Message): void;
 }
 
 export interface FlatMessageDecodeWalker {
-    startDecode(message: decorated.Message);
-    beginDecode(message: decorated.Message);
-    endDecode(message: decorated.Message);
-    finishDecode(message: decorated.Message);
+    startDecode(message: decorated.Message): void;
+    beginDecode(message: decorated.Message): void;
+    endDecode(message: decorated.Message): void;
+    finishDecode(message: decorated.Message): void;
 }
 
 export interface FlatMessageEncodeWalker {
-    startEncode(message: decorated.Message);
-    beginEncode(message: decorated.Message);
-    endEncode(message: decorated.Message);
-    finishEncode(message: decorated.Message);
+    startEncode(message: decorated.Message): void;
+    beginEncode(message: decorated.Message): void;
+    endEncode(message: decorated.Message): void;
+    finishEncode(message: decorated.Message): void;
 }
 
 export interface FlatMessageSizeWalker {
-    startSize(message: decorated.Message);
-    finishSize(message: decorated.Message);
+    startSize(message: decorated.Message): void;
+    finishSize(message: decorated.Message): void;
 }
 
 export interface FlatFieldWalker {
-    fieldDecl(field: decorated.Field);
-    fieldInit(field: decorated.Field);
-    fieldDecode(field: decorated.Field);
-    fieldSize(field: decorated.Field);
-    fieldEncode(field: decorated.Field);
+    fieldDecl(field: decorated.Field): void;
+    fieldInit(field: decorated.Field): void;
+    fieldDecode(field: decorated.Field): void;
+    fieldSize(field: decorated.Field): void;
+    fieldEncode(field: decorated.Field): void;
 }
 
 // Flat walker must meet this interface

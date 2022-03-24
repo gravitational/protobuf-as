@@ -31,22 +31,15 @@ export type Options = z.infer<typeof OptionsSchema>;
  * @returns Object of options
  */
 export function parseOptions(raw: string): Readonly<Options> {
-    const rawObj = {};
-
     if (raw.trim() == '') {
-        return OptionsSchema.parse(rawObj);
+        return OptionsSchema.parse({});
     }
+
+    const obj:{[key: string]: string | string[]} = {};
 
     raw.split(':')
         .map((v) => v.split('='))
-        .forEach(([key, value]) => (rawObj[key] = value));
+        .forEach(([key, value]) => arrays.includes(key) ? obj[key] = value.split(",") : obj[key] = value);
 
-    arrays.forEach((k) => {
-        if (rawObj[k] == undefined) {
-            return;
-        }
-        rawObj[k] = rawObj[k].split(',');
-    });
-
-    return OptionsSchema.parse(rawObj);
+    return OptionsSchema.parse(obj);
 }

@@ -5,6 +5,7 @@ import {
     Enum,
 } from '../__fixtures__/__ts_proto__/elementaries/main';
 import type * as t from '../__fixtures__/__assembly__/elementaries-module';
+import { TextEncoder, TextDecoder } from 'util';
 
 const imports = {
     /* imports go here */

@@ -92,7 +92,10 @@ export class NamedDescriptorIndex implements named.DescriptorCollection {
         codeIndex: source.CodeIndex,
     ): named.Message {
         const id = named.normalize(`${prefix}.${desc.name}`);
-        const message: named.Message = { id, namespace, kind: 'message', desc, comment: codeIndex.lookup()};
+        const oneOfDecl = desc.oneofDecl
+        const oneOf:string[] = oneOfDecl.map(d => d.name)
+        const message: named.Message = { id, namespace, kind: 'message', desc, comment: codeIndex.lookup(), oneOf: oneOf};
+
         this.index.set(id, message);
 
         desc.enumType.forEach((desc, index) =>
@@ -100,8 +103,16 @@ export class NamedDescriptorIndex implements named.DescriptorCollection {
         desc.nestedType.forEach((desc, index) =>
             this.registerMessage(id, namespace, desc, codeIndex.slice(source.Type.message.nested_type, index)),
         );
-        desc.field.forEach((desc, index) => 
-            this.registerField(id, namespace, desc, codeIndex.lookup(source.Type.message.field, index)));
+        desc.field.forEach((desc, index) => {
+            let oneOf:string | undefined = undefined;
+
+            // If object has oneofIndex property explicitly defined
+            if (Object.prototype.hasOwnProperty.call(desc, 'oneofIndex')) {
+                oneOf = oneOfDecl[desc.oneofIndex].name
+            }
+
+            this.registerField(id, namespace, desc, codeIndex.lookup(source.Type.message.field, index), oneOf);
+        })
 
         return message;
     }
@@ -111,9 +122,10 @@ export class NamedDescriptorIndex implements named.DescriptorCollection {
         namespace: string,
         desc: proto.FieldDescriptorProto,
         comment: string,
+        oneOf: string | undefined,
     ) {
         const id = named.normalize(`${prefix}.${desc.name}`);
-        let hasOne: string = null;
+        let hasOne: string | undefined = undefined;
 
         if (
             desc.type == proto.FieldDescriptorProto_Type.TYPE_MESSAGE ||
@@ -129,6 +141,7 @@ export class NamedDescriptorIndex implements named.DescriptorCollection {
             kind: 'field',
             desc,
             comment,
+            oneOf,
         };
         this.index.set(id, field);
     }
@@ -154,7 +167,7 @@ export class NamedDescriptorIndex implements named.DescriptorCollection {
      * @param key Descriptor ID
      * @returns Descriptor
      */
-    get(key: string): named.Descriptor {
+    get(key: string): named.Descriptor | undefined {
         return this.index.get(key);
     }
 }

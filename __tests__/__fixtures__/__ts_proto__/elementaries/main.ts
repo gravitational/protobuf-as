@@ -66,27 +66,31 @@ export interface Elementaries {
     EmptyBool: boolean;
 }
 
-const baseElementaries: object = {
-    Double: 0,
-    Float: 0,
-    Int32: 0,
-    UInt32: 0,
-    SInt32: 0,
-    Fixed32: 0,
-    SFixed32: 0,
-    Int64: 0,
-    UInt64: 0,
-    SInt64: 0,
-    Fixed64: 0,
-    SFixed64: 0,
-    Bool: false,
-    Enum: 0,
-    String: '',
-    EmptyString: '',
-    EmptyInt64: 0,
-    EmptyInt32: 0,
-    EmptyBool: false,
-};
+function createBaseElementaries(): Elementaries {
+    return {
+        Double: 0,
+        Float: 0,
+        Int32: 0,
+        UInt32: 0,
+        SInt32: 0,
+        Fixed32: 0,
+        SFixed32: 0,
+        Int64: 0,
+        UInt64: 0,
+        SInt64: 0,
+        Fixed64: 0,
+        SFixed64: 0,
+        Bool: false,
+        Enum: 0,
+        Bytes: new Uint8Array(),
+        String: '',
+        EmptyBytes: new Uint8Array(),
+        EmptyString: '',
+        EmptyInt64: 0,
+        EmptyInt32: 0,
+        EmptyBool: false,
+    };
+}
 
 export const Elementaries = {
     encode(
@@ -163,9 +167,7 @@ export const Elementaries = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseElementaries } as Elementaries;
-        message.Bytes = new Uint8Array();
-        message.EmptyBytes = new Uint8Array();
+        const message = createBaseElementaries();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -241,108 +243,65 @@ export const Elementaries = {
     },
 
     fromJSON(object: any): Elementaries {
-        const message = { ...baseElementaries } as Elementaries;
-        message.Double =
-            object.Double !== undefined && object.Double !== null
-                ? Number(object.Double)
-                : 0;
-        message.Float =
-            object.Float !== undefined && object.Float !== null
-                ? Number(object.Float)
-                : 0;
-        message.Int32 =
-            object.Int32 !== undefined && object.Int32 !== null
-                ? Number(object.Int32)
-                : 0;
-        message.UInt32 =
-            object.UInt32 !== undefined && object.UInt32 !== null
-                ? Number(object.UInt32)
-                : 0;
-        message.SInt32 =
-            object.SInt32 !== undefined && object.SInt32 !== null
-                ? Number(object.SInt32)
-                : 0;
-        message.Fixed32 =
-            object.Fixed32 !== undefined && object.Fixed32 !== null
-                ? Number(object.Fixed32)
-                : 0;
-        message.SFixed32 =
-            object.SFixed32 !== undefined && object.SFixed32 !== null
-                ? Number(object.SFixed32)
-                : 0;
-        message.Int64 =
-            object.Int64 !== undefined && object.Int64 !== null
-                ? Number(object.Int64)
-                : 0;
-        message.UInt64 =
-            object.UInt64 !== undefined && object.UInt64 !== null
-                ? Number(object.UInt64)
-                : 0;
-        message.SInt64 =
-            object.SInt64 !== undefined && object.SInt64 !== null
-                ? Number(object.SInt64)
-                : 0;
-        message.Fixed64 =
-            object.Fixed64 !== undefined && object.Fixed64 !== null
-                ? Number(object.Fixed64)
-                : 0;
-        message.SFixed64 =
-            object.SFixed64 !== undefined && object.SFixed64 !== null
-                ? Number(object.SFixed64)
-                : 0;
-        message.Bool =
-            object.Bool !== undefined && object.Bool !== null
-                ? Boolean(object.Bool)
-                : false;
-        message.Enum =
-            object.Enum !== undefined && object.Enum !== null
-                ? enumFromJSON(object.Enum)
-                : 0;
-        message.Bytes =
-            object.Bytes !== undefined && object.Bytes !== null
+        return {
+            Double: isSet(object.Double) ? Number(object.Double) : 0,
+            Float: isSet(object.Float) ? Number(object.Float) : 0,
+            Int32: isSet(object.Int32) ? Number(object.Int32) : 0,
+            UInt32: isSet(object.UInt32) ? Number(object.UInt32) : 0,
+            SInt32: isSet(object.SInt32) ? Number(object.SInt32) : 0,
+            Fixed32: isSet(object.Fixed32) ? Number(object.Fixed32) : 0,
+            SFixed32: isSet(object.SFixed32) ? Number(object.SFixed32) : 0,
+            Int64: isSet(object.Int64) ? Number(object.Int64) : 0,
+            UInt64: isSet(object.UInt64) ? Number(object.UInt64) : 0,
+            SInt64: isSet(object.SInt64) ? Number(object.SInt64) : 0,
+            Fixed64: isSet(object.Fixed64) ? Number(object.Fixed64) : 0,
+            SFixed64: isSet(object.SFixed64) ? Number(object.SFixed64) : 0,
+            Bool: isSet(object.Bool) ? Boolean(object.Bool) : false,
+            Enum: isSet(object.Enum) ? enumFromJSON(object.Enum) : 0,
+            Bytes: isSet(object.Bytes)
                 ? bytesFromBase64(object.Bytes)
-                : new Uint8Array();
-        message.String =
-            object.String !== undefined && object.String !== null
-                ? String(object.String)
-                : '';
-        message.EmptyBytes =
-            object.EmptyBytes !== undefined && object.EmptyBytes !== null
+                : new Uint8Array(),
+            String: isSet(object.String) ? String(object.String) : '',
+            EmptyBytes: isSet(object.EmptyBytes)
                 ? bytesFromBase64(object.EmptyBytes)
-                : new Uint8Array();
-        message.EmptyString =
-            object.EmptyString !== undefined && object.EmptyString !== null
+                : new Uint8Array(),
+            EmptyString: isSet(object.EmptyString)
                 ? String(object.EmptyString)
-                : '';
-        message.EmptyInt64 =
-            object.EmptyInt64 !== undefined && object.EmptyInt64 !== null
+                : '',
+            EmptyInt64: isSet(object.EmptyInt64)
                 ? Number(object.EmptyInt64)
-                : 0;
-        message.EmptyInt32 =
-            object.EmptyInt32 !== undefined && object.EmptyInt32 !== null
+                : 0,
+            EmptyInt32: isSet(object.EmptyInt32)
                 ? Number(object.EmptyInt32)
-                : 0;
-        message.EmptyBool =
-            object.EmptyBool !== undefined && object.EmptyBool !== null
+                : 0,
+            EmptyBool: isSet(object.EmptyBool)
                 ? Boolean(object.EmptyBool)
-                : false;
-        return message;
+                : false,
+        };
     },
 
     toJSON(message: Elementaries): unknown {
         const obj: any = {};
         message.Double !== undefined && (obj.Double = message.Double);
         message.Float !== undefined && (obj.Float = message.Float);
-        message.Int32 !== undefined && (obj.Int32 = message.Int32);
-        message.UInt32 !== undefined && (obj.UInt32 = message.UInt32);
-        message.SInt32 !== undefined && (obj.SInt32 = message.SInt32);
-        message.Fixed32 !== undefined && (obj.Fixed32 = message.Fixed32);
-        message.SFixed32 !== undefined && (obj.SFixed32 = message.SFixed32);
-        message.Int64 !== undefined && (obj.Int64 = message.Int64);
-        message.UInt64 !== undefined && (obj.UInt64 = message.UInt64);
-        message.SInt64 !== undefined && (obj.SInt64 = message.SInt64);
-        message.Fixed64 !== undefined && (obj.Fixed64 = message.Fixed64);
-        message.SFixed64 !== undefined && (obj.SFixed64 = message.SFixed64);
+        message.Int32 !== undefined && (obj.Int32 = Math.round(message.Int32));
+        message.UInt32 !== undefined &&
+            (obj.UInt32 = Math.round(message.UInt32));
+        message.SInt32 !== undefined &&
+            (obj.SInt32 = Math.round(message.SInt32));
+        message.Fixed32 !== undefined &&
+            (obj.Fixed32 = Math.round(message.Fixed32));
+        message.SFixed32 !== undefined &&
+            (obj.SFixed32 = Math.round(message.SFixed32));
+        message.Int64 !== undefined && (obj.Int64 = Math.round(message.Int64));
+        message.UInt64 !== undefined &&
+            (obj.UInt64 = Math.round(message.UInt64));
+        message.SInt64 !== undefined &&
+            (obj.SInt64 = Math.round(message.SInt64));
+        message.Fixed64 !== undefined &&
+            (obj.Fixed64 = Math.round(message.Fixed64));
+        message.SFixed64 !== undefined &&
+            (obj.SFixed64 = Math.round(message.SFixed64));
         message.Bool !== undefined && (obj.Bool = message.Bool);
         message.Enum !== undefined && (obj.Enum = enumToJSON(message.Enum));
         message.Bytes !== undefined &&
@@ -359,9 +318,9 @@ export const Elementaries = {
         message.EmptyString !== undefined &&
             (obj.EmptyString = message.EmptyString);
         message.EmptyInt64 !== undefined &&
-            (obj.EmptyInt64 = message.EmptyInt64);
+            (obj.EmptyInt64 = Math.round(message.EmptyInt64));
         message.EmptyInt32 !== undefined &&
-            (obj.EmptyInt32 = message.EmptyInt32);
+            (obj.EmptyInt32 = Math.round(message.EmptyInt32));
         message.EmptyBool !== undefined && (obj.EmptyBool = message.EmptyBool);
         return obj;
     },
@@ -369,7 +328,7 @@ export const Elementaries = {
     fromPartial<I extends Exact<DeepPartial<Elementaries>, I>>(
         object: I,
     ): Elementaries {
-        const message = { ...baseElementaries } as Elementaries;
+        const message = createBaseElementaries();
         message.Double = object.Double ?? 0;
         message.Float = object.Float ?? 0;
         message.Int32 = object.Int32 ?? 0;
@@ -472,4 +431,8 @@ function longToNumber(long: Long): number {
 if (_m0.util.Long !== Long) {
     _m0.util.Long = Long as any;
     _m0.configure();
+}
+
+function isSet(value: any): boolean {
+    return value !== null && value !== undefined;
 }

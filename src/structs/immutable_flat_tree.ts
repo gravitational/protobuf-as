@@ -42,7 +42,7 @@ export class ImmutableFlatTree<V> {
      * @param predicate A function that accepts up to three arguments. The filter method calls the predicate function one time for each element in the array.
      * @param thisArg An object to which the this keyword can refer in the predicate function. If thisArg is omitted, undefined is used as the this value.
      */
-    filter(predicate: (value: Item<K, V>, index?: number, array?: readonly Item<K, V>[]) => Item<K, V>): ImmutableFlatTree<V> {
+    filter(predicate: (value: Item<K, V>, index?: number, array?: readonly Item<K, V>[]) => Item<K, V> | null): ImmutableFlatTree<V> {
         return new ImmutableFlatTree(this.items.filter(predicate), this.delimiter)
     };
 
@@ -76,6 +76,8 @@ export class ImmutableFlatTree<V> {
             let match: boolean
             const [key, , level] = item
 
+            match = false
+
             if (parentKey) {
                 match = key.startsWith(parentKey+this.delimiter) && key != parentKey
             }
@@ -102,7 +104,7 @@ export class ImmutableFlatTree<V> {
      * @param key Item key
      * @returns Tree item
      */
-    get(key: K): Item<K, V> {
+    get(key: K): Item<K, V> | undefined {
         return this.items.find((value: Item<K, V>) => value[0] == key ? value : null)
     }
 

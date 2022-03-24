@@ -54,7 +54,9 @@ export interface Lists {
     Ints: number[];
 }
 
-const baseMessage: object = { String: '' };
+function createBaseMessage(): Message {
+    return { String: '' };
+}
 
 export const Message = {
     encode(
@@ -71,7 +73,7 @@ export const Message = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMessage } as Message;
+        const message = createBaseMessage();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -87,12 +89,9 @@ export const Message = {
     },
 
     fromJSON(object: any): Message {
-        const message = { ...baseMessage } as Message;
-        message.String =
-            object.String !== undefined && object.String !== null
-                ? String(object.String)
-                : '';
-        return message;
+        return {
+            String: isSet(object.String) ? String(object.String) : '',
+        };
     },
 
     toJSON(message: Message): unknown {
@@ -102,13 +101,15 @@ export const Message = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Message>, I>>(object: I): Message {
-        const message = { ...baseMessage } as Message;
+        const message = createBaseMessage();
         message.String = object.String ?? '';
         return message;
     },
 };
 
-const baseLists: object = { Enums: 0, Strings: '', Ints: 0 };
+function createBaseLists(): Lists {
+    return { Enums: [], Strings: [], Bytes: [], Messages: [], Ints: [] };
+}
 
 export const Lists = {
     encode(
@@ -141,12 +142,7 @@ export const Lists = {
         const reader =
             input instanceof _m0.Reader ? input : new _m0.Reader(input);
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseLists } as Lists;
-        message.Enums = [];
-        message.Strings = [];
-        message.Bytes = [];
-        message.Messages = [];
-        message.Ints = [];
+        const message = createBaseLists();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -190,17 +186,23 @@ export const Lists = {
     },
 
     fromJSON(object: any): Lists {
-        const message = { ...baseLists } as Lists;
-        message.Enums = (object.Enums ?? []).map((e: any) => enumFromJSON(e));
-        message.Strings = (object.Strings ?? []).map((e: any) => String(e));
-        message.Bytes = (object.Bytes ?? []).map((e: any) =>
-            bytesFromBase64(e),
-        );
-        message.Messages = (object.Messages ?? []).map((e: any) =>
-            Message.fromJSON(e),
-        );
-        message.Ints = (object.Ints ?? []).map((e: any) => Number(e));
-        return message;
+        return {
+            Enums: Array.isArray(object?.Enums)
+                ? object.Enums.map((e: any) => enumFromJSON(e))
+                : [],
+            Strings: Array.isArray(object?.Strings)
+                ? object.Strings.map((e: any) => String(e))
+                : [],
+            Bytes: Array.isArray(object?.Bytes)
+                ? object.Bytes.map((e: any) => bytesFromBase64(e))
+                : [],
+            Messages: Array.isArray(object?.Messages)
+                ? object.Messages.map((e: any) => Message.fromJSON(e))
+                : [],
+            Ints: Array.isArray(object?.Ints)
+                ? object.Ints.map((e: any) => Number(e))
+                : [],
+        };
     },
 
     toJSON(message: Lists): unknown {
@@ -230,7 +232,7 @@ export const Lists = {
             obj.Messages = [];
         }
         if (message.Ints) {
-            obj.Ints = message.Ints.map((e) => e);
+            obj.Ints = message.Ints.map((e) => Math.round(e));
         } else {
             obj.Ints = [];
         }
@@ -238,7 +240,7 @@ export const Lists = {
     },
 
     fromPartial<I extends Exact<DeepPartial<Lists>, I>>(object: I): Lists {
-        const message = { ...baseLists } as Lists;
+        const message = createBaseLists();
         message.Enums = object.Enums?.map((e) => e) || [];
         message.Strings = object.Strings?.map((e) => e) || [];
         message.Bytes = object.Bytes?.map((e) => e) || [];
@@ -317,4 +319,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (_m0.util.Long !== Long) {
     _m0.util.Long = Long as any;
     _m0.configure();
+}
+
+function isSet(value: any): boolean {
+    return value !== null && value !== undefined;
 }

@@ -645,10 +645,14 @@ export class Branch2 {
 } // Branch2
 
 export class OneOf {
+    public __oneOf_Messages: string = "";
+    public __oneOf_SecondMessage: string = "";
     public Branch1: Branch1 | null;
     public Branch2: Branch2 | null;
-    public Branch3: Branch1 | null;
-    public Branch4: Branch2 | null;
+    public NonOneOf1: string = "";
+    public Branch3: string = "";
+    public Branch4: i32;
+    public NonOneOf2: string = "";
 
     // Decodes OneOf from an ArrayBuffer
     static decodeArrayBuffer(buf: ArrayBuffer): OneOf {
@@ -676,6 +680,7 @@ export class OneOf {
                     );
                     decoder.skip(length);
 
+                    obj.__oneOf_Messages = "Branch1";
                     break;
                 }
                 case 2: {
@@ -689,32 +694,25 @@ export class OneOf {
                     );
                     decoder.skip(length);
 
+                    obj.__oneOf_Messages = "Branch2";
                     break;
                 }
                 case 3: {
-                    const length = decoder.uint32();
-                    obj.Branch3 = Branch1.decode(
-                        new DataView(
-                            decoder.view.buffer,
-                            decoder.pos + decoder.view.byteOffset,
-                            length
-                        )
-                    );
-                    decoder.skip(length);
-
+                    obj.NonOneOf1 = decoder.string();
                     break;
                 }
                 case 4: {
-                    const length = decoder.uint32();
-                    obj.Branch4 = Branch2.decode(
-                        new DataView(
-                            decoder.view.buffer,
-                            decoder.pos + decoder.view.byteOffset,
-                            length
-                        )
-                    );
-                    decoder.skip(length);
-
+                    obj.Branch3 = decoder.string();
+                    obj.__oneOf_SecondMessage = "Branch3";
+                    break;
+                }
+                case 5: {
+                    obj.Branch4 = decoder.int32();
+                    obj.__oneOf_SecondMessage = "Branch4";
+                    break;
+                }
+                case 6: {
+                    obj.NonOneOf2 = decoder.string();
                     break;
                 }
 
@@ -747,23 +745,25 @@ export class OneOf {
             }
         }
 
-        if (this.Branch3 != null) {
-            const f: Branch1 = this.Branch3 as Branch1;
-            const messageSize = f.size();
-
-            if (messageSize > 0) {
-                size += 1 + __proto.Sizer.varint64(messageSize) + messageSize;
-            }
-        }
-
-        if (this.Branch4 != null) {
-            const f: Branch2 = this.Branch4 as Branch2;
-            const messageSize = f.size();
-
-            if (messageSize > 0) {
-                size += 1 + __proto.Sizer.varint64(messageSize) + messageSize;
-            }
-        }
+        size +=
+            this.NonOneOf1.length > 0
+                ? 1 +
+                  __proto.Sizer.varint64(this.NonOneOf1.length) +
+                  this.NonOneOf1.length
+                : 0;
+        size +=
+            this.Branch3.length > 0
+                ? 1 +
+                  __proto.Sizer.varint64(this.Branch3.length) +
+                  this.Branch3.length
+                : 0;
+        size += this.Branch4 == 0 ? 0 : 1 + __proto.Sizer.int32(this.Branch4);
+        size +=
+            this.NonOneOf2.length > 0
+                ? 1 +
+                  __proto.Sizer.varint64(this.NonOneOf2.length) +
+                  this.NonOneOf2.length
+                : 0;
 
         return size;
     }
@@ -808,28 +808,24 @@ export class OneOf {
             }
         }
 
-        if (this.Branch3 != null) {
-            const f = this.Branch3 as Branch1;
-
-            const messageSize = f.size();
-
-            if (messageSize > 0) {
-                encoder.uint32(0x1a);
-                encoder.uint32(messageSize);
-                f.encodeU8Array(encoder);
-            }
+        if (this.NonOneOf1.length > 0) {
+            encoder.uint32(0x1a);
+            encoder.uint32(this.NonOneOf1.length);
+            encoder.string(this.NonOneOf1);
         }
-
-        if (this.Branch4 != null) {
-            const f = this.Branch4 as Branch2;
-
-            const messageSize = f.size();
-
-            if (messageSize > 0) {
-                encoder.uint32(0x22);
-                encoder.uint32(messageSize);
-                f.encodeU8Array(encoder);
-            }
+        if (this.Branch3.length > 0) {
+            encoder.uint32(0x22);
+            encoder.uint32(this.Branch3.length);
+            encoder.string(this.Branch3);
+        }
+        if (this.Branch4 != 0) {
+            encoder.uint32(0x28);
+            encoder.int32(this.Branch4);
+        }
+        if (this.NonOneOf2.length > 0) {
+            encoder.uint32(0x32);
+            encoder.uint32(this.NonOneOf2.length);
+            encoder.string(this.NonOneOf2);
         }
 
         return buf;

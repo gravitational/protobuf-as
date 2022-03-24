@@ -3,6 +3,7 @@ import { Blocks } from "./blocks";
 import { Writer, GlobalsRegistry } from './walker_as';
 import { relativeName } from './internal';
 import { Field } from "./field";
+import { Message } from "./message";
 import { Options } from "../options";
 import { getTypeInfo, TypeInfo } from './type_info';
 
@@ -79,6 +80,12 @@ export class Decode {
             case "field_map_message":
                 this.map(field, type)
                 break;
+        }
+
+        if (decorated.isElementary(field) || decorated.isMessage(field) || decorated.isAnyMap(field)) {
+            if (field.oneOf != undefined) {
+                this.p(`obj.${Message.oneOfVarName(field.oneOf)} = "${field.name}";`)
+            }
         }
 
         this.p(`break;
@@ -167,9 +174,9 @@ export class Decode {
 
     private registerMapMethod(field: decorated.FieldMap | decorated.FieldMapMessage, type: TypeInfo):string {
         const mapTypeName = getTypeInfo(field).collectionTypeName
-        const keyTypeInfo = type.keyTypeInfo
-        const valueTypeInfo = type.valueTypeInfo;
-        const name = `__decodeMap_${relativeName(keyTypeInfo.typeName)}_${relativeName(valueTypeInfo.typeName)}`;
+        const keyTypeInfo = type.keyTypeInfo as TypeInfo
+        const valueTypeInfo = type.valueTypeInfo as TypeInfo
+        const name = `__decodeMap_${relativeName(keyTypeInfo.typeName as string)}_${relativeName(valueTypeInfo.typeName as string)}`;
 
         const decodeValue = field.kind == "field_map" ? `value = ${this.decodeElementary(valueTypeInfo)};` : this.decodeMessage(valueTypeInfo, "value");
 
@@ -191,7 +198,7 @@ export class Decode {
                     break;
                 }
                 ${this.endMessageDecode()}
-                map.set(key as ${keyTypeInfo.typeName}, value as ${type.valueTypeInfo.typeName});    
+                map.set(key as ${keyTypeInfo.typeName}, value as ${type.valueTypeInfo?.typeName});    
             }
         `)
 
