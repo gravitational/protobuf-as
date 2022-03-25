@@ -7,7 +7,7 @@ Protobuf AssemblyScript compiler.
 Run the following inside your AssemblyScript project folder:
 
 ```
-npm install gzigzigzeo/protobuf-as
+npm install gravitational/protobuf-as
 ```
 
 `protobuf-as` is written in Typescript, heavily based on [`ts-proto`](https://github.com/stephenh/ts-proto).

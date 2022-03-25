@@ -58,7 +58,9 @@
     "typescript": "~4.2.3",
     "zod": "^3.11.6"
   },
-  "bin": "bin/protoc-gen-as",
+  "bin": {
+    "protoc-gen-as": "./bin/protoc-gen-as"
+  },
   "volta": {
     "node": "16.13.0"
   }
