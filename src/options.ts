@@ -1,28 +1,84 @@
 import { z } from 'zod';
+import { readFileSync } from 'fs';
 
-const stringBool = z.optional(z.enum(["true", "false"]));
+// utility type which represents object parsed from JSON or CLI (keys and values are strings)
+type strObj = {[key: string]: string}
+
+// Represents strings meaning true values
+const trueValues = ["1", "true"]
+
+// parseArray returns array parsed from string
+const parseArray = function(arg: unknown): Array<string> {
+    if (typeof arg == "string") {
+        return arg.split(",")
+    }
+
+    return arg as Array<string>
+}
+
+// parseBool returns boolean value parsed from string
+const parseBool = function(arg: unknown): boolean {
+    if (typeof arg == "string") {
+        return trueValues.includes(arg.toLowerCase())
+    }
+
+    return arg as boolean
+}
+
+// parseMap returns map parsed from a string or object
+const parseMap = function(arg: unknown): Map<string, string> {
+    if (typeof arg == "string") {
+        const m = new Map<string, string>()
+        const items = arg.split("+")
+
+        for (let i = 0; i < items.length; i+=2) {
+            const key = items[i]
+            const value = items[i+1]
+            m.set(key, value)
+        }
+
+        return m
+    }
+
+    if (arg === Object(arg)) {
+        const m = new Map<string, string>()
+        Object.entries(arg as strObj).forEach(([key, value]) => {
+            m.set(key, value)
+        })
+
+        return m
+    }
+
+    return arg as Map<string, string>;
+}
 
 /**
  * Zod schema used to validate JSON config file
  */
 const OptionsSchema = z
     .object({
-        exclude: z.optional(z.array(z.string())).default([]),          // IDs of messages, fields, enums and enum values to exclude
-        include: z.optional(z.array(z.string())).default([]),          // IDs of messages, fields, enums and enum values to include
-        deps: z.enum(["export", "embed", "package"]).default("embed"), // Dependencies: export, embed or leave in package
-        enableInterop: stringBool.default("false"),                    // Export or embed __protobuf_* functions from assembly/protobuf_interop.ts
-        disablePrettier: z.boolean().default(false),                   // Disable prettier
-        targetFileName: z.string().default('assembly.ts'),             // Default export file name
-        nullable: stringBool.default("false"),                         // Should embedded messages be nullable
-        typeAliases: z.map(z.string(), z.string()).optional(),         // Type aliases
+        // Config file name
+        config: z.optional(z.string()),
+        // IDs of messages, fields, enums and enum values to exclude
+        exclude: z.preprocess(parseArray, z.optional(z.array(z.string())).default([])),
+        // IDs of messages, fields, enums and enum values to include
+        include: z.preprocess(parseArray, z.optional(z.array(z.string())).default([])),
+        // Dependencies: export, embed or leave in package
+        deps: z.enum(["export", "embed", "package"]).default("embed"),
+        // Export or embed __protobuf_* functions from assembly/protobuf_interop.ts
+        enableInterop: z.preprocess(parseBool, z.boolean().default(false)),
+        // Disable prettier
+        disablePrettier: z.preprocess(parseBool, z.boolean().default(false)),
+        // Default export file name
+        targetFileName: z.string().default('assembly.ts'),
+        // Should embedded messages be nullable
+        nullable: z.preprocess(parseBool, z.boolean().default(false)),
+        // Type aliases
+        typeAliases: z.preprocess(parseMap, z.map(z.string(), z.string()).optional()),
+        // OneOf discriminator name overrides
+        oneOfVarNames: z.preprocess(parseMap, z.map(z.string(), z.string()).optional()),
     })
     .strict();
-
-// Array field names
-const arrays = ['exclude', 'include'];
-
-// Map field names
-const maps = ['typeAliases'];
 
 /**
  * Resulting TypeScript type of OptionsSchema + outDir
@@ -39,30 +95,17 @@ export function parseOptions(raw: string): Readonly<Options> {
         return OptionsSchema.parse({});
     }
 
-    const obj:{
-        [key: string]: string | string[] | Map<string, string>
-    } = {};
+    const obj:strObj = {};
 
     raw.split(':')
         .map((v) => v.split('='))
-        .forEach(([key, value]) => {
-            if (arrays.includes(key)) {
-                obj[key] = value.split(",")
-            } else if (maps.includes(key)) {
-                const items = value.split("+")
-                const m = new Map<string, string>()
+        .forEach(([key, value]) => obj[key] = value);
 
-                for (let i = 0; i < items.length; i+=2) {
-                    const key = items[i]
-                    const value = items[i+1]
-                    m.set(key, value)
-                }
+    if (obj.config) {
+        const file = readFileSync(obj.config as string)
+        const json = JSON.parse(file.toString())
+        return OptionsSchema.parse(json)
+    }
 
-                obj[key] = m
-            } else {
-                obj[key] = value
-            }
-        });
-
-    return OptionsSchema.parse(obj);
+    return OptionsSchema.parse(obj)
 }

@@ -21,7 +21,7 @@ readdir(protoPath, (error, files) => {
             `yarn protoc -I${dir}`,
             `--plugin node_modules/.bin/protoc-gen-dump --dump_opt ${targetDir}/main.codegenreq --dump_out ${protoPath}`,
             `--plugin node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=oneof=unions,esModuleInterop=true --ts_proto_out ${targetDir}`,
-            `--plugin bin/protoc-gen-as --as_opt=targetFileName=${name}.ts:deps=embed --as_out ${asPath}`,
+            `--plugin bin/protoc-gen-as --as_opt=targetFileName=${name}.ts:deps=embed:oneOfVarNames=OneOf.Messages+messageType --as_out ${asPath}`,
             `main.proto`
         ].join(" ")
         

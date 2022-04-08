@@ -1,0 +1,11 @@
+{
+    "exclude": [
+        "Foo",
+        "Bar"
+    ],
+    "enableInterop": true,
+    "deps": "embed",
+    "typeAliases": {
+        "Foo": "Bar"
+    }
+}

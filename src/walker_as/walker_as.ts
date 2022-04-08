@@ -55,7 +55,7 @@ export class WalkerAS implements FlatWalker, GlobalsRegistry {
         this.blocks = new Blocks(p, this.options, this.staticFiles());
         this.namespace = new Namespace(p);
         this.enum = new Enum(p);
-        this.message = new Message(p);
+        this.message = new Message(p, this.options);
         this.field = new Field(p, this.options);
         this.decode = new Decode(p, this, this.options);
         this.encode = new Encode(p, this.options);

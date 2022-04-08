@@ -87,7 +87,6 @@ export type FlatWalker = Walker &
  * - Namespaces are hierachical.
  * - Enums and messages are sequentially nested into namespaces.
  * - There are static decode and encode methods.
- * - Fields need to be initialized in the beginning of decode.
  */
 export class FlatWalkerStrategy extends WalkerStrategy<
     FlatWalker,
@@ -176,6 +175,7 @@ export class FlatWalkerStrategy extends WalkerStrategy<
     }
 
     private walkMessage(walker: FlatWalker, desc: decorated.Message) {
+        // Skip proto map entry artificial types
         if (desc.mapHelper) {
             return
         }
@@ -186,25 +186,25 @@ export class FlatWalkerStrategy extends WalkerStrategy<
         });
 
         walker.startMessage(desc);
-        children.forEach(([, desc]) => walker.fieldDecl(<decorated.Field>desc));
+        children.forEach(([, fieldDesc]) => walker.fieldDecl(<decorated.Field>fieldDesc));
 
         walker.startDecode(desc);
-        children.forEach(([, desc]) => walker.fieldInit(<decorated.Field>desc));
+        children.forEach(([, fieldDesc]) => walker.fieldInit(<decorated.Field>fieldDesc));
         walker.beginDecode(desc);
-        children.forEach(([, desc]) =>
-            walker.fieldDecode(<decorated.Field>desc),
+        children.forEach(([, fieldDesc]) =>
+            walker.fieldDecode(<decorated.Field>fieldDesc),
         );
         walker.endDecode(desc);
         walker.finishDecode(desc);
 
         walker.startSize(desc);
-        children.forEach(([, desc]) => walker.fieldSize(<decorated.Field>desc));
+        children.forEach(([, fieldDesc]) => walker.fieldSize(<decorated.Field>fieldDesc));
         walker.finishSize(desc);
 
         walker.startEncode(desc);
         walker.beginEncode(desc);
-        children.forEach(([, desc]) =>
-            walker.fieldEncode(<decorated.Field>desc),
+        children.forEach(([, fieldDesc]) =>
+            walker.fieldEncode(<decorated.Field>fieldDesc),
         );
         walker.endEncode(desc);
         walker.finishEncode(desc);

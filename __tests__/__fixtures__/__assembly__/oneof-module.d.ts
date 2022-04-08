@@ -41,7 +41,7 @@ export class OneOf {
   valueOf(): usize;
   static decodeArrayBuffer(buf: usize): usize;
   static decode(view: usize): usize;
-  __oneOf_Messages: usize;
+  messageType: usize;
   __oneOf_SecondMessage: usize;
   Branch1: usize;
   Branch2: usize;

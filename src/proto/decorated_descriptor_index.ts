@@ -247,13 +247,16 @@ export class DecoratedDescriptorIndex
         return Object.prototype.hasOwnProperty.call(field, 'oneofIndex');
     }
     
-
+    // relativeName returns naming properties of a field
     private relativeName(value: named.Id): decorated.Named {
-        const name = value.id.substring(value.id.lastIndexOf('.') + 1);
+        const id = value.id
+        const lastDotPos = id.lastIndexOf('.')
+        const name = id.substring(lastDotPos + 1);
         const relativeName = named.normalize(
-            value.id.substring(value.namespace.length),
+            id.substring(value.namespace.length),
         );
+        const parentID = id.substring(0, lastDotPos)
 
-        return { id: value.id, name, relativeName, namespace: value.namespace };
+        return { id, parentID, name, relativeName, namespace: value.namespace };
     }
 }
