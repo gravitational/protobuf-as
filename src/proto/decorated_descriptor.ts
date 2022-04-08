@@ -36,9 +36,10 @@ export type WithOneOf = {
 
 // Has name
 export type Named = {
-    id: string; // ID (including namespace, absolute)
-    name: string; // Name
-    namespace: string; // Namespace
+    id: string;           // ID (including namespace, absolute)
+    parentID: string;     // Parent ID (including namespace, absolute)
+    name: string;         // Name
+    namespace: string;    // Namespace
     relativeName: string; // Name relative to current namespace
 };
 

@@ -16,7 +16,7 @@ export class Field {
             case "field_elementary":
                 return `${type.typeName}${type.default ? ` = ${type.default}` : ''}`;
             case "field_message": {
-                const expr = options.nullable == "true" ?
+                const expr = options.nullable == true ?
                     '| null' : (field.oneOf != undefined ? '| null' : `= new ${type.typeName}()`);
 
                 return `${type.typeName}${expr}`;

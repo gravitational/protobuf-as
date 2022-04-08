@@ -32,7 +32,7 @@ describe("OneOf", () => {
 
         __pin(decoded)
         expect(b2.UInt32).toEqual(99)
-        expect(__getString(oneof.__oneOf_Messages)).toEqual("Branch2")
+        expect(__getString(oneof.messageType)).toEqual("Branch2")
         expect(__getString(oneof.NonOneOf1)).toEqual("foo")
         expect(__getString(oneof.NonOneOf2)).toEqual("bar")
         expect(__getString(oneof.__oneOf_SecondMessage)).toEqual("Branch3")

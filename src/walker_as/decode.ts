@@ -82,9 +82,10 @@ export class Decode {
                 break;
         }
 
+        // If a field belongs to oneOf
         if (decorated.isElementary(field) || decorated.isMessage(field) || decorated.isAnyMap(field)) {
             if (field.oneOf != undefined) {
-                this.p(`obj.${Message.oneOfVarName(field.oneOf)} = "${field.name}";`)
+                this.p(`obj.${Message.oneOfVarName(this.options, field.parentID, field.oneOf)} = "${field.name}";`)
             }
         }
 

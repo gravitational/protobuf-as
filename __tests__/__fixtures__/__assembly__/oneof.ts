@@ -645,7 +645,7 @@ export class Branch2 {
 } // Branch2
 
 export class OneOf {
-    public __oneOf_Messages: string = "";
+    public messageType: string = "";
     public __oneOf_SecondMessage: string = "";
     public Branch1: Branch1 | null;
     public Branch2: Branch2 | null;
@@ -680,7 +680,7 @@ export class OneOf {
                     );
                     decoder.skip(length);
 
-                    obj.__oneOf_Messages = "Branch1";
+                    obj.messageType = "Branch1";
                     break;
                 }
                 case 2: {
@@ -694,7 +694,7 @@ export class OneOf {
                     );
                     decoder.skip(length);
 
-                    obj.__oneOf_Messages = "Branch2";
+                    obj.messageType = "Branch2";
                     break;
                 }
                 case 3: {
