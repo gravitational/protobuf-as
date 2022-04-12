@@ -478,49 +478,17 @@ namespace __proto {
         }
     }
 }
-/**
- * Allocates and returns the DataView for a protobuf binary message.
- * @param length Message size
- * @returns (DataView addr << 32) | Buffer addr
- */
-export function __protobuf_alloc(length: i32): u64 {
-    const view = new DataView(new ArrayBuffer(length));
-    return (
-        (u64(changetype<usize>(view)) << 32) |
-        (changetype<usize>(view.buffer) + view.byteOffset)
-    );
-}
-
-/**
- * Returns the length of the DataView.
- * @param data DataView instance
- * @returns Length
- */
-export function __protobuf_getLength(view: DataView): u32 {
-    return view.byteLength;
-}
-
-/**
- * Returns address of the DataView, accessible via WASM memory.
- *
- * @param data DataView instance
- * @returns Memory address
- */
-export function __protobuf_getAddr(view: DataView): usize {
-    return changetype<usize>(view.buffer) + view.byteOffset;
-}
-
 export namespace external {
     export class Properties {
         public Properties: string = "";
 
         // Decodes Properties from an ArrayBuffer
-        static decodeArrayBuffer(buf: ArrayBuffer): Properties {
-            return Properties.decode(new DataView(buf));
+        static decode(buf: ArrayBuffer): Properties {
+            return Properties.decodeDataView(new DataView(buf));
         }
 
         // Decodes Properties from a DataView
-        static decode(view: DataView): Properties {
+        static decodeDataView(view: DataView): Properties {
             const decoder = new __proto.Decoder(view);
             const obj = new Properties();
 
@@ -555,14 +523,11 @@ export namespace external {
             return size;
         }
 
-        // Encodes Properties to the DataView
-        encode(): DataView {
-            const source = this.encodeU8Array();
-            const view = new DataView(new ArrayBuffer(source.length));
-            for (let i: i32 = 0; i < source.length; i++) {
-                view.setUint8(i, source.at(i));
-            }
-            return view;
+        // Encodes Properties to the ArrayBuffer
+        encode(): ArrayBuffer {
+            return changetype<ArrayBuffer>(
+                StaticArray.fromArray<u8>(this.encodeU8Array())
+            );
         }
 
         // Encodes Properties to the Array<u8>
@@ -586,12 +551,12 @@ export namespace external {
             public Properties: string = "";
 
             // Decodes Properties from an ArrayBuffer
-            static decodeArrayBuffer(buf: ArrayBuffer): Properties {
-                return Properties.decode(new DataView(buf));
+            static decode(buf: ArrayBuffer): Properties {
+                return Properties.decodeDataView(new DataView(buf));
             }
 
             // Decodes Properties from a DataView
-            static decode(view: DataView): Properties {
+            static decodeDataView(view: DataView): Properties {
                 const decoder = new __proto.Decoder(view);
                 const obj = new Properties();
 
@@ -626,14 +591,11 @@ export namespace external {
                 return size;
             }
 
-            // Encodes Properties to the DataView
-            encode(): DataView {
-                const source = this.encodeU8Array();
-                const view = new DataView(new ArrayBuffer(source.length));
-                for (let i: i32 = 0; i < source.length; i++) {
-                    view.setUint8(i, source.at(i));
-                }
-                return view;
+            // Encodes Properties to the ArrayBuffer
+            encode(): ArrayBuffer {
+                return changetype<ArrayBuffer>(
+                    StaticArray.fromArray<u8>(this.encodeU8Array())
+                );
             }
 
             // Encodes Properties to the Array<u8>
@@ -764,12 +726,12 @@ export namespace google {
             public nanos: i32;
 
             // Decodes Timestamp from an ArrayBuffer
-            static decodeArrayBuffer(buf: ArrayBuffer): Timestamp {
-                return Timestamp.decode(new DataView(buf));
+            static decode(buf: ArrayBuffer): Timestamp {
+                return Timestamp.decodeDataView(new DataView(buf));
             }
 
             // Decodes Timestamp from a DataView
-            static decode(view: DataView): Timestamp {
+            static decodeDataView(view: DataView): Timestamp {
                 const decoder = new __proto.Decoder(view);
                 const obj = new Timestamp();
 
@@ -808,14 +770,11 @@ export namespace google {
                 return size;
             }
 
-            // Encodes Timestamp to the DataView
-            encode(): DataView {
-                const source = this.encodeU8Array();
-                const view = new DataView(new ArrayBuffer(source.length));
-                for (let i: i32 = 0; i < source.length; i++) {
-                    view.setUint8(i, source.at(i));
-                }
-                return view;
+            // Encodes Timestamp to the ArrayBuffer
+            encode(): ArrayBuffer {
+                return changetype<ArrayBuffer>(
+                    StaticArray.fromArray<u8>(this.encodeU8Array())
+                );
             }
 
             // Encodes Timestamp to the Array<u8>
@@ -850,12 +809,12 @@ export class Labels {
     public Labels: Array<string> = new Array<string>();
 
     // Decodes Labels from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Labels {
-        return Labels.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Labels {
+        return Labels.decodeDataView(new DataView(buf));
     }
 
     // Decodes Labels from a DataView
-    static decode(view: DataView): Labels {
+    static decodeDataView(view: DataView): Labels {
         const decoder = new __proto.Decoder(view);
         const obj = new Labels();
 
@@ -885,14 +844,11 @@ export class Labels {
         return size;
     }
 
-    // Encodes Labels to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Labels to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Labels to the Array<u8>
@@ -934,12 +890,12 @@ export class Message {
     public Services: Array<u32> = new Array<u32>();
 
     // Decodes Message from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Message {
-        return Message.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Message {
+        return Message.decodeDataView(new DataView(buf));
     }
 
     // Decodes Message from a DataView
-    static decode(view: DataView): Message {
+    static decodeDataView(view: DataView): Message {
         const decoder = new __proto.Decoder(view);
         const obj = new Message();
 
@@ -954,7 +910,7 @@ export class Message {
                 }
                 case 2: {
                     const length = decoder.uint32();
-                    obj.Labels = Labels.decode(
+                    obj.Labels = Labels.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -1001,7 +957,7 @@ export class Message {
                 }
                 case 9: {
                     const length = decoder.uint32();
-                    obj.CircularInstance = Message_Circular.decode(
+                    obj.CircularInstance = Message_Circular.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -1014,7 +970,7 @@ export class Message {
                 }
                 case 10: {
                     const length = decoder.uint32();
-                    obj.CircularAInstance = Message_CircularA.decode(
+                    obj.CircularAInstance = Message_CircularA.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -1027,7 +983,7 @@ export class Message {
                 }
                 case 11: {
                     const length = decoder.uint32();
-                    obj.Properties1 = external.Properties.decode(
+                    obj.Properties1 = external.Properties.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -1040,13 +996,14 @@ export class Message {
                 }
                 case 12: {
                     const length = decoder.uint32();
-                    obj.Properties2 = external.external.Properties.decode(
-                        new DataView(
-                            decoder.view.buffer,
-                            decoder.pos + decoder.view.byteOffset,
-                            length
-                        )
-                    );
+                    obj.Properties2 =
+                        external.external.Properties.decodeDataView(
+                            new DataView(
+                                decoder.view.buffer,
+                                decoder.pos + decoder.view.byteOffset,
+                                length
+                            )
+                        );
                     decoder.skip(length);
 
                     break;
@@ -1172,14 +1129,11 @@ export class Message {
         return size;
     }
 
-    // Encodes Message to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Message to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Message to the Array<u8>
@@ -1355,12 +1309,12 @@ export class Message_Message {
     >();
 
     // Decodes Message_Message from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Message_Message {
-        return Message_Message.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Message_Message {
+        return Message_Message.decodeDataView(new DataView(buf));
     }
 
     // Decodes Message_Message from a DataView
-    static decode(view: DataView): Message_Message {
+    static decodeDataView(view: DataView): Message_Message {
         const decoder = new __proto.Decoder(view);
         const obj = new Message_Message();
 
@@ -1422,14 +1376,11 @@ export class Message_Message {
         return size;
     }
 
-    // Encodes Message_Message to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Message_Message to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Message_Message to the Array<u8>
@@ -1483,12 +1434,12 @@ export class Message_Message_Message {
         new google.protobuf.Timestamp();
 
     // Decodes Message_Message_Message from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Message_Message_Message {
-        return Message_Message_Message.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Message_Message_Message {
+        return Message_Message_Message.decodeDataView(new DataView(buf));
     }
 
     // Decodes Message_Message_Message from a DataView
-    static decode(view: DataView): Message_Message_Message {
+    static decodeDataView(view: DataView): Message_Message_Message {
         const decoder = new __proto.Decoder(view);
         const obj = new Message_Message_Message();
 
@@ -1503,7 +1454,7 @@ export class Message_Message_Message {
                 }
                 case 2: {
                     const length = decoder.uint32();
-                    obj.Timestamp = google.protobuf.Timestamp.decode(
+                    obj.Timestamp = google.protobuf.Timestamp.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -1541,14 +1492,11 @@ export class Message_Message_Message {
         return size;
     }
 
-    // Encodes Message_Message_Message to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Message_Message_Message to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Message_Message_Message to the Array<u8>
@@ -1586,12 +1534,12 @@ export class Message_Circular {
     public Circular: Message_Circular = new Message_Circular();
 
     // Decodes Message_Circular from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Message_Circular {
-        return Message_Circular.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Message_Circular {
+        return Message_Circular.decodeDataView(new DataView(buf));
     }
 
     // Decodes Message_Circular from a DataView
-    static decode(view: DataView): Message_Circular {
+    static decodeDataView(view: DataView): Message_Circular {
         const decoder = new __proto.Decoder(view);
         const obj = new Message_Circular();
 
@@ -1606,7 +1554,7 @@ export class Message_Circular {
                 }
                 case 2: {
                     const length = decoder.uint32();
-                    obj.Circular = Message_Circular.decode(
+                    obj.Circular = Message_Circular.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -1648,14 +1596,11 @@ export class Message_Circular {
         return size;
     }
 
-    // Encodes Message_Circular to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Message_Circular to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Message_Circular to the Array<u8>
@@ -1691,12 +1636,12 @@ export class Message_CircularA {
     public CircularB: Message_CircularB = new Message_CircularB();
 
     // Decodes Message_CircularA from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Message_CircularA {
-        return Message_CircularA.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Message_CircularA {
+        return Message_CircularA.decodeDataView(new DataView(buf));
     }
 
     // Decodes Message_CircularA from a DataView
-    static decode(view: DataView): Message_CircularA {
+    static decodeDataView(view: DataView): Message_CircularA {
         const decoder = new __proto.Decoder(view);
         const obj = new Message_CircularA();
 
@@ -1711,7 +1656,7 @@ export class Message_CircularA {
                 }
                 case 2: {
                     const length = decoder.uint32();
-                    obj.CircularB = Message_CircularB.decode(
+                    obj.CircularB = Message_CircularB.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -1753,14 +1698,11 @@ export class Message_CircularA {
         return size;
     }
 
-    // Encodes Message_CircularA to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Message_CircularA to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Message_CircularA to the Array<u8>
@@ -1796,12 +1738,12 @@ export class Message_CircularB {
     public CircularA: Message_CircularA = new Message_CircularA();
 
     // Decodes Message_CircularB from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Message_CircularB {
-        return Message_CircularB.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Message_CircularB {
+        return Message_CircularB.decodeDataView(new DataView(buf));
     }
 
     // Decodes Message_CircularB from a DataView
-    static decode(view: DataView): Message_CircularB {
+    static decodeDataView(view: DataView): Message_CircularB {
         const decoder = new __proto.Decoder(view);
         const obj = new Message_CircularB();
 
@@ -1816,7 +1758,7 @@ export class Message_CircularB {
                 }
                 case 2: {
                     const length = decoder.uint32();
-                    obj.CircularA = Message_CircularA.decode(
+                    obj.CircularA = Message_CircularA.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -1858,14 +1800,11 @@ export class Message_CircularB {
         return size;
     }
 
-    // Encodes Message_CircularB to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Message_CircularB to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Message_CircularB to the Array<u8>
@@ -1979,7 +1918,7 @@ function __decodeMap_string_Message_Message(
 
             case 2: {
                 const length = decoder.uint32();
-                value = Message_Message.decode(
+                value = Message_Message.decodeDataView(
                     new DataView(
                         decoder.view.buffer,
                         decoder.pos + decoder.view.byteOffset,

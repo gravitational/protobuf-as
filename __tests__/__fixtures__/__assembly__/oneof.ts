@@ -478,48 +478,16 @@ namespace __proto {
         }
     }
 }
-/**
- * Allocates and returns the DataView for a protobuf binary message.
- * @param length Message size
- * @returns (DataView addr << 32) | Buffer addr
- */
-export function __protobuf_alloc(length: i32): u64 {
-    const view = new DataView(new ArrayBuffer(length));
-    return (
-        (u64(changetype<usize>(view)) << 32) |
-        (changetype<usize>(view.buffer) + view.byteOffset)
-    );
-}
-
-/**
- * Returns the length of the DataView.
- * @param data DataView instance
- * @returns Length
- */
-export function __protobuf_getLength(view: DataView): u32 {
-    return view.byteLength;
-}
-
-/**
- * Returns address of the DataView, accessible via WASM memory.
- *
- * @param data DataView instance
- * @returns Memory address
- */
-export function __protobuf_getAddr(view: DataView): usize {
-    return changetype<usize>(view.buffer) + view.byteOffset;
-}
-
 export class Branch1 {
     public String: string = "";
 
     // Decodes Branch1 from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Branch1 {
-        return Branch1.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Branch1 {
+        return Branch1.decodeDataView(new DataView(buf));
     }
 
     // Decodes Branch1 from a DataView
-    static decode(view: DataView): Branch1 {
+    static decodeDataView(view: DataView): Branch1 {
         const decoder = new __proto.Decoder(view);
         const obj = new Branch1();
 
@@ -554,14 +522,11 @@ export class Branch1 {
         return size;
     }
 
-    // Encodes Branch1 to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Branch1 to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Branch1 to the Array<u8>
@@ -584,12 +549,12 @@ export class Branch2 {
     public UInt32: u32;
 
     // Decodes Branch2 from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Branch2 {
-        return Branch2.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Branch2 {
+        return Branch2.decodeDataView(new DataView(buf));
     }
 
     // Decodes Branch2 from a DataView
-    static decode(view: DataView): Branch2 {
+    static decodeDataView(view: DataView): Branch2 {
         const decoder = new __proto.Decoder(view);
         const obj = new Branch2();
 
@@ -619,14 +584,11 @@ export class Branch2 {
         return size;
     }
 
-    // Encodes Branch2 to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Branch2 to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Branch2 to the Array<u8>
@@ -655,12 +617,12 @@ export class OneOf {
     public NonOneOf2: string = "";
 
     // Decodes OneOf from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): OneOf {
-        return OneOf.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): OneOf {
+        return OneOf.decodeDataView(new DataView(buf));
     }
 
     // Decodes OneOf from a DataView
-    static decode(view: DataView): OneOf {
+    static decodeDataView(view: DataView): OneOf {
         const decoder = new __proto.Decoder(view);
         const obj = new OneOf();
 
@@ -671,7 +633,7 @@ export class OneOf {
             switch (number) {
                 case 1: {
                     const length = decoder.uint32();
-                    obj.Branch1 = Branch1.decode(
+                    obj.Branch1 = Branch1.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -685,7 +647,7 @@ export class OneOf {
                 }
                 case 2: {
                     const length = decoder.uint32();
-                    obj.Branch2 = Branch2.decode(
+                    obj.Branch2 = Branch2.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -768,14 +730,11 @@ export class OneOf {
         return size;
     }
 
-    // Encodes OneOf to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes OneOf to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes OneOf to the Array<u8>

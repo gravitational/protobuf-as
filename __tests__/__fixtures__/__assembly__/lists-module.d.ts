@@ -11,9 +11,6 @@ type usize = number;
 type f32 = number;
 type f64 = number;
 type bool = boolean | number;
-export function __protobuf_alloc(length: i32): u64;
-export function __protobuf_getLength(view: usize): u32;
-export function __protobuf_getAddr(view: usize): usize;
 export enum Enum {
   Zero,
   One,
@@ -22,8 +19,8 @@ export enum Enum {
 export class Message {
   static wrap(ptr: usize): Message;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   String: usize;
   size(): u32;
   encode(): usize;
@@ -33,8 +30,8 @@ export class Message {
 export class Lists {
   static wrap(ptr: usize): Lists;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   Enums: usize;
   Strings: usize;
   Bytes: usize;

@@ -20,14 +20,11 @@ export class Encode {
     start(message: decorated.Message) {
         const t = relativeName(message.relativeName);
         this.p(`
-            // Encodes ${t} to the DataView
-            encode(): DataView {
-                const source = this.encodeU8Array();
-                const view = new DataView(new ArrayBuffer(source.length));
-                for (let i: i32 = 0; i < source.length; i++) {
-                    view.setUint8(i, source.at(i));
-                }
-                return view;            
+            // Encodes ${t} to the ArrayBuffer
+            encode(): ArrayBuffer {
+                return changetype<ArrayBuffer>(
+                    StaticArray.fromArray<u8>(this.encodeU8Array())
+                );
             }
         
             // Encodes ${t} to the Array<u8>

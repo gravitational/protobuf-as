@@ -11,14 +11,11 @@ type usize = number;
 type f32 = number;
 type f64 = number;
 type bool = boolean | number;
-export function __protobuf_alloc(length: i32): u64;
-export function __protobuf_getLength(view: usize): u32;
-export function __protobuf_getAddr(view: usize): usize;
 export class Value {
   static wrap(ptr: usize): Value;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   Int32s: usize;
   size(): u32;
   encode(): usize;
@@ -28,8 +25,8 @@ export class Value {
 export class Maps {
   static wrap(ptr: usize): Maps;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   StringStringMap: usize;
   StringInt32Map: usize;
   Int32StringMap: usize;

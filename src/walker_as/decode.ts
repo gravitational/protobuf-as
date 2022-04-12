@@ -24,12 +24,12 @@ export class Decode {
 
         this.p(`  
             // Decodes ${t} from an ArrayBuffer
-            static decodeArrayBuffer(buf: ArrayBuffer):${t} {
-                return ${t}.decode(new DataView(buf))
+            static decode(buf: ArrayBuffer):${t} {
+                return ${t}.decodeDataView(new DataView(buf))
             }
             
             // Decodes ${t} from a DataView
-            static decode(view: DataView): ${t} {
+            static decodeDataView(view: DataView): ${t} {
                 const decoder = new ${this.decoder}(view);
                 const obj = new ${t}();
         `);
@@ -117,7 +117,7 @@ export class Decode {
     private repeatedMessage(field: decorated.Field, type: TypeInfo) {
         this.p(`
             ${this.readLength()}
-            obj.${field.name}.push(${type.typeName}.decode(${this.newDataBuffer()}));
+            obj.${field.name}.push(${type.typeName}.decodeDataView(${this.newDataView()}));
             ${this.skipLength()}
         `);
     }
@@ -149,7 +149,7 @@ export class Decode {
             }`;
     }
 
-    private newDataBuffer(parentDecoder = "decoder"): string {
+    private newDataView(parentDecoder = "decoder"): string {
         return `new DataView(${parentDecoder}.view.buffer, ${parentDecoder}.pos+${parentDecoder}.view.byteOffset, length)`;
     }
 
@@ -168,7 +168,7 @@ export class Decode {
     private decodeMessage(type: TypeInfo, varName: string): string {
         return (`
             ${this.readLength()}
-            ${varName} = ${type.typeName}.decode(${this.newDataBuffer()})
+            ${varName} = ${type.typeName}.decodeDataView(${this.newDataView()})
             ${this.skipLength()}
         `);
     }
@@ -183,7 +183,7 @@ export class Decode {
 
         this.globals.registerGlobal(name, `
             function ${name}(parentDecoder: ${this.decoder}, length: i32, map: ${mapTypeName}):void {
-                const decoder = new ${this.decoder}(${this.newDataBuffer("parentDecoder")});
+                const decoder = new ${this.decoder}(${this.newDataView("parentDecoder")});
                 
                 let key:${Field.typeDecl(field.key, keyTypeInfo, this.options)};
                 let value:${Field.typeDecl(field.value, valueTypeInfo, this.options)};

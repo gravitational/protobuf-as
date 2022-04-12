@@ -478,38 +478,6 @@ namespace __proto {
         }
     }
 }
-/**
- * Allocates and returns the DataView for a protobuf binary message.
- * @param length Message size
- * @returns (DataView addr << 32) | Buffer addr
- */
-export function __protobuf_alloc(length: i32): u64 {
-    const view = new DataView(new ArrayBuffer(length));
-    return (
-        (u64(changetype<usize>(view)) << 32) |
-        (changetype<usize>(view.buffer) + view.byteOffset)
-    );
-}
-
-/**
- * Returns the length of the DataView.
- * @param data DataView instance
- * @returns Length
- */
-export function __protobuf_getLength(view: DataView): u32 {
-    return view.byteLength;
-}
-
-/**
- * Returns address of the DataView, accessible via WASM memory.
- *
- * @param data DataView instance
- * @returns Memory address
- */
-export function __protobuf_getAddr(view: DataView): usize {
-    return changetype<usize>(view.buffer) + view.byteOffset;
-}
-
 export namespace elementaries {
     export enum Enum {
         Zero = 0,
@@ -540,12 +508,12 @@ export namespace elementaries {
         public EmptyBool: bool;
 
         // Decodes Elementaries from an ArrayBuffer
-        static decodeArrayBuffer(buf: ArrayBuffer): Elementaries {
-            return Elementaries.decode(new DataView(buf));
+        static decode(buf: ArrayBuffer): Elementaries {
+            return Elementaries.decodeDataView(new DataView(buf));
         }
 
         // Decodes Elementaries from a DataView
-        static decode(view: DataView): Elementaries {
+        static decodeDataView(view: DataView): Elementaries {
             const decoder = new __proto.Decoder(view);
             const obj = new Elementaries();
 
@@ -705,14 +673,11 @@ export namespace elementaries {
             return size;
         }
 
-        // Encodes Elementaries to the DataView
-        encode(): DataView {
-            const source = this.encodeU8Array();
-            const view = new DataView(new ArrayBuffer(source.length));
-            for (let i: i32 = 0; i < source.length; i++) {
-                view.setUint8(i, source.at(i));
-            }
-            return view;
+        // Encodes Elementaries to the ArrayBuffer
+        encode(): ArrayBuffer {
+            return changetype<ArrayBuffer>(
+                StaticArray.fromArray<u8>(this.encodeU8Array())
+            );
         }
 
         // Encodes Elementaries to the Array<u8>

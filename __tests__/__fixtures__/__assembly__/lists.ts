@@ -478,38 +478,6 @@ namespace __proto {
         }
     }
 }
-/**
- * Allocates and returns the DataView for a protobuf binary message.
- * @param length Message size
- * @returns (DataView addr << 32) | Buffer addr
- */
-export function __protobuf_alloc(length: i32): u64 {
-    const view = new DataView(new ArrayBuffer(length));
-    return (
-        (u64(changetype<usize>(view)) << 32) |
-        (changetype<usize>(view.buffer) + view.byteOffset)
-    );
-}
-
-/**
- * Returns the length of the DataView.
- * @param data DataView instance
- * @returns Length
- */
-export function __protobuf_getLength(view: DataView): u32 {
-    return view.byteLength;
-}
-
-/**
- * Returns address of the DataView, accessible via WASM memory.
- *
- * @param data DataView instance
- * @returns Memory address
- */
-export function __protobuf_getAddr(view: DataView): usize {
-    return changetype<usize>(view.buffer) + view.byteOffset;
-}
-
 export enum Enum {
     Zero = 0,
     One = 1,
@@ -519,12 +487,12 @@ export class Message {
     public String: string = "";
 
     // Decodes Message from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Message {
-        return Message.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Message {
+        return Message.decodeDataView(new DataView(buf));
     }
 
     // Decodes Message from a DataView
-    static decode(view: DataView): Message {
+    static decodeDataView(view: DataView): Message {
         const decoder = new __proto.Decoder(view);
         const obj = new Message();
 
@@ -559,14 +527,11 @@ export class Message {
         return size;
     }
 
-    // Encodes Message to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Message to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Message to the Array<u8>
@@ -593,12 +558,12 @@ export class Lists {
     public Ints: Array<i32> = new Array<i32>();
 
     // Decodes Lists from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Lists {
-        return Lists.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Lists {
+        return Lists.decodeDataView(new DataView(buf));
     }
 
     // Decodes Lists from a DataView
-    static decode(view: DataView): Lists {
+    static decodeDataView(view: DataView): Lists {
         const decoder = new __proto.Decoder(view);
         const obj = new Lists();
 
@@ -626,7 +591,7 @@ export class Lists {
                 case 4: {
                     const length = decoder.uint32();
                     obj.Messages.push(
-                        Message.decode(
+                        Message.decodeDataView(
                             new DataView(
                                 decoder.view.buffer,
                                 decoder.pos + decoder.view.byteOffset,
@@ -687,14 +652,11 @@ export class Lists {
         return size;
     }
 
-    // Encodes Lists to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Lists to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Lists to the Array<u8>

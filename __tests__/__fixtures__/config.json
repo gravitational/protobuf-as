@@ -3,7 +3,7 @@
         "Foo",
         "Bar"
     ],
-    "enableInterop": true,
+    "nullable": true,
     "deps": "embed",
     "typeAliases": {
         "Foo": "Bar"

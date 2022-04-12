@@ -25,7 +25,6 @@ const staticFiles = [
     join(__dirname, '../../../assembly/decoder.ts'),
     join(__dirname, '../../../assembly/encoder.ts'),
     join(__dirname, '../../../assembly/sizer.ts'),
-    join(__dirname, '../../../assembly/protobuf_interop.ts'), // Interop must always be last entry
 ]
 
 // Options for prettier, TODO: move to WalkerAS

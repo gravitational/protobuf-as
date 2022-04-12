@@ -27,7 +27,7 @@ const obj: Person = {
 };
 const data = Person.encode(obj).finish();
 const buf = __newArrayBuffer(data);
-const decoded = PersonWrapper.decodeArrayBuffer(buf);
+const decoded = PersonWrapper.decode(buf);
 const person = PersonWrapper.wrap(decoded);
 const id = IdWrapper.wrap(person.Id);
 const encoded = __getArray(person.encodeU8Array())

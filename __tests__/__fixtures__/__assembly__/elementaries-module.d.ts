@@ -11,9 +11,6 @@ type usize = number;
 type f32 = number;
 type f64 = number;
 type bool = boolean | number;
-export function __protobuf_alloc(length: i32): u64;
-export function __protobuf_getLength(view: usize): u32;
-export function __protobuf_getAddr(view: usize): usize;
 export namespace elementaries {
   export enum Enum {
     Zero,
@@ -23,8 +20,8 @@ export namespace elementaries {
   export class Elementaries {
     static wrap(ptr: usize): Elementaries;
     valueOf(): usize;
-    static decodeArrayBuffer(buf: usize): usize;
-    static decode(view: usize): usize;
+    static decode(buf: usize): usize;
+    static decodeDataView(view: usize): usize;
     Double: f64;
     Float: f32;
     Int32: i32;
