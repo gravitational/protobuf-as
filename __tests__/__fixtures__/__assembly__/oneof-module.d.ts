@@ -11,14 +11,11 @@ type usize = number;
 type f32 = number;
 type f64 = number;
 type bool = boolean | number;
-export function __protobuf_alloc(length: i32): u64;
-export function __protobuf_getLength(view: usize): u32;
-export function __protobuf_getAddr(view: usize): usize;
 export class Branch1 {
   static wrap(ptr: usize): Branch1;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   String: usize;
   size(): u32;
   encode(): usize;
@@ -28,8 +25,8 @@ export class Branch1 {
 export class Branch2 {
   static wrap(ptr: usize): Branch2;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   UInt32: u32;
   size(): u32;
   encode(): usize;
@@ -39,8 +36,8 @@ export class Branch2 {
 export class OneOf {
   static wrap(ptr: usize): OneOf;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   messageType: usize;
   __oneOf_SecondMessage: usize;
   Branch1: usize;

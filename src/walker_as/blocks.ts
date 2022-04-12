@@ -18,16 +18,9 @@ export class Blocks {
                 this.p(`import { Sizer } from './sizer'`);
                 break;
             case "embed": {
-                const interopFile = this.staticFiles.at(this.staticFiles.length-1)
-
-                if (interopFile == undefined) {
-                    throw new Error("protobuf_interop.ts not found")
-                }
-
                 this.p(`namespace ${Blocks.embedNamespace} {`);
-                this.staticFiles.slice(0,-1).forEach(f => this.p(readFileSync(f).toString()), this)
+                this.staticFiles.forEach(f => this.p(readFileSync(f).toString()), this)
                 this.p(`};`);
-                this.p(readFileSync(interopFile).toString())
                 
                 break;
             }

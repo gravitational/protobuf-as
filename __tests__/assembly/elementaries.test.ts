@@ -19,6 +19,7 @@ const {
     __unpin,
     __newArrayBuffer,
     __getArray,
+    __getArrayBuffer,
     __getString,
 } = mod.exports;
 
@@ -49,9 +50,10 @@ const obj: Elementaries = {
 };
 const data = Elementaries.encode(obj).finish();
 const buf = __newArrayBuffer(data);
-const decoded = ElementariesWrapper.decodeArrayBuffer(buf);
+const decoded = ElementariesWrapper.decode(buf);
 const elementaries = ElementariesWrapper.wrap(decoded);
 const encoded = __getArray(elementaries.encodeU8Array())
+const encodedArrayBuffer = __getArrayBuffer(elementaries.encode())
 
 describe('Elementaries', () => {
     it('decode()', () => {
@@ -87,6 +89,13 @@ describe('Elementaries', () => {
 
         for (let n = 0; n < encoded.length; n++) {
             expect(encoded[n]).toEqual(data[n])
+        }
+
+        expect(encodedArrayBuffer.byteLength).toEqual(data.byteLength);
+
+        const view = new DataView(encodedArrayBuffer)
+        for (let n = 0; n < encoded.length; n++) {
+            expect(encoded[n]).toEqual(view.getUint8(n))
         }
     });
 });

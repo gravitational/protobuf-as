@@ -21,7 +21,7 @@ Given you have [example/example.proto file](example/example.proto)
 Run:
 
 ```sh
-protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt enableInterop=true:targetFileName=example.ts example/example.proto
+protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts example/example.proto
 yarn asc assembly/example.ts --tsdFile assembly/example.d.ts
 ```
 
@@ -51,31 +51,9 @@ export namespace example {
         // Tags
         public Tags: example.Tags = new example.Tags();
 
-        // Decodes Post from an ArrayBuffer
-        static decodeArrayBuffer(buf: ArrayBuffer): Post {
-            ...
-        }
-
-        // Decodes Post from a DataView
-        static decode(view: DataView): Post {
-            ...
-        } // decode Post
-
-        public size(): u32 {
-            ...
-        }
-
-        // Encodes Post to the DataView
-        encode(): DataView {
-            ...
-        }
-
-        // Encodes Post to the Array<u8>
-        encodeU8Array(
-            encoder: __proto.Encoder = new __proto.Encoder(new Array<u8>())
-        ): Array<u8> {
-            ...
-        } // encode Post
+        static decode(buf: ArrayBuffer): Post {}
+        public size(): u32 {}
+        encode(): ArrayBuffer {}
     } // Post
 
     // Post paragraph
@@ -94,14 +72,14 @@ By default, only messages from an input `.proto` files and their references woul
 For example, this call won't generate both `Post.CreatedAt` field and `google.protobuf.Timestamp` message because `CreatedAt` field is the only field which references `Timestamp`.
 
 ```sh
-protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt enableInterop=true:targetFileName=example.ts:exclude=example.Post.CreatedAt example/example.proto
+protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts:exclude=example.Post.CreatedAt example/example.proto
 yarn asc assembly/example.ts --tsdFile assembly/example.d.ts
 ```
 
 If you still need `google.protobuf.Timestamp` for some reason, you can add it to the inclusion list:
 
 ```sh
-protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt enableInterop=true:targetFileName=example.ts:exclude=example.Post.CreatedAt:include=google.protobuf.Timestamp example/example.proto
+protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts:exclude=example.Post.CreatedAt:include=google.protobuf.Timestamp example/example.proto
 yarn asc assembly/example.ts --tsdFile assembly/example.d.ts
 ```
 
@@ -152,48 +130,31 @@ Please note that type aliases can not be used in constructors: `new Timestamp()`
 
 # Interop with non-node hosts
 
-Option `enableInterop=true` embeds standard interop methods [assembly/protobuf_interop.ts](assembly/protobuf_interop.ts) into the target file.
-
-Interop methods facilitate passing messages to and from WASM side if you plan to use `protobuf-as` outside of nodejs host environment, where AssemblyScript loader is not available.
-
 This looks as following for `wasmer-go`:
 
 ```go
 memory, _ := instance.Exports.GetMemory("memory")
-alloc, _ := instance.Exports.GetFunction("__protobuf_alloc")
-getLength, _ := instance.Exports.GetFunction("__protobuf_getLength")
-getAddr, _ := instance.Exports.GetFunction("__protobuf_getAddr")
+new, _ := instance.Exports.GetFunction("__new") // --export-runtime true
 
 // SendMessage allocates memory and copies proto.Message to WASM side, returns memory address
 func SendMessage(message proto.Message) int32 {
 	size := proto.Size(message)
 	bytes, _ := proto.Marshal(message)
-
-	// Calls __protobuf_alloc
-	viewAndBuffer, _ := alloc(size)
-
-	// __protobufAlloc returns DataView addr and it's Buffer addr
-	i := wasmer.NewI64(viewAndBuffer)
-	raw := i.I64()
-	dataView := int32(raw >> 32)
-	buffer := raw & 0xFFFFFFFF
-
-	// Copy message content
-	copy(memory.Data()[buffer:], bytes)
+	view, _ := new(size, 1) // 1 represent AS type for ArrayBuffer
+	data := memory.Data()
+	copy(data[wasmer.NewI32(view):], bytes)
 
 	return dataView
 }
 
 // ReceiveMessage decodes message from WASM side. Type of a message must be known onset.
-func (i *ProtobufInteropTrait) ReceiveMessage(dataView interface{}, m proto.Message) {
-	rawLength, _ := getLength(dataView)
-	rawAddr, _ := getAddr(dataView)
-
-	length := wasmer.NewI32(rawLength)
-	addr := wasmer.NewI32(rawAddr)
-
-	bytes := make([]byte, length.I32())
-	copy(bytes, memory.Data()[addr.I32():addr.I32()+length.I32()])
+// Please note that message type must be known onset.
+func ReceiveMessage(arrayBuffer interface{}, m proto.Message) {
+	addr := wasmer.NewI32(arrayBuffer)
+	data := ectx.Memory.Data()
+	len := int32(binary.LittleEndian.Uint32(data[addr-4 : addr])) // ArrayBuffer length from GC header
+	bytes := make([]byte, len)
+	copy(bytes, data[addr:addr+len])
 
 	proto.Unmarshal(bytes, m)
 }
@@ -211,7 +172,6 @@ The configuration file should look as following:
 
 ```json
 {
-    "enableInterop": true,
     "targetFileName": "example.ts",
     "exclude": ["example.Post.CreatedAt"],
     "include": ["google.protobuf.Timestamp"],

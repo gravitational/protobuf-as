@@ -478,38 +478,6 @@ namespace __proto {
         }
     }
 }
-/**
- * Allocates and returns the DataView for a protobuf binary message.
- * @param length Message size
- * @returns (DataView addr << 32) | Buffer addr
- */
-export function __protobuf_alloc(length: i32): u64 {
-    const view = new DataView(new ArrayBuffer(length));
-    return (
-        (u64(changetype<usize>(view)) << 32) |
-        (changetype<usize>(view.buffer) + view.byteOffset)
-    );
-}
-
-/**
- * Returns the length of the DataView.
- * @param data DataView instance
- * @returns Length
- */
-export function __protobuf_getLength(view: DataView): u32 {
-    return view.byteLength;
-}
-
-/**
- * Returns address of the DataView, accessible via WASM memory.
- *
- * @param data DataView instance
- * @returns Memory address
- */
-export function __protobuf_getAddr(view: DataView): usize {
-    return changetype<usize>(view.buffer) + view.byteOffset;
-}
-
 export class Person {
     public Name: string = "";
     public Surname: string = "";
@@ -518,12 +486,12 @@ export class Person {
     public Id: Id = new Id();
 
     // Decodes Person from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Person {
-        return Person.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Person {
+        return Person.decodeDataView(new DataView(buf));
     }
 
     // Decodes Person from a DataView
-    static decode(view: DataView): Person {
+    static decodeDataView(view: DataView): Person {
         const decoder = new __proto.Decoder(view);
         const obj = new Person();
 
@@ -550,7 +518,7 @@ export class Person {
                 }
                 case 5: {
                     const length = decoder.uint32();
-                    obj.Id = Id.decode(
+                    obj.Id = Id.decodeDataView(
                         new DataView(
                             decoder.view.buffer,
                             decoder.pos + decoder.view.byteOffset,
@@ -600,14 +568,11 @@ export class Person {
         return size;
     }
 
-    // Encodes Person to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Person to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Person to the Array<u8>
@@ -656,12 +621,12 @@ export class Id {
     public Serial: string = "";
 
     // Decodes Id from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Id {
-        return Id.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Id {
+        return Id.decodeDataView(new DataView(buf));
     }
 
     // Decodes Id from a DataView
-    static decode(view: DataView): Id {
+    static decodeDataView(view: DataView): Id {
         const decoder = new __proto.Decoder(view);
         const obj = new Id();
 
@@ -706,14 +671,11 @@ export class Id {
         return size;
     }
 
-    // Encodes Id to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Id to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Id to the Array<u8>

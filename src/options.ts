@@ -65,8 +65,6 @@ const OptionsSchema = z
         include: z.preprocess(parseArray, z.optional(z.array(z.string())).default([])),
         // Dependencies: export, embed or leave in package
         deps: z.enum(["export", "embed", "package"]).default("embed"),
-        // Export or embed __protobuf_* functions from assembly/protobuf_interop.ts
-        enableInterop: z.preprocess(parseBool, z.boolean().default(false)),
         // Disable prettier
         disablePrettier: z.preprocess(parseBool, z.boolean().default(false)),
         // Default export file name

@@ -6,14 +6,14 @@ describe('parseOptions', () => {
         expect(options.targetFileName).toEqual('assembly.ts');
     });
 
-    it('returns false enableInterop', () => {
-        const options = parseOptions("enableInterop=false")
-        expect(options.enableInterop).toEqual(false)
+    it('returns false nullable', () => {
+        const options = parseOptions("nullable=false")
+        expect(options.nullable).toEqual(false)
     });
 
-    it('returns true enableInterop', () => {
-        const options = parseOptions("enableInterop=TRuE")
-        expect(options.enableInterop).toEqual(true)
+    it('returns true nullable', () => {
+        const options = parseOptions("nullable=TRuE")
+        expect(options.nullable).toEqual(true)
     });
 
     it('returns targetFileName and exclude', () => {
@@ -35,7 +35,7 @@ describe('parseOptions', () => {
     it('returns configuration from a file', () => {
         const options = parseOptions("config=__tests__/__fixtures__/config.json")
         expect(options.exclude).toEqual(["Foo", "Bar"])
-        expect(options.enableInterop).toEqual(true)
+        expect(options.nullable).toEqual(true)
         expect(options.deps).toEqual("embed")
         expect(options.typeAliases).toEqual(new Map<string, string>([["Foo", "Bar"]]))
     });

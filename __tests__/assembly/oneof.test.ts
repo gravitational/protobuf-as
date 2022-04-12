@@ -21,7 +21,7 @@ const obj:OneOf = {
 const data = OneOf.encode(obj).finish()
 
 const buf = __newArrayBuffer(data)
-const decoded = OneOfWrapper.decodeArrayBuffer(buf)
+const decoded = OneOfWrapper.decode(buf)
 
 const oneof = OneOfWrapper.wrap(decoded)
 const b2 = Branch2Wrapper.wrap(oneof.Branch2)

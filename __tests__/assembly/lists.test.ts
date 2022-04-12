@@ -39,7 +39,7 @@ const obj: Lists = {
 
 const data = Lists.encode(obj).finish();
 const buf = __newArrayBuffer(data);
-const decoded = ListsWrapper.decodeArrayBuffer(buf);
+const decoded = ListsWrapper.decode(buf);
 const lists = ListsWrapper.wrap(decoded);
 const encoded = __getArray(lists.encodeU8Array())
 

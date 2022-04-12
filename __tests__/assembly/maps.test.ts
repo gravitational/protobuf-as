@@ -28,7 +28,7 @@ const obj: Maps = {
 const data = Maps.encode(obj).finish();
 
 const buf = __newArrayBuffer(data);
-const decoded = MapsWrapper.decodeArrayBuffer(buf);
+const decoded = MapsWrapper.decode(buf);
 const maps = MapsWrapper.wrap(decoded);
 
 const encoded = __getArray(maps.encodeU8Array())

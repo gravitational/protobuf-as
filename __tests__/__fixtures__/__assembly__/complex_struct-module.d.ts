@@ -11,15 +11,12 @@ type usize = number;
 type f32 = number;
 type f64 = number;
 type bool = boolean | number;
-export function __protobuf_alloc(length: i32): u64;
-export function __protobuf_getLength(view: usize): u32;
-export function __protobuf_getAddr(view: usize): usize;
 export namespace external {
   export class Properties {
     static wrap(ptr: usize): Properties;
     valueOf(): usize;
-    static decodeArrayBuffer(buf: usize): usize;
-    static decode(view: usize): usize;
+    static decode(buf: usize): usize;
+    static decodeDataView(view: usize): usize;
     Properties: usize;
     size(): u32;
     encode(): usize;
@@ -30,8 +27,8 @@ export namespace external {
     export class Properties {
       static wrap(ptr: usize): Properties;
       valueOf(): usize;
-      static decodeArrayBuffer(buf: usize): usize;
-      static decode(view: usize): usize;
+      static decode(buf: usize): usize;
+      static decodeDataView(view: usize): usize;
       Properties: usize;
       size(): u32;
       encode(): usize;
@@ -45,8 +42,8 @@ export namespace google {
     export class Timestamp {
       static wrap(ptr: usize): Timestamp;
       valueOf(): usize;
-      static decodeArrayBuffer(buf: usize): usize;
-      static decode(view: usize): usize;
+      static decode(buf: usize): usize;
+      static decodeDataView(view: usize): usize;
       seconds: i64;
       nanos: i32;
       size(): u32;
@@ -64,8 +61,8 @@ export enum Status {
 export class Labels {
   static wrap(ptr: usize): Labels;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   Labels: usize;
   size(): u32;
   encode(): usize;
@@ -75,8 +72,8 @@ export class Labels {
 export class Message {
   static wrap(ptr: usize): Message;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   String: usize;
   Labels: usize;
   Status1: u32;
@@ -103,8 +100,8 @@ export enum Message_Service {
 export class Message_Message {
   static wrap(ptr: usize): Message_Message;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   String: usize;
   Messages: usize;
   size(): u32;
@@ -115,8 +112,8 @@ export class Message_Message {
 export class Message_Message_Message {
   static wrap(ptr: usize): Message_Message_Message;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   Strings: usize;
   Timestamp: usize;
   size(): u32;
@@ -127,8 +124,8 @@ export class Message_Message_Message {
 export class Message_Circular {
   static wrap(ptr: usize): Message_Circular;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   String: usize;
   Circular: usize;
   size(): u32;
@@ -139,8 +136,8 @@ export class Message_Circular {
 export class Message_CircularA {
   static wrap(ptr: usize): Message_CircularA;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   String: usize;
   CircularB: usize;
   size(): u32;
@@ -151,8 +148,8 @@ export class Message_CircularA {
 export class Message_CircularB {
   static wrap(ptr: usize): Message_CircularB;
   valueOf(): usize;
-  static decodeArrayBuffer(buf: usize): usize;
-  static decode(view: usize): usize;
+  static decode(buf: usize): usize;
+  static decodeDataView(view: usize): usize;
   String: usize;
   CircularA: usize;
   size(): u32;

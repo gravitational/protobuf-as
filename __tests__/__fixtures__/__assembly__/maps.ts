@@ -478,48 +478,16 @@ namespace __proto {
         }
     }
 }
-/**
- * Allocates and returns the DataView for a protobuf binary message.
- * @param length Message size
- * @returns (DataView addr << 32) | Buffer addr
- */
-export function __protobuf_alloc(length: i32): u64 {
-    const view = new DataView(new ArrayBuffer(length));
-    return (
-        (u64(changetype<usize>(view)) << 32) |
-        (changetype<usize>(view.buffer) + view.byteOffset)
-    );
-}
-
-/**
- * Returns the length of the DataView.
- * @param data DataView instance
- * @returns Length
- */
-export function __protobuf_getLength(view: DataView): u32 {
-    return view.byteLength;
-}
-
-/**
- * Returns address of the DataView, accessible via WASM memory.
- *
- * @param data DataView instance
- * @returns Memory address
- */
-export function __protobuf_getAddr(view: DataView): usize {
-    return changetype<usize>(view.buffer) + view.byteOffset;
-}
-
 export class Value {
     public Int32s: Array<i32> = new Array<i32>();
 
     // Decodes Value from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Value {
-        return Value.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Value {
+        return Value.decodeDataView(new DataView(buf));
     }
 
     // Decodes Value from a DataView
-    static decode(view: DataView): Value {
+    static decodeDataView(view: DataView): Value {
         const decoder = new __proto.Decoder(view);
         const obj = new Value();
 
@@ -558,14 +526,11 @@ export class Value {
         return size;
     }
 
-    // Encodes Value to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Value to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Value to the Array<u8>
@@ -594,12 +559,12 @@ export class Maps {
     public StringValueMap: Map<string, Value> = new Map<string, Value>();
 
     // Decodes Maps from an ArrayBuffer
-    static decodeArrayBuffer(buf: ArrayBuffer): Maps {
-        return Maps.decode(new DataView(buf));
+    static decode(buf: ArrayBuffer): Maps {
+        return Maps.decodeDataView(new DataView(buf));
     }
 
     // Decodes Maps from a DataView
-    static decode(view: DataView): Maps {
+    static decodeDataView(view: DataView): Maps {
         const decoder = new __proto.Decoder(view);
         const obj = new Maps();
 
@@ -711,14 +676,11 @@ export class Maps {
         return size;
     }
 
-    // Encodes Maps to the DataView
-    encode(): DataView {
-        const source = this.encodeU8Array();
-        const view = new DataView(new ArrayBuffer(source.length));
-        for (let i: i32 = 0; i < source.length; i++) {
-            view.setUint8(i, source.at(i));
-        }
-        return view;
+    // Encodes Maps to the ArrayBuffer
+    encode(): ArrayBuffer {
+        return changetype<ArrayBuffer>(
+            StaticArray.fromArray<u8>(this.encodeU8Array())
+        );
     }
 
     // Encodes Maps to the Array<u8>
@@ -989,7 +951,7 @@ function __decodeMap_string_Value(
 
             case 2: {
                 const length = decoder.uint32();
-                value = Value.decode(
+                value = Value.decodeDataView(
                     new DataView(
                         decoder.view.buffer,
                         decoder.pos + decoder.view.byteOffset,
