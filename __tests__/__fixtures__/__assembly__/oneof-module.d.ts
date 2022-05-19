@@ -36,16 +36,22 @@ export class Branch2 {
 export class OneOf {
   static wrap(ptr: usize): OneOf;
   valueOf(): usize;
+  static MESSAGES_BRANCH_1_INDEX: u8;
+  static MESSAGES_BRANCH_2_INDEX: u8;
+  static SECOND_MESSAGE_BRANCH_3_INDEX: u8;
+  static SECOND_MESSAGE_BRANCH_4_INDEX: u8;
   static decode(buf: usize): usize;
   static decodeDataView(view: usize): usize;
-  messageType: usize;
-  __oneOf_SecondMessage: usize;
   Branch1: usize;
   Branch2: usize;
   NonOneOf1: usize;
   Branch3: usize;
   Branch4: i32;
   NonOneOf2: usize;
+  messageType: usize;
+  messageType_index: u8;
+  __oneOf_SecondMessage: usize;
+  __oneOf_SecondMessage_index: u8;
   size(): u32;
   encode(): usize;
   encodeU8Array(encoder?: usize): usize;

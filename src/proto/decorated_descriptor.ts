@@ -175,3 +175,8 @@ export function isMessage(field: Field): field is FieldMessage {
 export function isAnyMap(field: Field): field is (FieldMap | FieldMapMessage) {
     return field.kind == 'field_map' || field.kind == 'field_map_message';
 }
+
+// Descriptor has oneOf field
+export function isOneOf(field: Field): field is (FieldElementary | FieldMessage | FieldMap | FieldMapMessage) {
+    return isElementary(field) || isMessage(field) || isAnyMap(field)    
+}

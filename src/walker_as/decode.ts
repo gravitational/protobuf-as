@@ -3,7 +3,7 @@ import { Blocks } from "./blocks";
 import { Writer, GlobalsRegistry } from './walker_as';
 import { relativeName } from './internal';
 import { Field } from "./field";
-import { Message } from "./message";
+import { OneOf } from "./one_of";
 import { Options } from "../options";
 import { getTypeInfo, TypeInfo } from './type_info';
 
@@ -82,10 +82,11 @@ export class Decode {
                 break;
         }
 
-        // If a field belongs to oneOf
-        if (decorated.isElementary(field) || decorated.isMessage(field) || decorated.isAnyMap(field)) {
+        // If a field belongs to oneOf we need to set discriminator value
+        if (decorated.isOneOf(field)) {
             if (field.oneOf != undefined) {
-                this.p(`obj.${Message.oneOfVarName(this.options, field.parentID, field.oneOf)} = "${field.name}";`)
+                this.p(`obj.${OneOf.varName(this.options, field.parentID, field.oneOf)} = "${field.name}";`)
+                this.p(`obj.${OneOf.indexVarName(this.options, field.parentID, field.oneOf)} = ${field.number};`)
             }
         }
 

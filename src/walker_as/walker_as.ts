@@ -11,6 +11,7 @@ import { Encode } from './encode';
 import { Size } from './size';
 import { join } from 'path';
 import * as prettier from 'prettier';
+import { OneOf } from './one_of';
 
 // Writer implements generic function which prints a code piece
 export type Writer = (value: string) => void;
@@ -46,6 +47,7 @@ export class WalkerAS implements FlatWalker, GlobalsRegistry {
     private encode: Encode;
     private size: Size;
     private field: Field;
+    private oneOf: OneOf;
     private globals: Map<string, string> = new Map<string, string>();
 
     constructor(private options: Readonly<Options>) {
@@ -59,6 +61,7 @@ export class WalkerAS implements FlatWalker, GlobalsRegistry {
         this.decode = new Decode(p, this, this.options);
         this.encode = new Encode(p, this.options);
         this.size = new Size(p, this, this.options);
+        this.oneOf = new OneOf(p, this.options);
     }
 
     public beforeAll() {
@@ -155,6 +158,14 @@ export class WalkerAS implements FlatWalker, GlobalsRegistry {
 
     public finishSize() {
         this.size.finish();
+    }
+
+    public oneOfDiscriminatorDecl(desc: decorated.Message, group: string): void {
+        this.oneOf.discriminatorDecl(desc, group);
+    }
+
+    public oneOfDiscriminatorConst(desc: decorated.Field): void {
+        this.oneOf.discriminatorConst(desc);
     }
 
     public content() {

@@ -17,6 +17,10 @@
  (type $i32_=>_i64 (func (param i32) (result i64)))
  (type $i32_i64_=>_none (func (param i32 i64)))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
+ (global $__tests__/__fixtures__/__assembly__/oneof/OneOf.MESSAGES_BRANCH_1_INDEX i32 (i32.const 1))
+ (global $__tests__/__fixtures__/__assembly__/oneof/OneOf.MESSAGES_BRANCH_2_INDEX i32 (i32.const 2))
+ (global $__tests__/__fixtures__/__assembly__/oneof/OneOf.SECOND_MESSAGE_BRANCH_3_INDEX i32 (i32.const 4))
+ (global $__tests__/__fixtures__/__assembly__/oneof/OneOf.SECOND_MESSAGE_BRANCH_4_INDEX i32 (i32.const 5))
  (global $~lib/shared/runtime/Runtime.Stub i32 (i32.const 0))
  (global $~lib/shared/runtime/Runtime.Minimal i32 (i32.const 1))
  (global $~lib/shared/runtime/Runtime.Incremental i32 (i32.const 2))
@@ -84,6 +88,10 @@
  (export "Branch1" (global $__tests__/__fixtures__/__assembly__/oneof/Branch1))
  (export "Branch2" (global $__tests__/__fixtures__/__assembly__/oneof/Branch2))
  (export "OneOf" (global $__tests__/__fixtures__/__assembly__/oneof/OneOf))
+ (export "OneOf.MESSAGES_BRANCH_1_INDEX" (global $__tests__/__fixtures__/__assembly__/oneof/OneOf.MESSAGES_BRANCH_1_INDEX))
+ (export "OneOf.MESSAGES_BRANCH_2_INDEX" (global $__tests__/__fixtures__/__assembly__/oneof/OneOf.MESSAGES_BRANCH_2_INDEX))
+ (export "OneOf.SECOND_MESSAGE_BRANCH_3_INDEX" (global $__tests__/__fixtures__/__assembly__/oneof/OneOf.SECOND_MESSAGE_BRANCH_3_INDEX))
+ (export "OneOf.SECOND_MESSAGE_BRANCH_4_INDEX" (global $__tests__/__fixtures__/__assembly__/oneof/OneOf.SECOND_MESSAGE_BRANCH_4_INDEX))
  (export "__new" (func $~lib/rt/itcms/__new))
  (export "__pin" (func $~lib/rt/itcms/__pin))
  (export "__unpin" (func $~lib/rt/itcms/__unpin))
@@ -107,10 +115,6 @@
  (export "Branch2#constructor" (func $export:__tests__/__fixtures__/__assembly__/oneof/Branch2#constructor))
  (export "Branch2.decode" (func $export:__tests__/__fixtures__/__assembly__/oneof/Branch2.decode))
  (export "Branch2.decodeDataView" (func $export:__tests__/__fixtures__/__assembly__/oneof/Branch2.decodeDataView))
- (export "OneOf#get:messageType" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType))
- (export "OneOf#set:messageType" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType))
- (export "OneOf#get:__oneOf_SecondMessage" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage))
- (export "OneOf#set:__oneOf_SecondMessage" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage))
  (export "OneOf#get:Branch1" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:Branch1))
  (export "OneOf#set:Branch1" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch1))
  (export "OneOf#get:Branch2" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:Branch2))
@@ -123,6 +127,14 @@
  (export "OneOf#set:Branch4" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch4))
  (export "OneOf#get:NonOneOf2" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:NonOneOf2))
  (export "OneOf#set:NonOneOf2" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:NonOneOf2))
+ (export "OneOf#get:messageType" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType))
+ (export "OneOf#set:messageType" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType))
+ (export "OneOf#get:messageType_index" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType_index))
+ (export "OneOf#set:messageType_index" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType_index))
+ (export "OneOf#get:__oneOf_SecondMessage" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage))
+ (export "OneOf#set:__oneOf_SecondMessage" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage))
+ (export "OneOf#get:__oneOf_SecondMessage_index" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage_index))
+ (export "OneOf#set:__oneOf_SecondMessage_index" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage_index))
  (export "OneOf#size" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#size))
  (export "OneOf#encode" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#encode))
  (export "OneOf#encodeU8Array" (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#encodeU8Array@varargs))
@@ -5007,7 +5019,7 @@
   local.set $1
   local.get $1
  )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType (param $0 i32) (param $1 i32)
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch1 (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store
@@ -5016,7 +5028,7 @@
   i32.const 0
   call $~lib/rt/itcms/__link
  )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage (param $0 i32) (param $1 i32)
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch2 (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store offset=4
@@ -5025,7 +5037,7 @@
   i32.const 0
   call $~lib/rt/itcms/__link
  )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch1 (param $0 i32) (param $1 i32)
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:NonOneOf1 (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store offset=8
@@ -5034,7 +5046,7 @@
   i32.const 0
   call $~lib/rt/itcms/__link
  )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch2 (param $0 i32) (param $1 i32)
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch3 (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store offset=12
@@ -5043,16 +5055,12 @@
   i32.const 0
   call $~lib/rt/itcms/__link
  )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:NonOneOf1 (param $0 i32) (param $1 i32)
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch4 (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store offset=16
-  local.get $0
-  local.get $1
-  i32.const 0
-  call $~lib/rt/itcms/__link
  )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch3 (param $0 i32) (param $1 i32)
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:NonOneOf2 (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store offset=20
@@ -5061,51 +5069,73 @@
   i32.const 0
   call $~lib/rt/itcms/__link
  )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch4 (param $0 i32) (param $1 i32)
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store offset=24
- )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:NonOneOf2 (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  i32.store offset=28
   local.get $0
   local.get $1
   i32.const 0
   call $~lib/rt/itcms/__link
  )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType (param $0 i32) (result i32)
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType_index (param $0 i32) (param $1 i32)
   local.get $0
-  i32.load
+  local.get $1
+  i32.store8 offset=28
  )
- (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage (param $0 i32) (result i32)
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage (param $0 i32) (param $1 i32)
   local.get $0
-  i32.load offset=4
+  local.get $1
+  i32.store offset=32
+  local.get $0
+  local.get $1
+  i32.const 0
+  call $~lib/rt/itcms/__link
+ )
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage_index (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  i32.store8 offset=36
  )
  (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:Branch1 (param $0 i32) (result i32)
   local.get $0
-  i32.load offset=8
+  i32.load
  )
  (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:Branch2 (param $0 i32) (result i32)
   local.get $0
-  i32.load offset=12
+  i32.load offset=4
  )
  (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:NonOneOf1 (param $0 i32) (result i32)
   local.get $0
-  i32.load offset=16
+  i32.load offset=8
  )
  (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:Branch3 (param $0 i32) (result i32)
   local.get $0
-  i32.load offset=20
+  i32.load offset=12
  )
  (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:Branch4 (param $0 i32) (result i32)
   local.get $0
-  i32.load offset=24
+  i32.load offset=16
  )
  (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:NonOneOf2 (param $0 i32) (result i32)
   local.get $0
-  i32.load offset=28
+  i32.load offset=20
+ )
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType (param $0 i32) (result i32)
+  local.get $0
+  i32.load offset=24
+ )
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType_index (param $0 i32) (result i32)
+  local.get $0
+  i32.load8_u offset=28
+ )
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage (param $0 i32) (result i32)
+  local.get $0
+  i32.load offset=32
+ )
+ (func $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage_index (param $0 i32) (result i32)
+  local.get $0
+  i32.load8_u offset=36
  )
  (func $~lib/rt/itcms/__pin (param $0 i32) (result i32)
   (local $1 i32)
@@ -5400,14 +5430,6 @@
    call $~lib/rt/itcms/__visit
   end
   local.get $0
-  i32.load offset=16
-  local.tee $2
-  if
-   local.get $2
-   local.get $1
-   call $~lib/rt/itcms/__visit
-  end
-  local.get $0
   i32.load offset=20
   local.tee $2
   if
@@ -5416,7 +5438,15 @@
    call $~lib/rt/itcms/__visit
   end
   local.get $0
-  i32.load offset=28
+  i32.load offset=24
+  local.tee $2
+  if
+   local.get $2
+   local.get $1
+   call $~lib/rt/itcms/__visit
+  end
+  local.get $0
+  i32.load offset=32
   local.tee $2
   if
    local.get $2
@@ -7132,6 +7162,9 @@
            local.get $2
            i32.const 3008
            call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType
+           local.get $2
+           i32.const 1
+           call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType_index
            br $break|1
           end
           local.get $1
@@ -7176,6 +7209,9 @@
           local.get $2
           i32.const 3056
           call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType
+          local.get $2
+          i32.const 2
+          call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType_index
           br $break|1
          end
          local.get $2
@@ -7191,6 +7227,9 @@
         local.get $2
         i32.const 3104
         call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage
+        local.get $2
+        i32.const 4
+        call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage_index
         br $break|1
        end
        local.get $2
@@ -7203,6 +7242,9 @@
        local.get $2
        i32.const 3152
        call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage
+       local.get $2
+       i32.const 5
+       call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage_index
        br $break|1
       end
       local.get $2
@@ -7278,14 +7320,14 @@
   i32.const 0
   local.set $1
   local.get $0
-  i32.load offset=8
+  i32.load
   i32.const 0
   i32.ne
   if
    global.get $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
    local.get $0
-   i32.load offset=8
+   i32.load
    local.tee $2
    i32.store
    local.get $2
@@ -7294,7 +7336,7 @@
    else
     i32.const 3200
     i32.const 2512
-    i32.const 693
+    i32.const 706
     i32.const 32
     call $~lib/builtins/abort
     unreachable
@@ -7321,14 +7363,14 @@
    end
   end
   local.get $0
-  i32.load offset=12
+  i32.load offset=4
   i32.const 0
   i32.ne
   if
    global.get $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
    local.get $0
-   i32.load offset=12
+   i32.load offset=4
    local.tee $3
    i32.store offset=4
    local.get $3
@@ -7337,7 +7379,7 @@
    else
     i32.const 3200
     i32.const 2512
-    i32.const 702
+    i32.const 715
     i32.const 32
     call $~lib/builtins/abort
     unreachable
@@ -7365,7 +7407,7 @@
   end
   local.get $1
   local.get $0
-  i32.load offset=16
+  i32.load offset=8
   local.set $4
   global.get $~lib/memory/__stack_pointer
   local.get $4
@@ -7377,7 +7419,7 @@
   if (result i32)
    i32.const 1
    local.get $0
-   i32.load offset=16
+   i32.load offset=8
    local.set $4
    global.get $~lib/memory/__stack_pointer
    local.get $4
@@ -7388,7 +7430,7 @@
    call $__tests__/__fixtures__/__assembly__/oneof/__proto.Sizer.varint64
    i32.add
    local.get $0
-   i32.load offset=16
+   i32.load offset=8
    local.set $4
    global.get $~lib/memory/__stack_pointer
    local.get $4
@@ -7398,6 +7440,63 @@
    i32.add
   else
    i32.const 0
+  end
+  i32.add
+  local.set $1
+  local.get $1
+  local.get $0
+  i32.load offset=12
+  local.set $4
+  global.get $~lib/memory/__stack_pointer
+  local.get $4
+  i32.store offset=8
+  local.get $4
+  call $~lib/string/String#get:length
+  i32.const 0
+  i32.gt_s
+  if (result i32)
+   i32.const 1
+   local.get $0
+   i32.load offset=12
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   local.get $4
+   i32.store offset=8
+   local.get $4
+   call $~lib/string/String#get:length
+   i64.extend_i32_s
+   call $__tests__/__fixtures__/__assembly__/oneof/__proto.Sizer.varint64
+   i32.add
+   local.get $0
+   i32.load offset=12
+   local.set $4
+   global.get $~lib/memory/__stack_pointer
+   local.get $4
+   i32.store offset=8
+   local.get $4
+   call $~lib/string/String#get:length
+   i32.add
+  else
+   i32.const 0
+  end
+  i32.add
+  local.set $1
+  local.get $1
+  local.get $0
+  i32.load offset=16
+  i32.const 0
+  i32.eq
+  if (result i32)
+   i32.const 0
+  else
+   i32.const 1
+   local.get $0
+   i32.load offset=16
+   local.set $3
+   local.get $3
+   i64.extend_i32_s
+   call $__tests__/__fixtures__/__assembly__/oneof/__proto.Sizer.varint64
+   i32.add
   end
   i32.add
   local.set $1
@@ -7427,63 +7526,6 @@
    i32.add
    local.get $0
    i32.load offset=20
-   local.set $4
-   global.get $~lib/memory/__stack_pointer
-   local.get $4
-   i32.store offset=8
-   local.get $4
-   call $~lib/string/String#get:length
-   i32.add
-  else
-   i32.const 0
-  end
-  i32.add
-  local.set $1
-  local.get $1
-  local.get $0
-  i32.load offset=24
-  i32.const 0
-  i32.eq
-  if (result i32)
-   i32.const 0
-  else
-   i32.const 1
-   local.get $0
-   i32.load offset=24
-   local.set $3
-   local.get $3
-   i64.extend_i32_s
-   call $__tests__/__fixtures__/__assembly__/oneof/__proto.Sizer.varint64
-   i32.add
-  end
-  i32.add
-  local.set $1
-  local.get $1
-  local.get $0
-  i32.load offset=28
-  local.set $4
-  global.get $~lib/memory/__stack_pointer
-  local.get $4
-  i32.store offset=8
-  local.get $4
-  call $~lib/string/String#get:length
-  i32.const 0
-  i32.gt_s
-  if (result i32)
-   i32.const 1
-   local.get $0
-   i32.load offset=28
-   local.set $4
-   global.get $~lib/memory/__stack_pointer
-   local.get $4
-   i32.store offset=8
-   local.get $4
-   call $~lib/string/String#get:length
-   i64.extend_i32_s
-   call $__tests__/__fixtures__/__assembly__/oneof/__proto.Sizer.varint64
-   i32.add
-   local.get $0
-   i32.load offset=28
    local.set $4
    global.get $~lib/memory/__stack_pointer
    local.get $4
@@ -7531,14 +7573,14 @@
   local.tee $2
   i32.store
   local.get $0
-  i32.load offset=8
+  i32.load
   i32.const 0
   i32.ne
   if
    global.get $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
    local.get $0
-   i32.load offset=8
+   i32.load
    local.tee $3
    i32.store offset=4
    local.get $3
@@ -7547,7 +7589,7 @@
    else
     i32.const 3200
     i32.const 2512
-    i32.const 747
+    i32.const 760
     i32.const 23
     call $~lib/builtins/abort
     unreachable
@@ -7584,14 +7626,14 @@
    end
   end
   local.get $0
-  i32.load offset=12
+  i32.load offset=4
   i32.const 0
   i32.ne
   if
    global.get $~lib/memory/__stack_pointer
    global.get $~lib/memory/__stack_pointer
    local.get $0
-   i32.load offset=12
+   i32.load offset=4
    local.tee $4
    i32.store offset=8
    local.get $4
@@ -7600,7 +7642,7 @@
    else
     i32.const 3200
     i32.const 2512
-    i32.const 759
+    i32.const 772
     i32.const 23
     call $~lib/builtins/abort
     unreachable
@@ -7637,7 +7679,7 @@
    end
   end
   local.get $0
-  i32.load offset=16
+  i32.load offset=8
   local.set $7
   global.get $~lib/memory/__stack_pointer
   local.get $7
@@ -7658,7 +7700,7 @@
    local.get $1
    local.set $3
    local.get $0
-   i32.load offset=16
+   i32.load offset=8
    local.set $7
    global.get $~lib/memory/__stack_pointer
    local.get $7
@@ -7672,7 +7714,7 @@
    call $__tests__/__fixtures__/__assembly__/oneof/__proto.Encoder#varint64
    local.get $1
    local.get $0
-   i32.load offset=16
+   i32.load offset=8
    local.set $7
    global.get $~lib/memory/__stack_pointer
    local.get $7
@@ -7681,7 +7723,7 @@
    call $__tests__/__fixtures__/__assembly__/oneof/__proto.Encoder#string
   end
   local.get $0
-  i32.load offset=20
+  i32.load offset=12
   local.set $7
   global.get $~lib/memory/__stack_pointer
   local.get $7
@@ -7702,7 +7744,7 @@
    local.get $1
    local.set $3
    local.get $0
-   i32.load offset=20
+   i32.load offset=12
    local.set $7
    global.get $~lib/memory/__stack_pointer
    local.get $7
@@ -7716,7 +7758,7 @@
    call $__tests__/__fixtures__/__assembly__/oneof/__proto.Encoder#varint64
    local.get $1
    local.get $0
-   i32.load offset=20
+   i32.load offset=12
    local.set $7
    global.get $~lib/memory/__stack_pointer
    local.get $7
@@ -7725,7 +7767,7 @@
    call $__tests__/__fixtures__/__assembly__/oneof/__proto.Encoder#string
   end
   local.get $0
-  i32.load offset=24
+  i32.load offset=16
   i32.const 0
   i32.ne
   if
@@ -7740,7 +7782,7 @@
    local.get $1
    local.set $3
    local.get $0
-   i32.load offset=24
+   i32.load offset=16
    local.set $4
    local.get $3
    local.get $4
@@ -7748,7 +7790,7 @@
    call $__tests__/__fixtures__/__assembly__/oneof/__proto.Encoder#varint64
   end
   local.get $0
-  i32.load offset=28
+  i32.load offset=20
   local.set $7
   global.get $~lib/memory/__stack_pointer
   local.get $7
@@ -7769,7 +7811,7 @@
    local.get $1
    local.set $3
    local.get $0
-   i32.load offset=28
+   i32.load offset=20
    local.set $7
    global.get $~lib/memory/__stack_pointer
    local.get $7
@@ -7783,7 +7825,7 @@
    call $__tests__/__fixtures__/__assembly__/oneof/__proto.Encoder#varint64
    local.get $1
    local.get $0
-   i32.load offset=28
+   i32.load offset=20
    local.set $7
    global.get $~lib/memory/__stack_pointer
    local.get $7
@@ -9331,18 +9373,12 @@
   i32.eqz
   if
    global.get $~lib/memory/__stack_pointer
-   i32.const 32
+   i32.const 37
    i32.const 11
    call $~lib/rt/itcms/__new
    local.tee $0
    i32.store
   end
-  local.get $0
-  i32.const 544
-  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType
-  local.get $0
-  i32.const 544
-  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage
   local.get $0
   i32.const 0
   call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:Branch1
@@ -9361,6 +9397,18 @@
   local.get $0
   i32.const 544
   call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:NonOneOf2
+  local.get $0
+  i32.const 544
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType
+  local.get $0
+  i32.const 0
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType_index
+  local.get $0
+  i32.const 544
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage
+  local.get $0
+  i32.const 0
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage_index
   local.get $0
   local.set $1
   global.get $~lib/memory/__stack_pointer
@@ -9680,84 +9728,6 @@
   global.set $~lib/memory/__stack_pointer
   local.get $1
  )
- (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType (param $0 i32) (result i32)
-  (local $1 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  local.get $0
-  i32.store
-  local.get $0
-  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType
-  local.set $1
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $1
- )
- (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType (param $0 i32) (param $1 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  local.get $0
-  i32.store
-  global.get $~lib/memory/__stack_pointer
-  local.get $1
-  i32.store offset=4
-  local.get $0
-  local.get $1
-  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
- (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage (param $0 i32) (result i32)
-  (local $1 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  local.get $0
-  i32.store
-  local.get $0
-  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage
-  local.set $1
-  global.get $~lib/memory/__stack_pointer
-  i32.const 4
-  i32.add
-  global.set $~lib/memory/__stack_pointer
-  local.get $1
- )
- (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage (param $0 i32) (param $1 i32)
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.sub
-  global.set $~lib/memory/__stack_pointer
-  call $~stack_check
-  global.get $~lib/memory/__stack_pointer
-  local.get $0
-  i32.store
-  global.get $~lib/memory/__stack_pointer
-  local.get $1
-  i32.store offset=4
-  local.get $0
-  local.get $1
-  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage
-  global.get $~lib/memory/__stack_pointer
-  i32.const 8
-  i32.add
-  global.set $~lib/memory/__stack_pointer
- )
  (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:Branch1 (param $0 i32) (result i32)
   (local $1 i32)
   global.get $~lib/memory/__stack_pointer
@@ -9986,6 +9956,156 @@
   call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:NonOneOf2
   global.get $~lib/memory/__stack_pointer
   i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType (param $0 i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType (param $0 i32) (param $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $0
+  local.get $1
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType_index (param $0 i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:messageType_index
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType_index (param $0 i32) (param $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  local.get $1
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:messageType_index
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage (param $0 i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage (param $0 i32) (param $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
+  local.get $0
+  local.get $1
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage
+  global.get $~lib/memory/__stack_pointer
+  i32.const 8
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+ )
+ (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage_index (param $0 i32) (result i32)
+  (local $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#get:__oneOf_SecondMessage_index
+  local.set $1
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.add
+  global.set $~lib/memory/__stack_pointer
+  local.get $1
+ )
+ (func $export:__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage_index (param $0 i32) (param $1 i32)
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
+  i32.sub
+  global.set $~lib/memory/__stack_pointer
+  call $~stack_check
+  global.get $~lib/memory/__stack_pointer
+  local.get $0
+  i32.store
+  local.get $0
+  local.get $1
+  call $__tests__/__fixtures__/__assembly__/oneof/OneOf#set:__oneOf_SecondMessage_index
+  global.get $~lib/memory/__stack_pointer
+  i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
  )

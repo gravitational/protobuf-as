@@ -70,6 +70,11 @@ export interface FlatFieldWalker {
     fieldEncode(field: decorated.Field): void;
 }
 
+export interface FlatOneOfWalker {
+    oneOfDiscriminatorDecl(message: decorated.Message, group: string): void;
+    oneOfDiscriminatorConst(desc: decorated.Field): void;
+}
+
 // Flat walker must meet this interface
 export type FlatWalker = Walker &
     FlatBlocksWalker &
@@ -79,14 +84,15 @@ export type FlatWalker = Walker &
     FlatMessageDecodeWalker &
     FlatMessageSizeWalker &
     FlatMessageEncodeWalker &
-    FlatFieldWalker;
+    FlatFieldWalker &
+    FlatOneOfWalker;
 
 /**
  * Implements the generic walker strategy for an OO language.
  *
  * - Namespaces are hierachical.
  * - Enums and messages are sequentially nested into namespaces.
- * - There are static decode and encode methods.
+ * - decode(), encode() and size() methods.
  */
 export class FlatWalkerStrategy extends WalkerStrategy<
     FlatWalker,
@@ -180,6 +186,7 @@ export class FlatWalkerStrategy extends WalkerStrategy<
             return
         }
 
+        // Get direct children which are fields
         const children = this.items.descendants(desc.id, 1).filter((value) => {
             const [, desc] = value;
             return decorated.isField(desc) ? value : null;
@@ -187,6 +194,11 @@ export class FlatWalkerStrategy extends WalkerStrategy<
 
         walker.startMessage(desc);
         children.forEach(([, fieldDesc]) => walker.fieldDecl(<decorated.Field>fieldDesc));
+
+        desc.oneOf.forEach((group) => {
+            walker.oneOfDiscriminatorDecl(desc, group)
+        })
+        children.forEach(([, fieldDesc]) => walker.oneOfDiscriminatorConst(<decorated.Field>fieldDesc))
 
         walker.startDecode(desc);
         children.forEach(([, fieldDesc]) => walker.fieldInit(<decorated.Field>fieldDesc));

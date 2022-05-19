@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 type strObj = {[key: string]: string}
 
 // Represents strings meaning true values
-const trueValues = ["1", "true"]
+const trueValues = ["1", "true", "yes"]
 
 // parseArray returns array parsed from string
 const parseArray = function(arg: unknown): Array<string> {
