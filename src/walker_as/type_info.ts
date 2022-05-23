@@ -1,6 +1,6 @@
 import { FieldDescriptorProto_Type } from 'ts-proto-descriptors';
-import { decorated } from '../proto';
-import { absoluteName } from './internal';
+import { decorated } from '../proto/index.js';
+import { absoluteName } from './internal.js';
 
 // AssemblyScript types for the corresponding proto types
 const types = new Map<FieldDescriptorProto_Type, string>([

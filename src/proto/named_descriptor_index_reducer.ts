@@ -1,5 +1,5 @@
-import { WeightMap, ImmutableFlatTree } from '../structs';
-import * as named from './named_descriptor';
+import { WeightMap, ImmutableFlatTree } from '../structs/index.js';
+import * as named from './named_descriptor.js';
 
 /**
  * Performs tree-shaking of the named descriptor index. 

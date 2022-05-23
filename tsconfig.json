@@ -1,16 +1,27 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "lib": ["es2018"],
-    "module": "commonjs",
+    "lib": ["ES2021", "DOM"],
+    "target": "ESNext",
+    "module": "NodeNext",
     "strict": true,
     "outDir": "build",
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
     "esModuleInterop": true,
+    "moduleResolution": "nodenext",
+    "declaration": true
   },
-  "include": [
+  "ts-node": {
+    "esm": true,
+    "compilerOptions": {
+      "paths": {
+        "uvu": ["./node_modules/uvu"],
+      }  
+    }
+  },  
+  "include": [    
     "src/**/*",
-    "__tests__/**/*.ts"
+    "tests/**/*"
+  ],
+  "exclude": [
+    "tests/__fixtures__/**/*"
   ]
 }

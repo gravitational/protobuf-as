@@ -1,17 +1,19 @@
-import { FlatWalker } from '../walker';
-import { decorated } from '../proto';
-import { Blocks } from './blocks';
-import { Namespace } from './namespace';
-import { Enum } from './enum';
-import { Message } from './message';
-import { Field } from './field';
-import { Options } from '../options';
-import { Decode } from './decode';
-import { Encode } from './encode';
-import { Size } from './size';
+import { FlatWalker } from '../walker/index.js';
+import { decorated } from '../proto/index.js';
+import { Blocks } from './blocks.js';
+import { Namespace } from './namespace.js';
+import { Enum } from './enum.js';
+import { Message } from './message.js';
+import { Field } from './field.js';
+import { Options } from '../options.js';
+import { Decode } from './decode.js';
+import { Encode } from './encode.js';
+import { Size } from './size.js';
+import { OneOf } from './one_of.js';
 import { join } from 'path';
-import * as prettier from 'prettier';
-import { OneOf } from './one_of';
+import prettier from 'prettier';
+import path from 'path';
+import {fileURLToPath} from 'url';
 
 // Writer implements generic function which prints a code piece
 export type Writer = (value: string) => void;
@@ -21,11 +23,14 @@ export interface GlobalsRegistry {
     registerGlobal(key: string, content: string): void;
 }
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // staticFiles represents list of static files to embed/copy
 const staticFiles = [
-    join(__dirname, '../../../assembly/decoder.ts'),
-    join(__dirname, '../../../assembly/encoder.ts'),
-    join(__dirname, '../../../assembly/sizer.ts'),
+    join(__dirname, '../../assembly/decoder.ts'),
+    join(__dirname, '../../assembly/encoder.ts'),
+    join(__dirname, '../../assembly/sizer.ts'),
 ]
 
 // Options for prettier, TODO: move to WalkerAS

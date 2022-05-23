@@ -1,9 +1,9 @@
-import { decorated } from '../proto';
-import { Writer, GlobalsRegistry } from './walker_as';
-import { getTypeInfo, TypeInfo } from './type_info';
-import { Blocks } from './blocks';
-import { Options } from '../options';
-import { relativeName } from './internal';
+import { decorated } from '../proto/index.js';
+import { Writer, GlobalsRegistry } from './walker_as.js';
+import { getTypeInfo, TypeInfo } from './type_info.js';
+import { Blocks } from './blocks.js';
+import { Options } from '../options.js';
+import { relativeName } from './internal.js';
 
 /**
  * Generates message size() and __size helper methods

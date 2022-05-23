@@ -6,17 +6,18 @@ import {
 
 import { promisify } from 'util';
 import ReadStream = NodeJS.ReadStream;
-import { FlatWalkerStrategy } from './walker';
-import { WalkerAS } from './walker_as';
+import { FlatWalkerStrategy } from './walker/flat_walker_strategy.js';
+import { WalkerAS } from './walker_as/walker_as.js';
 import {
     NamedDescriptorIndex,
     DecoratedDescriptorIndex,
     NamedDescriptorIndexReducer,
-} from './proto';
-import { parseOptions } from './options';
+} from './proto/index.js';
+import { parseOptions } from './options.js';
 import { readFileSync } from 'fs';
 import { basename } from 'path';
 
+// TODO: internal.ts
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
     return new Promise((resolve) => {
         const ret: Array<Buffer> = [];
@@ -49,7 +50,7 @@ async function main() {
 
     const types = new NamedDescriptorIndex(request);
     const roots: Set<string> = types.rootIDs() as Set<string>;
-    options.include.forEach((n) => roots.add(n));
+    options.include.forEach((n:string) => roots.add(n));
     const requiredIDs = new NamedDescriptorIndexReducer(
         types,
         roots,
@@ -60,7 +61,7 @@ async function main() {
     if (brokenReferences.length > 0) {
         throw new Error(
             `Broken references found: ${brokenReferences
-                .map((value, key) => `${value} references ${key}`)
+                .map((value:[string, string]) => `${value[0]} references ${value[1]}`)
                 .join(
                     ', ',
                 )}, please either exclude a type and all it's references`,

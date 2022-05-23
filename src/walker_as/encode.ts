@@ -1,9 +1,9 @@
-import { decorated } from '../proto';
-import { Blocks } from './blocks';
-import { Writer } from './walker_as';
-import { relativeName } from './internal';
-import { Options } from '../options';
-import { getTypeInfo, TypeInfo } from './type_info';
+import { decorated } from '../proto/index.js';
+import { Blocks } from './blocks.js';
+import { Writer } from './walker_as.js';
+import { relativeName } from './internal.js';
+import { Options } from '../options.js';
+import { getTypeInfo, TypeInfo } from './type_info.js';
 
 /**
  * Generates encode() method

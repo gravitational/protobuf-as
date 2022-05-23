@@ -1,5 +1,5 @@
-import { decorated } from "../proto";
-import { Writer } from "./walker_as";
+import { decorated } from "../proto/index.js";
+import { Writer } from "./walker_as.js";
 
 /**
  * Namespace code blocks

@@ -1,5 +1,5 @@
 import { FieldDescriptorProto_Type } from 'ts-proto-descriptors';
-import { AbstractDescriptorCollection } from '.';
+import { AbstractDescriptorCollection } from './index.js';
 
 // Protobuf wire type
 export enum WireType {

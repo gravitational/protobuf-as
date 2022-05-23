@@ -1,5 +1,6 @@
 /**/*.js
-/__tests__/__fixtures__/**/*
 /scripts/**/*
 /assembly/**/*
 /tmp/**/*
+/build/**/*
+/tests/__fixtures__/**/*

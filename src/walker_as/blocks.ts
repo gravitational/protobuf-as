@@ -1,5 +1,5 @@
-import { Options } from '../options';
-import { Writer } from "./walker_as";
+import { Options } from '../options.js';
+import { Writer } from "./walker_as.js";
 import { readFileSync } from 'fs';
 
 /**

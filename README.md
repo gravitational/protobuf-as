@@ -22,7 +22,6 @@ Run:
 
 ```sh
 protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts example/example.proto
-yarn asc assembly/example.ts --tsdFile assembly/example.d.ts
 ```
 
 This will generate the following `assembly/example.ts` and `assembly/example.d.ts`:
@@ -73,14 +72,12 @@ For example, this call won't generate both `Post.CreatedAt` field and `google.pr
 
 ```sh
 protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts:exclude=example.Post.CreatedAt example/example.proto
-yarn asc assembly/example.ts --tsdFile assembly/example.d.ts
 ```
 
 If you still need `google.protobuf.Timestamp` for some reason, you can add it to the inclusion list:
 
 ```sh
 protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts:exclude=example.Post.CreatedAt:include=google.protobuf.Timestamp example/example.proto
-yarn asc assembly/example.ts --tsdFile assembly/example.d.ts
 ```
 
 # Dependencies
@@ -253,3 +250,12 @@ switch (oneOf.valueType_index) {
     default:
         // ...
 }
+```
+
+# Development
+
+After checking the repo, use `yarn test` to run tests. If you make changes fixture `.proto` files, run: `yarn test:gen-fixtures`.
+
+# Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/gravitational/protobuf-as.

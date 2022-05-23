@@ -1,6 +1,6 @@
-import { decorated } from "../proto";
-import { Writer } from "./walker_as";
-import { Options } from '../options';
+import { decorated } from "../proto/index.js";
+import { Writer } from "./walker_as.js";
+import { Options } from '../options.js';
 import voca from "voca";
 
 /**

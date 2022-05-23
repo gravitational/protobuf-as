@@ -1,4 +1,4 @@
-import { decorated, named } from '../proto';
+import { decorated, named } from '../proto/index.js';
 
 // Generates "// DEPRECATED" comment
 export function deprecatedComment(obj: decorated.Depricable) {

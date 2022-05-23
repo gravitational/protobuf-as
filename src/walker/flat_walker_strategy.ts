@@ -1,7 +1,7 @@
-import { decorated } from '../proto';
-import { ImmutableFlatTree } from '../structs/immutable_flat_tree';
-import { DecoratedDescriptorIndex } from '../proto/decorated_descriptor_index';
-import { AbstractDescriptorCollection } from '../proto';
+import { decorated } from '../proto/index.js';
+import { ImmutableFlatTree } from '../structs/immutable_flat_tree.js';
+import { DecoratedDescriptorIndex } from '../proto/decorated_descriptor_index.js';
+import { AbstractDescriptorCollection } from '../proto/index.js';
 
 /**
  * Walker interface

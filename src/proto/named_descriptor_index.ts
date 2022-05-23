@@ -1,6 +1,6 @@
 import * as proto from 'ts-proto-descriptors';
-import * as named from './named_descriptor';
-import * as source from './source_code_index';
+import * as named from './named_descriptor.js';
+import * as source from './source_code_index.js';
 
 /**
  * Represents a map of protobuf descriptors with IDs, namespaces and in-hierarchy references.

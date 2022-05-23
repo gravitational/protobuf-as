@@ -1,8 +1,8 @@
-import { decorated } from '../proto';
-import { Writer } from './walker_as';
-import { getTypeInfo, TypeInfo } from './type_info';
-import { Options } from '../options';
-import { comment } from './internal';
+import { decorated } from '../proto/index.js';
+import { Writer } from './walker_as.js';
+import { getTypeInfo, TypeInfo } from './type_info.js';
+import { Options } from '../options.js';
+import { comment } from './internal.js';
 
 /**
  * Field code blocks

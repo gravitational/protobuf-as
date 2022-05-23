@@ -1,2 +1,2 @@
-export * from './flat_walker_strategy';
+export * from './flat_walker_strategy.js';
 

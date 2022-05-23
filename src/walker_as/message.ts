@@ -1,7 +1,7 @@
-import { decorated } from '../proto';
-import { Writer } from './walker_as';
-import { relativeName, comment } from './internal';
-import { Options } from '../options';
+import { decorated } from '../proto/index.js';
+import { Writer } from './walker_as.js';
+import { relativeName, comment } from './internal.js';
+import { Options } from '../options.js';
 
 /**
  * Message code blocks
