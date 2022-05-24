@@ -95,7 +95,7 @@ export function getTypeInfo(type: decorated.Field): TypeInfo {
         }
         case "field_message":            
         case "field_message_repeated": {
-            const typeName = absoluteName(type.typeName)
+            const typeName = absoluteName(type.typeName, type.namespace)            
             return {
                 typeName,
                 collectionTypeName: `Array<${typeName}>`

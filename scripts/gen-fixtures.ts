@@ -38,7 +38,7 @@ fixtures.forEach((fixture: Fixture) => {
         `yarn protoc -I${fixture.proto}`,
         `--plugin node_modules/.bin/protoc-gen-dump --dump_opt ${fixture.tsProto}/main.codegenreq --dump_out ${fixture.tsProto}`,
         `--plugin node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=oneof=unions,esModuleInterop=true --ts_proto_out ${fixture.tsProto}`,
-        `--plugin ./bin/protoc-gen-as --as_opt=targetFileName=${fixture.name}.ts:deps=embed:oneOfVarNames=OneOf.Messages+messageType --as_out ${fixture.asProto}`,
+        `--plugin ./bin/protoc-gen-as --as_opt=targetFileName=${fixture.name}.ts:mode=single:oneOfVarNames=OneOf.Messages+messageType --as_out ${fixture.asProto}`,
         `main.proto`
     ].join(" ")
 

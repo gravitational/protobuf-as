@@ -2,13 +2,21 @@ import { decorated } from '../proto/index.js';
 import { ImmutableFlatTree } from '../structs/immutable_flat_tree.js';
 import { DecoratedDescriptorIndex } from '../proto/decorated_descriptor_index.js';
 import { AbstractDescriptorCollection } from '../proto/index.js';
+import { isField } from '../proto/decorated_descriptor.js';
 
 /**
- * Walker interface
+ * File interface represents the generated file
+ */
+export interface File {
+    name: string;
+    content: string;
+}
+
+/**
+ * Walker interface, emits files
  */
 export interface Walker {
-    content(): string;
-    staticFiles(): string[];
+    files(): File[];
 }
 
 // Walker strategy is a strategy which calls a walker methods in an order required
@@ -29,6 +37,7 @@ export interface FlatBlocksWalker {
 
 export interface FlatNamespaceWalker {
     startNamespace(namespace: decorated.Namespace): void;
+    referenceExternal(namespace: decorated.Namespace, ext: string): void;
     finishNamespace(namespace: decorated.Namespace): void;
 }
 
@@ -115,6 +124,7 @@ export class FlatWalkerStrategy extends WalkerStrategy<
             .filter((item) => {
                 const [, desc, level] = item;
                 let match: boolean;
+
                 if (desc.kind == 'namespace') {
                     match = level == 1; // Root namespace
                 } else {
@@ -146,11 +156,49 @@ export class FlatWalkerStrategy extends WalkerStrategy<
         }
     }
 
+    private walkExternals(
+        walker: FlatWalker,
+        namespaceDesc: decorated.Namespace,
+    ) {
+        const externals = new Array<string>()
+
+        // Generate references to external namespaces within this particular namespace
+        this.items.descendants(namespaceDesc.id).forEach(([, desc]) => {
+            if (desc.namespace != namespaceDesc.id) {
+                return
+            }
+
+            if (!isField(desc)) {
+                return
+            }
+
+            if (desc.kind == 'field_message' || desc.kind == 'field_message_repeated') {
+                if (desc.typeName.namespace != namespaceDesc.id) {
+                    externals.push(desc.typeName.namespace)
+                }
+            }
+
+            if (desc.kind == 'field_map_message') {
+                if (desc.value.typeName.namespace != namespaceDesc.id) {
+                    externals.push(desc.value.typeName.namespace)
+                }
+            }
+        })
+
+        externals
+            .filter((value, index, self) => self.indexOf(value) === index)
+            .forEach(name => walker.referenceExternal(namespaceDesc, name))
+    }
+
     private walkNamespace(
         walker: FlatWalker,
         namespaceDesc: decorated.Namespace,
     ) {
         walker.startNamespace(namespaceDesc);
+
+        this.walkExternals(walker, namespaceDesc)
+
+        // Walk by this namespace items
         this.items.descendants(namespaceDesc.id).forEach(([, desc]) => {
             // Walk inside namespaces of any nesting level
             if (desc.kind == 'namespace') {
@@ -195,9 +243,7 @@ export class FlatWalkerStrategy extends WalkerStrategy<
         walker.startMessage(desc);
         children.forEach(([, fieldDesc]) => walker.fieldDecl(<decorated.Field>fieldDesc));
 
-        desc.oneOf.forEach((group) => {
-            walker.oneOfDiscriminatorDecl(desc, group)
-        })
+        desc.oneOf.forEach((group) => walker.oneOfDiscriminatorDecl(desc, group))
         children.forEach(([, fieldDesc]) => walker.oneOfDiscriminatorConst(<decorated.Field>fieldDesc))
 
         walker.startDecode(desc);

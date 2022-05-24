@@ -64,7 +64,7 @@ const OptionsSchema = z
         // IDs of messages, fields, enums and enum values to include
         include: z.preprocess(parseArray, z.optional(z.array(z.string())).default([])),
         // Dependencies: export, embed or leave in package
-        deps: z.enum(["export", "embed", "package"]).default("embed"),
+        mode: z.enum(["single", "multi"]).default("single"),
         // Disable prettier
         disablePrettier: z.preprocess(parseBool, z.boolean().default(false)),
         // Default export file name

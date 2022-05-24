@@ -1,7 +1,6 @@
 import { decorated } from '../proto/index.js';
-import { Blocks } from "./blocks.js";
-import { Writer, GlobalsRegistry } from './walker_as.js';
-import { relativeName } from './internal.js';
+import { Writer, GlobalsRegistry } from './index.js';
+import { relativeName, embedNamespace } from './internal.js';
 import { Field } from "./field.js";
 import { OneOf } from "./one_of.js";
 import { Options } from "../options.js";
@@ -14,9 +13,7 @@ export class Decode {
     private decoder = 'Decoder';
 
     constructor(private p: Writer, private globals: GlobalsRegistry, private options:Options) {
-        if (this.options.deps == "embed") {
-            this.decoder = [Blocks.embedNamespace, "Decoder"].join(".");
-        }
+        this.decoder = [embedNamespace, "Decoder"].join(".");
     }
 
     start(message: decorated.Message) {

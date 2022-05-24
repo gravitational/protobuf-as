@@ -1,5 +1,5 @@
 import { decorated } from '../proto/index.js';
-import { Writer } from "./walker_as.js";
+import { Writer } from "./index.js";
 import { deprecatedComment, relativeName, comment } from "./internal.js";
 
 /**

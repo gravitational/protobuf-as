@@ -4295,8 +4295,8 @@
    else
     i32.const 32
     i32.const 96
-    i32.const 760
-    i32.const 23
+    i32.const 745
+    i32.const 17
     call $~lib/builtins/abort
     unreachable
    end
@@ -4348,8 +4348,8 @@
    else
     i32.const 32
     i32.const 96
-    i32.const 772
-    i32.const 23
+    i32.const 757
+    i32.const 17
     call $~lib/builtins/abort
     unreachable
    end
@@ -5272,8 +5272,8 @@
    local.get $5
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 96
-   i32.const 287
-   i32.const 13
+   i32.const 276
+   i32.const 7
    call $~lib/builtins/abort
    unreachable
   end
@@ -5350,8 +5350,8 @@
    local.get $4
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 96
-   i32.const 287
-   i32.const 13
+   i32.const 276
+   i32.const 7
    call $~lib/builtins/abort
    unreachable
   end
@@ -5462,8 +5462,8 @@
    local.get $4
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 96
-   i32.const 287
-   i32.const 13
+   i32.const 276
+   i32.const 7
    call $~lib/builtins/abort
    unreachable
   end
@@ -5615,8 +5615,8 @@
    local.get $4
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 96
-   i32.const 265
-   i32.const 21
+   i32.const 254
+   i32.const 11
    call $~lib/builtins/abort
    unreachable
   end
@@ -5932,8 +5932,8 @@
    else
     i32.const 32
     i32.const 96
-    i32.const 706
-    i32.const 32
+    i32.const 693
+    i32.const 26
     call $~lib/builtins/abort
     unreachable
    end
@@ -5975,8 +5975,8 @@
    else
     i32.const 32
     i32.const 96
-    i32.const 715
-    i32.const 32
+    i32.const 702
+    i32.const 26
     call $~lib/builtins/abort
     unreachable
    end

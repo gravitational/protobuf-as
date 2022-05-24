@@ -8191,8 +8191,8 @@
    local.get $5
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 2976
-   i32.const 287
-   i32.const 13
+   i32.const 276
+   i32.const 7
    call $~lib/builtins/abort
    unreachable
   end
@@ -8269,8 +8269,8 @@
    local.get $4
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 2976
-   i32.const 287
-   i32.const 13
+   i32.const 276
+   i32.const 7
    call $~lib/builtins/abort
    unreachable
   end
@@ -8381,8 +8381,8 @@
    local.get $4
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 2976
-   i32.const 287
-   i32.const 13
+   i32.const 276
+   i32.const 7
    call $~lib/builtins/abort
    unreachable
   end
@@ -8534,8 +8534,8 @@
    local.get $4
    call $~lib/staticarray/StaticArray<~lib/string/String>#join
    i32.const 2976
-   i32.const 265
-   i32.const 21
+   i32.const 254
+   i32.const 11
    call $~lib/builtins/abort
    unreachable
   end

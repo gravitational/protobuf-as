@@ -1,7 +1,6 @@
-import { FlatWalker } from '../walker/index.js';
+import { FlatWalker, File } from '../walker/index.js';
 import { decorated } from '../proto/index.js';
-import { Blocks } from './blocks.js';
-import { Namespace } from './namespace.js';
+import { NamespaceMultiFile } from './namespace_multi_file.js';
 import { Enum } from './enum.js';
 import { Message } from './message.js';
 import { Field } from './field.js';
@@ -10,42 +9,16 @@ import { Decode } from './decode.js';
 import { Encode } from './encode.js';
 import { Size } from './size.js';
 import { OneOf } from './one_of.js';
-import { join } from 'path';
-import prettier from 'prettier';
-import path from 'path';
-import {fileURLToPath} from 'url';
-
-// Writer implements generic function which prints a code piece
-export type Writer = (value: string) => void;
-
-// Global code blocks registry
-export interface GlobalsRegistry {
-    registerGlobal(key: string, content: string): void;
-}
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// staticFiles represents list of static files to embed/copy
-const staticFiles = [
-    join(__dirname, '../../assembly/decoder.ts'),
-    join(__dirname, '../../assembly/encoder.ts'),
-    join(__dirname, '../../assembly/sizer.ts'),
-]
-
-// Options for prettier, TODO: move to WalkerAS
-const prettierOptions: prettier.Options = {
-    parser: 'typescript',
-    tabWidth: 4,
-};
+import { prettify } from './prettify.js';
+import { GlobalsRegistry } from './index.js';
+import { staticFiles, namespaceToFileName } from './internal.js';
+import fs from 'fs';
 
 /**
  * WalkerAS represents Walker implementing FlatWalker strategy producing AssemblyScript code. This is the composite class.
  */
-export class WalkerAS implements FlatWalker, GlobalsRegistry {
-    private chunks: string[] = new Array<string>();
-    private blocks: Blocks;
-    private namespace: Namespace;
+export class WalkerASMultiFile implements FlatWalker, GlobalsRegistry {
+    private namespace: NamespaceMultiFile;
     private enum: Enum;
     private message: Message;
     private decode: Decode;
@@ -54,35 +27,63 @@ export class WalkerAS implements FlatWalker, GlobalsRegistry {
     private field: Field;
     private oneOf: OneOf;
     private globals: Map<string, string> = new Map<string, string>();
+    private generatedFiles: Map<string, Array<string>> = new Map<string, Array<string>>();
+    private fileStack: Array<string> = new Array<string>();
 
     constructor(private options: Readonly<Options>) {
         const p = this.p.bind(this);
 
-        this.blocks = new Blocks(p, this.options, this.staticFiles());
-        this.namespace = new Namespace(p);
+        this.namespace = new NamespaceMultiFile(p, this.options)
         this.enum = new Enum(p);
-        this.message = new Message(p, this.options);
+        this.message = new Message(p);
         this.field = new Field(p, this.options);
         this.decode = new Decode(p, this, this.options);
-        this.encode = new Encode(p, this.options);
-        this.size = new Size(p, this, this.options);
+        this.encode = new Encode(p);
+        this.size = new Size(p, this);
         this.oneOf = new OneOf(p, this.options);
+
+        this.pushFile(options.targetFileName)
+    }
+
+    private currentFileName():string {
+        return this.fileStack[this.fileStack.length-1]
+    }
+
+    private pushFile(name: string) {
+        this.fileStack.push(name)
+        this.generatedFiles.set(this.currentFileName(), new Array<string>())
+    }
+
+    private popFile() {
+        this.fileStack.pop()
+    }
+
+    private resetGlobals() {
+        this.globals = new Map<string, string>()
     }
 
     public beforeAll() {
-        this.blocks.beforeAll();
+        // noop
     }
 
     public afterAll() {
-        this.blocks.afterAll(this.globals);
+        // noop
     }
 
     public startNamespace(namespace: decorated.Namespace) {
-        this.namespace.start(namespace);
+        this.namespace.parentRef(namespace)
+        this.pushFile(namespaceToFileName(namespace)+".ts")
+        this.namespace.start(namespace)
+    }
+
+    public referenceExternal(namespace:decorated.Namespace, ext: string): void {
+        this.namespace.extRef(namespace, ext)
     }
 
     public finishNamespace(namespace: decorated.Namespace) {
-        this.namespace.finish(namespace);
+        this.namespace.finish(namespace, this.globals)
+        this.resetGlobals()
+        this.popFile()
     }
 
     public startEnum(en: decorated.Enum) {
@@ -173,25 +174,31 @@ export class WalkerAS implements FlatWalker, GlobalsRegistry {
         this.oneOf.discriminatorConst(desc);
     }
 
-    public content() {
-        const content = this.chunks.join('\n');
+    public files():File[] {
+        const files:File[] = new Array<File>()
 
-        return this.options.disablePrettier
-            ? content
-            : prettier.format(content, prettierOptions);
-    }
+        // Join Encoder, Decoder, etc. to the single __proto.ts file
+        const staticContent = staticFiles.map((f) => fs.readFileSync(f).toString()).join("\n")
+        files.push({ name: "__proto.ts", content: staticContent });
 
-    public staticFiles() {
-        if (this.options.deps != "package") {
-            return staticFiles;
+        // Put all files to the array
+        this.generatedFiles.forEach((value:string[], key:string) => files.push(<File>{
+            name: key, content: value.join('\n')
+        }));
+    
+        if (this.options.disablePrettier) {
+            return files
         }
-
-        return [];
+        
+        return prettify(files)
     }
 
     p(s: string) {
         if (s != '') {
-            this.chunks.push(s);
+            const chunks = this.generatedFiles.get(this.currentFileName())
+            if (chunks) {
+                chunks.push(s);
+            }
         }
     }
 

@@ -37,7 +37,7 @@ test('parseOptions() returns configuration from a file', () => {
     const options = parseOptions("config=tests/__fixtures__/config.json")
     assert.equal(options.exclude, ["Foo", "Bar"])
     assert.equal(options.nullable, true)
-    assert.equal(options.deps, "embed")
+    assert.equal(options.mode, "single")
     assert.equal(options.typeAliases, new Map<string, string>([["Foo", "Bar"]]))
 });
 

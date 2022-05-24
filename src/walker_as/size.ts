@@ -1,9 +1,7 @@
 import { decorated } from '../proto/index.js';
-import { Writer, GlobalsRegistry } from './walker_as.js';
+import { Writer, GlobalsRegistry } from './index.js';
 import { getTypeInfo, TypeInfo } from './type_info.js';
-import { Blocks } from './blocks.js';
-import { Options } from '../options.js';
-import { relativeName } from './internal.js';
+import { relativeName, embedNamespace } from './internal.js';
 
 /**
  * Generates message size() and __size helper methods
@@ -13,12 +11,9 @@ export class Size {
 
     constructor(
         private p: Writer,
-        private globals: GlobalsRegistry,
-        private options: Options,
+        private globals: GlobalsRegistry
     ) {
-        if (this.options.deps == 'embed') {
-            this.sizer = [Blocks.embedNamespace, 'Sizer'].join('.');
-        }
+        this.sizer = [embedNamespace, 'Sizer'].join('.');
     }
 
     start() {

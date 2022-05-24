@@ -1,10 +1,10 @@
 import { decorated } from "../proto/index.js";
-import { Writer } from "./walker_as.js";
+import { Writer } from "./index.js";
 
 /**
  * Namespace code blocks
  */
-export class Namespace {
+export class NamespaceSingleFile {
     constructor(private p:Writer) {}
 
     start(ns:decorated.Namespace) {

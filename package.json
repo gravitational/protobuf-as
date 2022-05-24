@@ -60,6 +60,6 @@
     "lint": "eslint . --ext .ts,.tsx",
     "test:gen-fixtures": "yarn build && ts-node-esm scripts/gen-fixtures.ts",
     "test": "./node_modules/.bin/c8 yarn run ts-node --project tsconfig.json node_modules/.bin/uvu tests test --color",
-    "debug:gen-teleport": "mkdir -p tmp/assembly && protoc -I/$(go env GOPATH)/src/github.com/gravitational/teleport/api/types -I$(go env GOPATH)/src/github.com/gravitational/teleport/api/types/wrappers -I$(go env GOPATH)/src/github.com/gogo/protobuf/ -I$(go env GOPATH)/src --plugin=./bin/protoc-gen-as --as_out=tmp/assembly --plugin node_modules/.bin/protoc-gen-ts_proto --as_opt targetFileName=teleport.ts --ts_proto_opt=outputJsonMethods=false,outputTypeRegistry=false,outputClientImpl=false,outputServices=false,addGrpcMetadata=false --ts_proto_out=tmp types.proto events/events.proto && yarn asc tmp/assembly/teleport.ts --bindings esm -o tmp/teleport.wasm -t tmp/teleport.wat"
+    "debug:gen-teleport": "mkdir -p tmp/assembly && protoc -I/$(go env GOPATH)/src/github.com/gravitational/teleport/api/types -I$(go env GOPATH)/src/github.com/gravitational/teleport/api/types/wrappers -I$(go env GOPATH)/src/github.com/gogo/protobuf/ -I$(go env GOPATH)/src --plugin=./bin/protoc-gen-as --as_out=tmp/assembly --as_opt targetFileName=teleport.ts:mode=multi:disablePrettier=false types.proto events/events.proto && yarn asc tmp/assembly/teleport.ts --bindings esm -o tmp/teleport.wasm -t tmp/teleport.wat"
   }
 }

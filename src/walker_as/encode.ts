@@ -1,8 +1,6 @@
 import { decorated } from '../proto/index.js';
-import { Blocks } from './blocks.js';
-import { Writer } from './walker_as.js';
-import { relativeName } from './internal.js';
-import { Options } from '../options.js';
+import { Writer } from './index.js';
+import { relativeName, embedNamespace } from './internal.js';
 import { getTypeInfo, TypeInfo } from './type_info.js';
 
 /**
@@ -11,10 +9,8 @@ import { getTypeInfo, TypeInfo } from './type_info.js';
 export class Encode {
     private encoder = 'Encoder';
 
-    constructor(private p: Writer, private options: Options) {
-        if (this.options.deps == 'embed') {
-            this.encoder = [Blocks.embedNamespace, 'Encoder'].join('.');
-        }
+    constructor(private p: Writer) {
+        this.encoder = [embedNamespace, 'Encoder'].join('.');
     }
 
     start(message: decorated.Message) {

@@ -37,11 +37,12 @@ async function instantiate(module, imports = {}) {
     // tests/__fixtures__/as_proto/maps/maps/Maps
     // Hint: Opt-out from lowering as a record by providing an empty constructor
     if (value == null) return 0;
-    const pointer = exports.__pin(exports.__new(16, 3));
+    const pointer = exports.__pin(exports.__new(20, 3));
     new Uint32Array(memory.buffer)[pointer + 0 >>> 2] = __lowerInternref(value.StringStringMap) || __notnull();
     new Uint32Array(memory.buffer)[pointer + 4 >>> 2] = __lowerInternref(value.StringInt32Map) || __notnull();
     new Uint32Array(memory.buffer)[pointer + 8 >>> 2] = __lowerInternref(value.Int32StringMap) || __notnull();
     new Uint32Array(memory.buffer)[pointer + 12 >>> 2] = __lowerInternref(value.StringValueMap) || __notnull();
+    new Uint32Array(memory.buffer)[pointer + 16 >>> 2] = __lowerInternref(value.StringExternalMapValue) || __notnull();
     exports.__unpin(pointer);
     return pointer;
   }
@@ -54,6 +55,7 @@ async function instantiate(module, imports = {}) {
       StringInt32Map: __liftInternref(new Uint32Array(memory.buffer)[pointer + 4 >>> 2]),
       Int32StringMap: __liftInternref(new Uint32Array(memory.buffer)[pointer + 8 >>> 2]),
       StringValueMap: __liftInternref(new Uint32Array(memory.buffer)[pointer + 12 >>> 2]),
+      StringExternalMapValue: __liftInternref(new Uint32Array(memory.buffer)[pointer + 16 >>> 2]),
     };
   }
   function __liftBuffer(pointer) {

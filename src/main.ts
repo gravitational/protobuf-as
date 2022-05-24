@@ -5,35 +5,15 @@ import {
 } from 'ts-proto-descriptors';
 
 import { promisify } from 'util';
-import ReadStream = NodeJS.ReadStream;
-import { FlatWalkerStrategy } from './walker/flat_walker_strategy.js';
-import { WalkerAS } from './walker_as/walker_as.js';
+import { FlatWalker, FlatWalkerStrategy } from './walker/flat_walker_strategy.js';
+import { WalkerASSingleFile, WalkerASMultiFile } from './walker_as/index.js';
 import {
     NamedDescriptorIndex,
     DecoratedDescriptorIndex,
     NamedDescriptorIndexReducer,
 } from './proto/index.js';
 import { parseOptions } from './options.js';
-import { readFileSync } from 'fs';
-import { basename } from 'path';
-
-// TODO: internal.ts
-export function readToBuffer(stream: ReadStream): Promise<Buffer> {
-    return new Promise((resolve) => {
-        const ret: Array<Buffer> = [];
-        let len = 0;
-        stream.on('readable', () => {
-            let chunk;
-            while ((chunk = stream.read())) {
-                ret.push(chunk);
-                len += chunk.length;
-            }
-        });
-        stream.on('end', () => {
-            resolve(Buffer.concat(ret, len));
-        });
-    });
-}
+import { readToBuffer } from './internal.js';
 
 async function main() {
     const stdin = await readToBuffer(process.stdin);
@@ -70,20 +50,16 @@ async function main() {
 
     const descriptors = new DecoratedDescriptorIndex(requiredIDs);
     const strategy = new FlatWalkerStrategy(descriptors);
-    const walker = new WalkerAS(options);
+
+    let walker:FlatWalker = new WalkerASSingleFile(options);
+    
+    if (options.mode == 'multi') {
+        walker = new WalkerASMultiFile(options);
+    }
+    
     strategy.walk(walker);
 
-    const content = walker.content()
-    const files = [{
-        name: options.targetFileName, content: content
-    }];
-
-    if (options.deps == 'export') {
-        walker.staticFiles().forEach((f) => {
-            files.push({ name: basename(f), content: readFileSync(f).toString() });
-        });
-    }
-
+    const files = walker.files()
     const response = CodeGeneratorResponse.fromPartial({
         // There is an issue with type declaration in ts-proto-descriptors, ignoring it for now
         /* eslint-disable @typescript-eslint/ban-ts-comment */

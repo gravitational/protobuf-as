@@ -32,6 +32,10 @@ declare class __Internref6 extends Number {
 declare class __Internref9 extends Number {
   private __nominal9: symbol;
 }
+/** ~lib/map/Map<~lib/string/String,tests/__fixtures__/as_proto/maps/maps/external.MapValue> */
+declare class __Internref11 extends Number {
+  private __nominal11: symbol;
+}
 /** tests/__fixtures__/as_proto/maps/maps/Maps */
 declare interface __Record3<TOmittable> {
   /** @type `~lib/map/Map<~lib/string/String,~lib/string/String>` */
@@ -42,4 +46,6 @@ declare interface __Record3<TOmittable> {
   Int32StringMap: __Internref6;
   /** @type `~lib/map/Map<~lib/string/String,tests/__fixtures__/as_proto/maps/maps/Value>` */
   StringValueMap: __Internref9;
+  /** @type `~lib/map/Map<~lib/string/String,tests/__fixtures__/as_proto/maps/maps/external.MapValue>` */
+  StringExternalMapValue: __Internref11;
 }

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Long from 'long';
 import _m0 from 'protobufjs/minimal.js';
+import { MapValue } from './external.js';
 
 export const protobufPackage = '';
 
@@ -13,6 +14,7 @@ export interface Maps {
     StringInt32Map: { [key: string]: number };
     Int32StringMap: { [key: number]: string };
     StringValueMap: { [key: string]: Value };
+    StringExternalMapValue: { [key: string]: MapValue };
 }
 
 export interface Maps_StringStringMapEntry {
@@ -33,6 +35,11 @@ export interface Maps_Int32StringMapEntry {
 export interface Maps_StringValueMapEntry {
     key: string;
     value: Value | undefined;
+}
+
+export interface Maps_StringExternalMapValueEntry {
+    key: string;
+    value: MapValue | undefined;
 }
 
 function createBaseValue(): Value {
@@ -109,6 +116,7 @@ function createBaseMaps(): Maps {
         StringInt32Map: {},
         Int32StringMap: {},
         StringValueMap: {},
+        StringExternalMapValue: {},
     };
 }
 
@@ -141,6 +149,14 @@ export const Maps = {
                 writer.uint32(34).fork(),
             ).ldelim();
         });
+        Object.entries(message.StringExternalMapValue).forEach(
+            ([key, value]) => {
+                Maps_StringExternalMapValueEntry.encode(
+                    { key: key as any, value },
+                    writer.uint32(42).fork(),
+                ).ldelim();
+            },
+        );
         return writer;
     },
 
@@ -188,6 +204,16 @@ export const Maps = {
                         message.StringValueMap[entry4.key] = entry4.value;
                     }
                     break;
+                case 5:
+                    const entry5 = Maps_StringExternalMapValueEntry.decode(
+                        reader,
+                        reader.uint32(),
+                    );
+                    if (entry5.value !== undefined) {
+                        message.StringExternalMapValue[entry5.key] =
+                            entry5.value;
+                    }
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -230,6 +256,14 @@ export const Maps = {
                       return acc;
                   }, {})
                 : {},
+            StringExternalMapValue: isObject(object.StringExternalMapValue)
+                ? Object.entries(object.StringExternalMapValue).reduce<{
+                      [key: string]: MapValue;
+                  }>((acc, [key, value]) => {
+                      acc[key] = MapValue.fromJSON(value);
+                      return acc;
+                  }, {})
+                : {},
         };
     },
 
@@ -257,6 +291,12 @@ export const Maps = {
         if (message.StringValueMap) {
             Object.entries(message.StringValueMap).forEach(([k, v]) => {
                 obj.StringValueMap[k] = Value.toJSON(v);
+            });
+        }
+        obj.StringExternalMapValue = {};
+        if (message.StringExternalMapValue) {
+            Object.entries(message.StringExternalMapValue).forEach(([k, v]) => {
+                obj.StringExternalMapValue[k] = MapValue.toJSON(v);
             });
         }
         return obj;
@@ -293,6 +333,14 @@ export const Maps = {
         ).reduce<{ [key: string]: Value }>((acc, [key, value]) => {
             if (value !== undefined) {
                 acc[key] = Value.fromPartial(value);
+            }
+            return acc;
+        }, {});
+        message.StringExternalMapValue = Object.entries(
+            object.StringExternalMapValue ?? {},
+        ).reduce<{ [key: string]: MapValue }>((acc, [key, value]) => {
+            if (value !== undefined) {
+                acc[key] = MapValue.fromPartial(value);
             }
             return acc;
         }, {});
@@ -571,6 +619,81 @@ export const Maps_StringValueMapEntry = {
         message.value =
             object.value !== undefined && object.value !== null
                 ? Value.fromPartial(object.value)
+                : undefined;
+        return message;
+    },
+};
+
+function createBaseMaps_StringExternalMapValueEntry(): Maps_StringExternalMapValueEntry {
+    return { key: '', value: undefined };
+}
+
+export const Maps_StringExternalMapValueEntry = {
+    encode(
+        message: Maps_StringExternalMapValueEntry,
+        writer: _m0.Writer = _m0.Writer.create(),
+    ): _m0.Writer {
+        if (message.key !== '') {
+            writer.uint32(10).string(message.key);
+        }
+        if (message.value !== undefined) {
+            MapValue.encode(message.value, writer.uint32(18).fork()).ldelim();
+        }
+        return writer;
+    },
+
+    decode(
+        input: _m0.Reader | Uint8Array,
+        length?: number,
+    ): Maps_StringExternalMapValueEntry {
+        const reader =
+            input instanceof _m0.Reader ? input : new _m0.Reader(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseMaps_StringExternalMapValueEntry();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.key = reader.string();
+                    break;
+                case 2:
+                    message.value = MapValue.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+
+    fromJSON(object: any): Maps_StringExternalMapValueEntry {
+        return {
+            key: isSet(object.key) ? String(object.key) : '',
+            value: isSet(object.value)
+                ? MapValue.fromJSON(object.value)
+                : undefined,
+        };
+    },
+
+    toJSON(message: Maps_StringExternalMapValueEntry): unknown {
+        const obj: any = {};
+        message.key !== undefined && (obj.key = message.key);
+        message.value !== undefined &&
+            (obj.value = message.value
+                ? MapValue.toJSON(message.value)
+                : undefined);
+        return obj;
+    },
+
+    fromPartial<
+        I extends Exact<DeepPartial<Maps_StringExternalMapValueEntry>, I>,
+    >(object: I): Maps_StringExternalMapValueEntry {
+        const message = createBaseMaps_StringExternalMapValueEntry();
+        message.key = object.key ?? '';
+        message.value =
+            object.value !== undefined && object.value !== null
+                ? MapValue.fromPartial(object.value)
                 : undefined;
         return message;
     },

@@ -80,17 +80,16 @@ If you still need `google.protobuf.Timestamp` for some reason, you can add it to
 protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts:exclude=example.Post.CreatedAt:include=google.protobuf.Timestamp example/example.proto
 ```
 
-# Dependencies
+# Types
 
 The generated code depends on a few common classes. You can control exporting them using `deps` option.
 
-* `deps=embed` (default) embeds dependencies to the generated file, within the special `__proto` namespace.
-* `deps=export` exports dependencies as a separate files in the same folder.
-* `deps=package` generates normal imports from the `protobuf-as` package.
+* `mode=single` (default) generates the single file.
+* `mode=multi` emits file structure where every file represents separate namespace.
 
 # Setting target file properties
 
-* `targetFileName` sets the target file name. For `singlefile` output that's the name of a target file.
+* `targetFileName` sets the target file name. For `type=single` output that's the name of a target file. For `mode=multi` it would be the file name for Messages and Enums in root namespace.
 * `disablePrettier=true` disables prettier on the generated code (used for debug purposes).
 
 # Nullable fields
@@ -251,6 +250,8 @@ switch (oneOf.valueType_index) {
         // ...
 }
 ```
+
+Discriminant field is set by `decode()` and does not impact `encode()`. If you need to change `oneOf` value, just set the old value to `null`.
 
 # Development
 

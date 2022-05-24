@@ -1,5 +1,5 @@
 import { decorated } from '../proto/index.js';
-import { Writer } from './walker_as.js';
+import { Writer } from './index.js';
 import { getTypeInfo, TypeInfo } from './type_info.js';
 import { Options } from '../options.js';
 import { comment } from './internal.js';

@@ -11,6 +11,7 @@ const subject: Maps = {
         value1: { Int32s: [1, 2, 3] },
         value2: { Int32s: [1, 2, 3] },
     },
+    StringExternalMapValue: {},
 };
 
 const data = Maps.encode(subject).finish()
