@@ -1,8 +1,8 @@
-export * as named from './named_descriptor';
-export * as decorated from './decorated_descriptor';
-export * from './named_descriptor_index';
-export * from './named_descriptor_index_reducer';
-export * from './decorated_descriptor_index';
+export * as named from './named_descriptor.js';
+export * as decorated from './decorated_descriptor.js';
+export * from './named_descriptor_index.js';
+export * from './named_descriptor_index_reducer.js';
+export * from './decorated_descriptor_index.js';
 
 // Represents abstract descriptor collection interface
 export interface AbstractDescriptorCollection<T> {

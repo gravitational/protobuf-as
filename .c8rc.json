@@ -1,0 +1,10 @@
+{
+  "all": true,
+  "include": ["src/**/*"],
+  "exclude": [
+    "src/walker/**/*", 
+    "src/walker_as/**/*",
+    "src/internal.ts",
+    "src/main.ts"
+  ]
+}

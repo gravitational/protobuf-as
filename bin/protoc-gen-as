@@ -1,2 +1,2 @@
-#!/usr/bin/env node
-require("../build/src/main")
+#!/bin/sh
+yarn exec ts-node src/main.ts

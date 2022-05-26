@@ -1,0 +1,11 @@
+{
+    "exclude": [
+        "Foo",
+        "Bar"
+    ],
+    "nullable": true,
+    "mode": "single",
+    "typeAliases": {
+        "Foo": "Bar"
+    }
+}

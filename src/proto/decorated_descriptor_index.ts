@@ -1,5 +1,5 @@
-import * as decorated from './decorated_descriptor';
-import * as named from './named_descriptor';
+import * as decorated from './decorated_descriptor.js';
+import * as named from './named_descriptor.js';
 
 import {
     FieldDescriptorProto_Label,

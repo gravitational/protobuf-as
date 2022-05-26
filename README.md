@@ -22,7 +22,6 @@ Run:
 
 ```sh
 protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts example/example.proto
-yarn asc assembly/example.ts --tsdFile assembly/example.d.ts
 ```
 
 This will generate the following `assembly/example.ts` and `assembly/example.d.ts`:
@@ -73,27 +72,24 @@ For example, this call won't generate both `Post.CreatedAt` field and `google.pr
 
 ```sh
 protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts:exclude=example.Post.CreatedAt example/example.proto
-yarn asc assembly/example.ts --tsdFile assembly/example.d.ts
 ```
 
 If you still need `google.protobuf.Timestamp` for some reason, you can add it to the inclusion list:
 
 ```sh
 protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts:exclude=example.Post.CreatedAt:include=google.protobuf.Timestamp example/example.proto
-yarn asc assembly/example.ts --tsdFile assembly/example.d.ts
 ```
 
-# Dependencies
+# Types
 
 The generated code depends on a few common classes. You can control exporting them using `deps` option.
 
-* `deps=embed` (default) embeds dependencies to the generated file, within the special `__proto` namespace.
-* `deps=export` exports dependencies as a separate files in the same folder.
-* `deps=package` generates normal imports from the `protobuf-as` package.
+* `mode=single` (default) generates the single file.
+* `mode=multi` emits file structure where every file represents separate namespace.
 
 # Setting target file properties
 
-* `targetFileName` sets the target file name.
+* `targetFileName` sets the target file name. For `type=single` output that's the name of a target file. For `mode=multi` it would be the file name for Messages and Enums in root namespace.
 * `disablePrettier=true` disables prettier on the generated code (used for debug purposes).
 
 # Nullable fields
@@ -196,18 +192,26 @@ message OneOf {
 }
 ```
 
-The following property would be added to the generated class:
+The following properties will be added to the generated class:
 
 ```ts
 class OneOf {
     public __oneOf_Values: string = "";
+    public __oneOf_Values_index: u8 = 0;
+
+    static readonly ONE_OF_VALUES_STRING_INDEX = 1;
+    static readonly ONE_OF_VALUES_INT_INDEX = 2;
 }
 ```
 
-It will be set to the field name of a current OneOf value:
+It will be set to the field name of a current OneOf value and number:
 
 ```typescript
 if (oneof.__oneOf_Values == "Int") {
+    // ...
+}
+
+if (oneof.__oneOf_Values_index == 2) {
     // ...
 }
 ```
@@ -228,4 +232,31 @@ Where `OneOf.Values` is the full path to a `OneOf` definition, and `valueType` i
 if (oneof.valueType == "Int") {
     // ...
 }
+
+if (oneof.valueType_index == "Int") {
+    // ...
+}
 ```
+
+You can use generated constants for switch:
+
+```typescript
+switch (oneOf.valueType_index) {
+    case ONE_OF_VALUES_INT_INDEX:
+        // ...
+    case ONE_OF_VALUES_STRING_INDEX:
+        // ...
+    default:
+        // ...
+}
+```
+
+Discriminant field is set by `decode()` and does not impact `encode()`. If you need to change `oneOf` value, just set the old value to `null`.
+
+# Development
+
+After checking the repo, use `yarn test` to run tests. If you make changes fixture `.proto` files, run: `yarn test:gen-fixtures`.
+
+# Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/gravitational/protobuf-as.

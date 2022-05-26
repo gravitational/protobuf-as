@@ -1,5 +1,5 @@
 import { FieldDescriptorProto_Type } from 'ts-proto-descriptors';
-import { AbstractDescriptorCollection } from '.';
+import { AbstractDescriptorCollection } from './index.js';
 
 // Protobuf wire type
 export enum WireType {
@@ -174,4 +174,9 @@ export function isMessage(field: Field): field is FieldMessage {
 // Descriptor is any map field
 export function isAnyMap(field: Field): field is (FieldMap | FieldMapMessage) {
     return field.kind == 'field_map' || field.kind == 'field_map_message';
+}
+
+// Descriptor has oneOf field
+export function isOneOf(field: Field): field is (FieldElementary | FieldMessage | FieldMap | FieldMapMessage) {
+    return isElementary(field) || isMessage(field) || isAnyMap(field)    
 }

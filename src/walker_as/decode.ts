@@ -1,11 +1,10 @@
-import { decorated } from '../proto';
-import { Blocks } from "./blocks";
-import { Writer, GlobalsRegistry } from './walker_as';
-import { relativeName } from './internal';
-import { Field } from "./field";
-import { Message } from "./message";
-import { Options } from "../options";
-import { getTypeInfo, TypeInfo } from './type_info';
+import { decorated } from '../proto/index.js';
+import { Writer, GlobalsRegistry } from './index.js';
+import { relativeName, embedNamespace } from './internal.js';
+import { Field } from "./field.js";
+import { OneOf } from "./one_of.js";
+import { Options } from "../options.js";
+import { getTypeInfo, TypeInfo } from './type_info.js';
 
 /**
  * Generates decode() method
@@ -14,9 +13,7 @@ export class Decode {
     private decoder = 'Decoder';
 
     constructor(private p: Writer, private globals: GlobalsRegistry, private options:Options) {
-        if (this.options.deps == "embed") {
-            this.decoder = [Blocks.embedNamespace, "Decoder"].join(".");
-        }
+        this.decoder = [embedNamespace, "Decoder"].join(".");
     }
 
     start(message: decorated.Message) {
@@ -82,10 +79,11 @@ export class Decode {
                 break;
         }
 
-        // If a field belongs to oneOf
-        if (decorated.isElementary(field) || decorated.isMessage(field) || decorated.isAnyMap(field)) {
+        // If a field belongs to oneOf we need to set discriminator value
+        if (decorated.isOneOf(field)) {
             if (field.oneOf != undefined) {
-                this.p(`obj.${Message.oneOfVarName(this.options, field.parentID, field.oneOf)} = "${field.name}";`)
+                this.p(`obj.${OneOf.varName(this.options, field.parentID, field.oneOf)} = "${field.name}";`)
+                this.p(`obj.${OneOf.indexVarName(this.options, field.parentID, field.oneOf)} = ${field.number};`)
             }
         }
 

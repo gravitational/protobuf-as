@@ -1,6 +1,6 @@
-import { decorated } from '../proto';
-import { Writer } from "./walker_as";
-import { deprecatedComment, relativeName, comment } from "./internal";
+import { decorated } from '../proto/index.js';
+import { Writer } from "./index.js";
+import { deprecatedComment, relativeName, comment } from "./internal.js";
 
 /**
  * Enum code blocks

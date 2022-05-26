@@ -1,40 +1,27 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "lib": ["es2018"],
-    "module": "commonjs",
+    "lib": ["ES2021", "DOM"],
+    "target": "ESNext",
+    "module": "NodeNext",
     "strict": true,
     "outDir": "build",
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
     "esModuleInterop": true,
+    "moduleResolution": "nodenext",
+    "declaration": true
   },
-  "include": [
+  "ts-node": {
+    "esm": true,
+    "compilerOptions": {
+      "paths": {
+        "uvu": ["./node_modules/uvu"],
+      }  
+    }
+  },  
+  "include": [    
     "src/**/*",
-    "__tests__/**/*.ts"
+    "tests/**/*"
+  ],
+  "exclude": [
+    "tests/__fixtures__/**/*"
   ]
 }
-// {
-//   "compilerOptions": {
-//     "target": "es6",
-//     "module": "commonjs",
-//     "moduleResolution": "node",
-//     "allowSyntheticDefaultImports": true,
-//     "allowJs": true,
-//     "importHelpers": true,
-//     "sourceMap": true,
-//     "forceConsistentCasingInFileNames": true,
-//     "noFallthroughCasesInSwitch": true,
-//     "noImplicitReturns": true,
-//     "noUnusedLocals": true,
-//     "noUnusedParameters": true,
-//     "noImplicitAny": false,
-//     "noImplicitThis": false,
-//     "strictNullChecks": false,
-//     "esModuleInterop": true
-//   },
-//   "include": [
-//     "src/**/*",
-//     "__tests__/**/*.ts"
-//   ]
-// }

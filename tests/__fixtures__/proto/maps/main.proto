@@ -1,0 +1,14 @@
+syntax = "proto3";
+import "external.proto";
+
+message Value {
+    repeated int32 Int32s = 1;
+}
+
+message Maps {
+    map<string, string> StringStringMap = 1;
+    map<string, int32> StringInt32Map = 2;
+    map<int32, string> Int32StringMap = 3;
+    map<string, Value> StringValueMap = 4;
+    map<string, .external.MapValue> StringExternalMapValue = 5;
+}

@@ -5,34 +5,15 @@ import {
 } from 'ts-proto-descriptors';
 
 import { promisify } from 'util';
-import ReadStream = NodeJS.ReadStream;
-import { FlatWalkerStrategy } from './walker';
-import { WalkerAS } from './walker_as';
+import { FlatWalker, FlatWalkerStrategy } from './walker/flat_walker_strategy.js';
+import { WalkerASSingleFile, WalkerASMultiFile } from './walker_as/index.js';
 import {
     NamedDescriptorIndex,
     DecoratedDescriptorIndex,
     NamedDescriptorIndexReducer,
-} from './proto';
-import { parseOptions } from './options';
-import { readFileSync } from 'fs';
-import { basename } from 'path';
-
-export function readToBuffer(stream: ReadStream): Promise<Buffer> {
-    return new Promise((resolve) => {
-        const ret: Array<Buffer> = [];
-        let len = 0;
-        stream.on('readable', () => {
-            let chunk;
-            while ((chunk = stream.read())) {
-                ret.push(chunk);
-                len += chunk.length;
-            }
-        });
-        stream.on('end', () => {
-            resolve(Buffer.concat(ret, len));
-        });
-    });
-}
+} from './proto/index.js';
+import { parseOptions } from './options.js';
+import { readToBuffer } from './internal.js';
 
 async function main() {
     const stdin = await readToBuffer(process.stdin);
@@ -49,7 +30,7 @@ async function main() {
 
     const types = new NamedDescriptorIndex(request);
     const roots: Set<string> = types.rootIDs() as Set<string>;
-    options.include.forEach((n) => roots.add(n));
+    options.include.forEach((n:string) => roots.add(n));
     const requiredIDs = new NamedDescriptorIndexReducer(
         types,
         roots,
@@ -60,7 +41,7 @@ async function main() {
     if (brokenReferences.length > 0) {
         throw new Error(
             `Broken references found: ${brokenReferences
-                .map((value, key) => `${value} references ${key}`)
+                .map((value:[string, string]) => `${value[0]} references ${value[1]}`)
                 .join(
                     ', ',
                 )}, please either exclude a type and all it's references`,
@@ -69,20 +50,16 @@ async function main() {
 
     const descriptors = new DecoratedDescriptorIndex(requiredIDs);
     const strategy = new FlatWalkerStrategy(descriptors);
-    const walker = new WalkerAS(options);
+
+    let walker:FlatWalker = new WalkerASSingleFile(options);
+    
+    if (options.mode == 'multi') {
+        walker = new WalkerASMultiFile(options);
+    }
+    
     strategy.walk(walker);
 
-    const content = walker.content()
-    const files = [{
-        name: options.targetFileName, content: content
-    }];
-
-    if (options.deps == 'export') {
-        walker.staticFiles().forEach((f) => {
-            files.push({ name: basename(f), content: readFileSync(f).toString() });
-        });
-    }
-
+    const files = walker.files()
     const response = CodeGeneratorResponse.fromPartial({
         // There is an issue with type declaration in ts-proto-descriptors, ignoring it for now
         /* eslint-disable @typescript-eslint/ban-ts-comment */

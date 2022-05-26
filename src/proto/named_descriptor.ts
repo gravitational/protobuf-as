@@ -1,5 +1,5 @@
 import * as proto from 'ts-proto-descriptors';
-import { AbstractDescriptorCollection } from '.';
+import { AbstractDescriptorCollection } from './index.js';
 
 // Descriptor ID and namespace
 export type Id = {

@@ -1,6 +1,6 @@
 import { FieldDescriptorProto_Type } from 'ts-proto-descriptors';
-import { decorated } from '../proto';
-import { absoluteName } from './internal';
+import { decorated } from '../proto/index.js';
+import { absoluteName } from './internal.js';
 
 // AssemblyScript types for the corresponding proto types
 const types = new Map<FieldDescriptorProto_Type, string>([
@@ -95,7 +95,7 @@ export function getTypeInfo(type: decorated.Field): TypeInfo {
         }
         case "field_message":            
         case "field_message_repeated": {
-            const typeName = absoluteName(type.typeName)
+            const typeName = absoluteName(type.typeName, type.namespace)            
             return {
                 typeName,
                 collectionTypeName: `Array<${typeName}>`

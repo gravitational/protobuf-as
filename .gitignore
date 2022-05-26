@@ -10,8 +10,8 @@ node_modules/
 # Coverage
 coverage
 
-# Transpiled files
-build/
+# Transpiled files (roots only)
+/build
 
 # VS Code
 .vscode
