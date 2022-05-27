@@ -1,7 +1,7 @@
 import { decorated, named } from '../proto/index.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import voca from 'voca';
+import changeCase from 'change-case';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -51,7 +51,7 @@ export function comment(obj: decorated.Commented): string {
 
 // Converts namespace to ts file name
 export function namespaceToFileName(obj: decorated.Namespace):string {
-    return obj.id.split(".").map(v => voca.snakeCase(v)).join("/")
+    return obj.id.split(".").map(v => changeCase.snakeCase(v)).join("/")
 }
 
 // Returns relative component of the ts file

@@ -607,10 +607,10 @@ export class OneOf {
   public __oneOf_SecondMessage: string = "";
   public __oneOf_SecondMessage_index: u8 = 0;
 
-  static readonly MESSAGES_BRANCH_1_INDEX: u8 = 1;
-  static readonly MESSAGES_BRANCH_2_INDEX: u8 = 2;
-  static readonly SECOND_MESSAGE_BRANCH_3_INDEX: u8 = 4;
-  static readonly SECOND_MESSAGE_BRANCH_4_INDEX: u8 = 5;
+  static readonly MESSAGES_BRANCH1_INDEX: u8 = 1;
+  static readonly MESSAGES_BRANCH2_INDEX: u8 = 2;
+  static readonly SECOND_MESSAGE_BRANCH3_INDEX: u8 = 4;
+  static readonly SECOND_MESSAGE_BRANCH4_INDEX: u8 = 5;
 
   // Decodes OneOf from an ArrayBuffer
   static decode(buf: ArrayBuffer): OneOf {

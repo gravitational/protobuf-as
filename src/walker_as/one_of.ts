@@ -1,7 +1,7 @@
 import { decorated } from "../proto/index.js";
 import { Writer } from "./index.js";
 import { Options } from '../options.js';
-import voca from "voca";
+import changeCase from "change-case";
 
 /**
  * OneOf code blocks
@@ -29,7 +29,7 @@ export class OneOf {
             return
         }
 
-        const name = voca.snakeCase(
+        const name = changeCase.snakeCase(
             field.oneOf+" "+field.name.replace(/[.]+/g, "_") + " index"
         ).toUpperCase()
 
