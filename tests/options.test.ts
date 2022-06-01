@@ -27,10 +27,10 @@ test('parseOptions() returns targetFileName and exclude', () => {
 
 test('parseOptions() returns typeAliases', () => {
     const options = parseOptions(
-        'exclude=types.Options:typeAliases=Event+events.OneOf',
+        'exclude=types.Options:oneOf=Foo+Bar',
     );
     assert.equal(options.exclude, ['types.Options']);        
-    assert.equal(options.typeAliases, new Map<string, string>([["Event", "events.OneOf"]]));
+    assert.equal(options.oneOf, new Map<string, string>([["Foo", "Bar"]]));
 });
 
 test('parseOptions() returns configuration from a file', () => {
@@ -38,7 +38,7 @@ test('parseOptions() returns configuration from a file', () => {
     assert.equal(options.exclude, ["Foo", "Bar"])
     assert.equal(options.nullable, true)
     assert.equal(options.mode, "single")
-    assert.equal(options.typeAliases, new Map<string, string>([["Foo", "Bar"]]))
+    assert.equal(options.oneOf, new Map<string, string>([["Foo", "Bar"]]))
 });
 
 test.run()

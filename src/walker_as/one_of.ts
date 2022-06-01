@@ -37,15 +37,15 @@ export class OneOf {
     }
 
     public static varName(options: Options, id: string, f: string): string {
-        if (options.oneOfVarNames) {
+        if (options.oneOf) {
             const path = id + "." + f
-            const varName = options.oneOfVarNames.get(path)
+            const varName = options.oneOf.get(path)
             if (varName) {
                 return varName
             }
         }
 
-        return `__oneOf_${f}`;
+        return `__${f}`;
     }
 
     public static indexVarName(options: Options, id: string, f: string): string {

@@ -45,7 +45,7 @@ declare interface __Record3<TOmittable> {
   /** @type `u8` */
   messageType_index: number | TOmittable;
   /** @type `~lib/string/String` */
-  __oneOf_SecondMessage: string;
+  __SecondMessage: string;
   /** @type `u8` */
-  __oneOf_SecondMessage_index: number | TOmittable;
+  __SecondMessage_index: number | TOmittable;
 }

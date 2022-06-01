@@ -67,14 +67,14 @@ const OptionsSchema = z
         mode: z.enum(["single", "multi"]).default("single"),
         // Disable prettier
         disablePrettier: z.preprocess(parseBool, z.boolean().default(false)),
+        // Enable standard type extensions (check assembly/ext)
+        stdext: z.preprocess(parseBool, z.boolean().default(true)),
         // Default export file name
         targetFileName: z.string().default('assembly.ts'),
         // Should embedded messages be nullable
         nullable: z.preprocess(parseBool, z.boolean().default(false)),
-        // Type aliases
-        typeAliases: z.preprocess(parseMap, z.map(z.string(), z.string()).optional()),
         // OneOf discriminator name overrides
-        oneOfVarNames: z.preprocess(parseMap, z.map(z.string(), z.string()).optional()),
+        oneOf: z.preprocess(parseMap, z.map(z.string(), z.string()).optional()),
     })
     .strict();
 

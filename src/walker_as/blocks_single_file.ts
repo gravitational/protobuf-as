@@ -1,4 +1,3 @@
-import { Options } from '../options.js';
 import { Writer } from "./index.js";
 import { readFileSync } from 'fs';
 import { staticFiles, embedNamespace } from './internal.js';
@@ -7,7 +6,7 @@ import { staticFiles, embedNamespace } from './internal.js';
  * Before and after code blocks
  */
 export class BlocksSingleFile {
-    constructor(private p:Writer, private options: Options) {}
+    constructor(private p:Writer) {}
 
     beforeAll() {
         this.p(`namespace ${embedNamespace} {`);
@@ -22,12 +21,5 @@ export class BlocksSingleFile {
                 ${value}
             `)
         });
-
-        if (this.options.typeAliases) {
-            this.p('// Type aliases')
-            this.options.typeAliases.forEach((value, key) => {
-                this.p(`export type ${key} = ${value}`)
-            })
-        }
     }
 }

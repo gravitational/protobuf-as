@@ -11,7 +11,7 @@
     "directory": "gravitational/protobuf-as"
   },
   "engines": {
-    "node": ">= 16.13 <=18.2"
+    "node": ">= 16.13 <17"
   },
   "author": "Victor Sokolov <gzigzigzeo@gmail.com>",
   "bin": {

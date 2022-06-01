@@ -12,7 +12,7 @@ npm install gravitational/protobuf-as
 
 `protobuf-as` is written in Typescript, heavily based on [`ts-proto`](https://github.com/stephenh/ts-proto).
 
-Requires `node >= 16.3`, `protoc 3+`.
+Requires `node >= 16.3 <17`, `protoc 3+`.
 
 # Example
 
@@ -21,7 +21,7 @@ Given you have [example/example.proto file](example/example.proto)
 Run:
 
 ```sh
-protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts example/example.proto
+protoc --plugin=./node_modules/.bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts example/example.proto
 ```
 
 This will generate the following `assembly/example.ts` and `assembly/example.d.ts`:
@@ -80,16 +80,16 @@ If you still need `google.protobuf.Timestamp` for some reason, you can add it to
 protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt targetFileName=example.ts:exclude=example.Post.CreatedAt:include=google.protobuf.Timestamp example/example.proto
 ```
 
-# Types
+# Modes
 
 The generated code depends on a few common classes. You can control exporting them using `deps` option.
 
-* `mode=single` (default) generates the single file.
+* `mode=single` (default) generates a single file with all types.
 * `mode=multi` emits file structure where every file represents separate namespace.
 
 # Setting target file properties
 
-* `targetFileName` sets the target file name. For `type=single` output that's the name of a target file. For `mode=multi` it would be the file name for Messages and Enums in root namespace.
+* `targetFileName` sets the target file name. For `type=single` output that's the name of a target file. For `mode=multi` it would be the root file name. It will include messages and enums not bound to any package. It will export nested namespaces.
 * `disablePrettier=true` disables prettier on the generated code (used for debug purposes).
 
 # Nullable fields
@@ -106,23 +106,122 @@ public Expires: google.protobuf.Timestamp = new google.protobuf.Timestamp();
 public Expires: google.protobuf.Timestamp | null = null;
 ```
 
-# Generating type aliases
+# OneOf discriminators
 
-Sometimes, it is useful to provide shortcuts to a deeply nested types. For example, it would be easier to reference `google.protobuf.Timestamp` as `Timestamp` in the code.
+Given you have the following definition:
 
-It can be done using `typeAliases` option:
-
-```sh
-protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt typeAliases=Timestamp+google.protobuf.Timestamp example/example.proto
+```proto
+message OneOf {
+    oneof Values {
+        string String = 1;
+        int32 Int = 2;
+    }
+}
 ```
 
-It will generate the following line in the target file:
+The following properties will be added to the generated class:
+
+```ts
+class OneOf {
+    public __Values: string = "";
+    public __Values_index: u8 = 0;
+
+    static readonly ONE_OF_VALUES_STRING_INDEX = 1;
+    static readonly ONE_OF_VALUES_INT_INDEX = 2;
+}
+```
+
+It will be set to the field name of a current OneOf value and number:
 
 ```typescript
-export type Timestamp = google.protobuf.Timestamp;
+if (oneof.__Values == "Int") {
+    // ...
+}
+
+if (oneof.__Values_index == 2) {
+    // ...
+}
 ```
 
-Please note that type aliases can not be used in constructors: `new Timestamp()` would fail (although, you can use the `instantiate` helper `const t = instantiate<Timestamp>()`).
+You can use `oneOf` option to change variable names:
+
+```json
+{
+    "oneOf": {
+        "OneOf.Values": "valueType"
+    }
+}
+```
+
+Where `OneOf.Values` is the full path to a `OneOf` definition, and `valueType` is the target variable prefix:
+
+```typescript
+if (oneof.valueType == "Int") {
+    // ...
+}
+
+if (oneof.valueType_index == "Int") {
+    // ...
+}
+```
+
+You can use generated constants in case switch statements:
+
+```typescript
+switch (oneOf.valueType_index) {
+    case ONE_OF_VALUES_INT_INDEX:
+        // ...
+    case ONE_OF_VALUES_STRING_INDEX:
+        // ...
+    default:
+        // ...
+}
+```
+
+Discriminant field is set by `decode()` and does not impact `encode()` behaviour. If you need to change `oneOf` value, set the old value to null/zero and set the new value.
+
+# Well-known type extensions
+
+`protobuf-as` adds helper methods to well-known `google.protobuf.*` types.
+
+```ts
+const struct = new google.protobuf.Struct()
+
+struct.get("string_field").set("string_value")
+struct.get("number_field").set(5)
+struct.get("null_field").setNull()
+struct.get("string_list_field").set(["foo", "bar"])
+struct.get("struct_field").set(new google.protobuf.Struct())
+```
+
+Check [assembly/ext](assembly/ext) folder for complete list of extensions.
+
+Well-known extensions can be disabled by passing `stdext=false` option.
+
+# Custom extensions
+
+# Configuration file
+
+Instead of passing option in command line, you can use JSON configuration file:
+
+```json
+{
+    "targetFileName": "example.ts",
+    "exclude": ["example.Post.CreatedAt"],
+    "include": ["google.protobuf.Timestamp"],
+    "oneOf": {
+        "Timestamp": "google.protobuf.Timestamp"
+    }
+}
+```
+
+Pass path to the file in `config` option:
+
+```sh
+protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt config=protobuf-as.json example/example.proto
+```
+
+Please be advised that if a configuration file is specified, all command line parameters are ignored.
 
 # Interop with non-node hosts
 
@@ -156,102 +255,6 @@ func ReceiveMessage(arrayBuffer interface{}, m proto.Message) {
 }
 ```
 
-# Configuration file
-
-Instead of passing option in command line, you can use JSON configuration file:
-
-```sh
-protoc --plugin=./node_modules/protobuf-as/bin/protoc-gen-as --as_out=assembly --as_opt config=protobuf-as.json example/example.proto
-```
-
-The configuration file should look as following:
-
-```json
-{
-    "targetFileName": "example.ts",
-    "exclude": ["example.Post.CreatedAt"],
-    "include": ["google.protobuf.Timestamp"],
-    "typeAliases": {
-        "Timestamp": "google.protobuf.Timestamp"
-    }
-}
-```
-
-Please be advised that if a configuration file is specified, all command line parameters are ignored.
-
-# OneOf discriminators
-
-Given you have the following definition:
-
-```proto
-message OneOf {
-    oneof Values {
-        string String = 1;
-        int32 Int = 2;
-    }
-}
-```
-
-The following properties will be added to the generated class:
-
-```ts
-class OneOf {
-    public __oneOf_Values: string = "";
-    public __oneOf_Values_index: u8 = 0;
-
-    static readonly ONE_OF_VALUES_STRING_INDEX = 1;
-    static readonly ONE_OF_VALUES_INT_INDEX = 2;
-}
-```
-
-It will be set to the field name of a current OneOf value and number:
-
-```typescript
-if (oneof.__oneOf_Values == "Int") {
-    // ...
-}
-
-if (oneof.__oneOf_Values_index == 2) {
-    // ...
-}
-```
-
-You can use `oneOfVarNames` option to change this variable name:
-
-```json
-{
-    "oneOfVarNames": {
-        "OneOf.Values": "valueType"
-    }
-}
-```
-
-Where `OneOf.Values` is the full path to a `OneOf` definition, and `valueType` is the target name:
-
-```typescript
-if (oneof.valueType == "Int") {
-    // ...
-}
-
-if (oneof.valueType_index == "Int") {
-    // ...
-}
-```
-
-You can use generated constants for switch:
-
-```typescript
-switch (oneOf.valueType_index) {
-    case ONE_OF_VALUES_INT_INDEX:
-        // ...
-    case ONE_OF_VALUES_STRING_INDEX:
-        // ...
-    default:
-        // ...
-}
-```
-
-Discriminant field is set by `decode()` and does not impact `encode()`. If you need to change `oneOf` value, just set the old value to `null`.
 
 # Development
 

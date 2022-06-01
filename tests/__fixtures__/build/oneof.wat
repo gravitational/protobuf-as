@@ -3062,7 +3062,7 @@
   local.get $1
   i32.store8 offset=28
  )
- (func $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage (param $0 i32) (param $1 i32)
+ (func $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store offset=32
@@ -3071,7 +3071,7 @@
   i32.const 0
   call $~lib/rt/itcms/__link
  )
- (func $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage_index (param $0 i32) (param $1 i32)
+ (func $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage_index (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store8 offset=36
@@ -5822,10 +5822,10 @@
         call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:Branch3
         local.get $2
         i32.const 3168
-        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage
+        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage
         local.get $2
         i32.const 4
-        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage_index
+        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage_index
         br $break|1
        end
        local.get $2
@@ -5837,10 +5837,10 @@
        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:Branch4
        local.get $2
        i32.const 3216
-       call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage
+       call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage
        local.get $2
        i32.const 5
-       call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage_index
+       call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage_index
        br $break|1
       end
       local.get $2
@@ -6546,10 +6546,10 @@
   call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:messageType_index
   local.get $0
   i32.const 880
-  call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage
+  call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage
   local.get $0
   i32.const 0
-  call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage_index
+  call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage_index
   local.get $0
   local.set $1
   global.get $~lib/memory/__stack_pointer
