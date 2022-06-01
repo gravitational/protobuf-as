@@ -200,6 +200,10 @@ Well-known extensions can be disabled by passing `stdext=false` option.
 
 # Custom extensions
 
+You can pass path to your custom extensions folder in `customext` option. Each extension file name must be the same as the message name, including namespace (eg. `google.protobuf.Timestamp.ts`). The file contents will be appended to the end of the class.
+
+Standard extensions can be overriden by custom ones.
+
 # Configuration file
 
 Instead of passing option in command line, you can use JSON configuration file:

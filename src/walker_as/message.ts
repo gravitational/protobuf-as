@@ -1,7 +1,7 @@
 import { decorated } from '../proto/index.js';
 import { Writer } from './index.js';
 import { relativeName, comment } from './internal.js';
-import { Options } from '../options';
+import { Options } from '../options.js';
 import { normalize, join, dirname, parse } from 'path';
 import { fileURLToPath } from 'url';
 import { readdirSync, readFileSync } from 'fs';
@@ -20,7 +20,16 @@ export class Message {
         const extPath = normalize(join(dirname(fileURLToPath(import.meta.url)), "../../assembly/ext"))
         const exts = readdirSync(extPath)
         
-        exts.forEach(f => this.ext.set(parse(f).name, readFileSync(join(extPath, f)).toString()))
+        this.addExt(extPath, exts)
+
+        if (options.customext) {
+            const customExts = readdirSync(options.customext)
+            this.addExt(options.customext, customExts)
+        }
+    }
+
+    private addExt(base: string, exts: Array<string>) {
+        exts.forEach(f => this.ext.set(parse(f).name, readFileSync(join(base, f)).toString()))
     }
 
     start(message: decorated.Message) {

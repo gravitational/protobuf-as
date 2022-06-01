@@ -69,6 +69,8 @@ const OptionsSchema = z
         disablePrettier: z.preprocess(parseBool, z.boolean().default(false)),
         // Enable standard type extensions (check assembly/ext)
         stdext: z.preprocess(parseBool, z.boolean().default(true)),
+        // Path to custom extensions directory
+        customext: z.optional(z.string()),
         // Default export file name
         targetFileName: z.string().default('assembly.ts'),
         // Should embedded messages be nullable
