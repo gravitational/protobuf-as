@@ -1,2 +1,2 @@
-#!/bin/sh
-yarn exec ts-node src/main.ts
+#!/usr/bin/env yarn exec --silent ts-node
+import("../src/main.ts")

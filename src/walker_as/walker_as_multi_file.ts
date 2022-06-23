@@ -33,9 +33,9 @@ export class WalkerASMultiFile implements FlatWalker, GlobalsRegistry {
     constructor(private options: Readonly<Options>) {
         const p = this.p.bind(this);
 
-        this.namespace = new NamespaceMultiFile(p, this.options)
+        this.namespace = new NamespaceMultiFile(p)
         this.enum = new Enum(p);
-        this.message = new Message(p);
+        this.message = new Message(p, this.options);
         this.field = new Field(p, this.options);
         this.decode = new Decode(p, this, this.options);
         this.encode = new Encode(p);

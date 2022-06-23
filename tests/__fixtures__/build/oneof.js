@@ -64,8 +64,8 @@ async function instantiate(module, imports = {}) {
     new Uint32Array(memory.buffer)[pointer + 20 >>> 2] = __lowerString(value.NonOneOf2) || __notnull();
     new Uint32Array(memory.buffer)[pointer + 24 >>> 2] = __lowerString(value.messageType) || __notnull();
     new Uint8Array(memory.buffer)[pointer + 28 >>> 0] = value.messageType_index;
-    new Uint32Array(memory.buffer)[pointer + 32 >>> 2] = __lowerString(value.__oneOf_SecondMessage) || __notnull();
-    new Uint8Array(memory.buffer)[pointer + 36 >>> 0] = value.__oneOf_SecondMessage_index;
+    new Uint32Array(memory.buffer)[pointer + 32 >>> 2] = __lowerString(value.__SecondMessage) || __notnull();
+    new Uint8Array(memory.buffer)[pointer + 36 >>> 0] = value.__SecondMessage_index;
     exports.__unpin(pointer);
     return pointer;
   }
@@ -98,8 +98,8 @@ async function instantiate(module, imports = {}) {
       NonOneOf2: __liftString(new Uint32Array(memory.buffer)[pointer + 20 >>> 2]),
       messageType: __liftString(new Uint32Array(memory.buffer)[pointer + 24 >>> 2]),
       messageType_index: new Uint8Array(memory.buffer)[pointer + 28 >>> 0],
-      __oneOf_SecondMessage: __liftString(new Uint32Array(memory.buffer)[pointer + 32 >>> 2]),
-      __oneOf_SecondMessage_index: new Uint8Array(memory.buffer)[pointer + 36 >>> 0],
+      __SecondMessage: __liftString(new Uint32Array(memory.buffer)[pointer + 32 >>> 2]),
+      __SecondMessage_index: new Uint8Array(memory.buffer)[pointer + 36 >>> 0],
     };
   }
   function __liftBuffer(pointer) {

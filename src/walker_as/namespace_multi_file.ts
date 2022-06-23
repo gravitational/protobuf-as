@@ -1,13 +1,12 @@
 import { decorated } from "../proto/index.js";
 import { Writer } from "./index.js";
-import { Options } from '../options.js';
 import { namespaceToFileName, getRelPath } from './internal.js';
 
 /**
  * Namespace code blocks
  */
 export class NamespaceMultiFile {
-    constructor(private p:Writer, private options:Options) {}
+    constructor(private p:Writer) {}
 
     // Generates statement which re-exports embedded namespace to the top level
     parentRef(ns: decorated.Namespace) {
@@ -34,12 +33,5 @@ export class NamespaceMultiFile {
                 ${value}
             `)
         });
-
-        if (this.options.typeAliases) {
-            this.p('// Type aliases')
-            this.options.typeAliases.forEach((value, key) => {
-                this.p(`export type ${key} = ${value}`)
-            })
-        }
     }
 }

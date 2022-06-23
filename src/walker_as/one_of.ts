@@ -1,7 +1,7 @@
 import { decorated } from "../proto/index.js";
 import { Writer } from "./index.js";
 import { Options } from '../options.js';
-import voca from "voca";
+import changeCase from "change-case";
 
 /**
  * OneOf code blocks
@@ -29,7 +29,7 @@ export class OneOf {
             return
         }
 
-        const name = voca.snakeCase(
+        const name = changeCase.snakeCase(
             field.oneOf+" "+field.name.replace(/[.]+/g, "_") + " index"
         ).toUpperCase()
 
@@ -37,15 +37,15 @@ export class OneOf {
     }
 
     public static varName(options: Options, id: string, f: string): string {
-        if (options.oneOfVarNames) {
+        if (options.oneOf) {
             const path = id + "." + f
-            const varName = options.oneOfVarNames.get(path)
+            const varName = options.oneOf.get(path)
             if (varName) {
                 return varName
             }
         }
 
-        return `__oneOf_${f}`;
+        return `__${f}`;
     }
 
     public static indexVarName(options: Options, id: string, f: string): string {

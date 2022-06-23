@@ -604,13 +604,13 @@ export class OneOf {
   public messageType: string = "";
   public messageType_index: u8 = 0;
 
-  public __oneOf_SecondMessage: string = "";
-  public __oneOf_SecondMessage_index: u8 = 0;
+  public __SecondMessage: string = "";
+  public __SecondMessage_index: u8 = 0;
 
-  static readonly MESSAGES_BRANCH_1_INDEX: u8 = 1;
-  static readonly MESSAGES_BRANCH_2_INDEX: u8 = 2;
-  static readonly SECOND_MESSAGE_BRANCH_3_INDEX: u8 = 4;
-  static readonly SECOND_MESSAGE_BRANCH_4_INDEX: u8 = 5;
+  static readonly MESSAGES_BRANCH1_INDEX: u8 = 1;
+  static readonly MESSAGES_BRANCH2_INDEX: u8 = 2;
+  static readonly SECOND_MESSAGE_BRANCH3_INDEX: u8 = 4;
+  static readonly SECOND_MESSAGE_BRANCH4_INDEX: u8 = 5;
 
   // Decodes OneOf from an ArrayBuffer
   static decode(buf: ArrayBuffer): OneOf {
@@ -663,14 +663,14 @@ export class OneOf {
         }
         case 4: {
           obj.Branch3 = decoder.string();
-          obj.__oneOf_SecondMessage = "Branch3";
-          obj.__oneOf_SecondMessage_index = 4;
+          obj.__SecondMessage = "Branch3";
+          obj.__SecondMessage_index = 4;
           break;
         }
         case 5: {
           obj.Branch4 = decoder.int32();
-          obj.__oneOf_SecondMessage = "Branch4";
-          obj.__oneOf_SecondMessage_index = 5;
+          obj.__SecondMessage = "Branch4";
+          obj.__SecondMessage_index = 5;
           break;
         }
         case 6: {

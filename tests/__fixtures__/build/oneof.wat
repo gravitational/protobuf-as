@@ -17,10 +17,10 @@
  (type $i32_i64_=>_none (func (param i32 i64)))
  (type $i32_=>_i64 (func (param i32) (result i64)))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
- (global $tests/__fixtures__/as_proto/oneof/oneof/OneOf.MESSAGES_BRANCH_1_INDEX i32 (i32.const 1))
- (global $tests/__fixtures__/as_proto/oneof/oneof/OneOf.MESSAGES_BRANCH_2_INDEX i32 (i32.const 2))
- (global $tests/__fixtures__/as_proto/oneof/oneof/OneOf.SECOND_MESSAGE_BRANCH_3_INDEX i32 (i32.const 4))
- (global $tests/__fixtures__/as_proto/oneof/oneof/OneOf.SECOND_MESSAGE_BRANCH_4_INDEX i32 (i32.const 5))
+ (global $tests/__fixtures__/as_proto/oneof/oneof/OneOf.MESSAGES_BRANCH1_INDEX i32 (i32.const 1))
+ (global $tests/__fixtures__/as_proto/oneof/oneof/OneOf.MESSAGES_BRANCH2_INDEX i32 (i32.const 2))
+ (global $tests/__fixtures__/as_proto/oneof/oneof/OneOf.SECOND_MESSAGE_BRANCH3_INDEX i32 (i32.const 4))
+ (global $tests/__fixtures__/as_proto/oneof/oneof/OneOf.SECOND_MESSAGE_BRANCH4_INDEX i32 (i32.const 5))
  (global $~lib/shared/runtime/Runtime.Stub i32 (i32.const 0))
  (global $~lib/shared/runtime/Runtime.Minimal i32 (i32.const 1))
  (global $~lib/shared/runtime/Runtime.Incremental i32 (i32.const 2))
@@ -3062,7 +3062,7 @@
   local.get $1
   i32.store8 offset=28
  )
- (func $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage (param $0 i32) (param $1 i32)
+ (func $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store offset=32
@@ -3071,7 +3071,7 @@
   i32.const 0
   call $~lib/rt/itcms/__link
  )
- (func $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage_index (param $0 i32) (param $1 i32)
+ (func $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage_index (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
   i32.store8 offset=36
@@ -5822,10 +5822,10 @@
         call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:Branch3
         local.get $2
         i32.const 3168
-        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage
+        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage
         local.get $2
         i32.const 4
-        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage_index
+        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage_index
         br $break|1
        end
        local.get $2
@@ -5837,10 +5837,10 @@
        call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:Branch4
        local.get $2
        i32.const 3216
-       call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage
+       call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage
        local.get $2
        i32.const 5
-       call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage_index
+       call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage_index
        br $break|1
       end
       local.get $2
@@ -6546,10 +6546,10 @@
   call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:messageType_index
   local.get $0
   i32.const 880
-  call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage
+  call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage
   local.get $0
   i32.const 0
-  call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__oneOf_SecondMessage_index
+  call $tests/__fixtures__/as_proto/oneof/oneof/OneOf#set:__SecondMessage_index
   local.get $0
   local.set $1
   global.get $~lib/memory/__stack_pointer
